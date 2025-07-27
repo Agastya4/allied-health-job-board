@@ -1,28 +1,8 @@
 "use client"
 
-import type React from "react"
-
-import { useState, useEffect, useRef, useCallback } from "react"
-import { MapPin, Loader2 } from "lucide-react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
 import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
-
-interface LocationSuggestion {
-  display_name: string
-  lat: string
-  lon: string
-  place_id: number
-  address?: {
-    city?: string
-    town?: string
-    suburb?: string
-    state?: string
-    country?: string
-    road?: string
-    house_number?: string
-    postcode?: string
-  }
-}
+import { Search, MapPin } from "lucide-react"
 
 interface LocationAutocompleteProps {
   value: string
@@ -32,68 +12,42 @@ interface LocationAutocompleteProps {
 }
 
 // Cache for search results
-const searchCache = new Map<string, LocationSuggestion[]>()
+const searchCache = new Map<string, any[]>()
 
-// Rate limiting to prevent too many API calls
-let lastApiCall = 0
-const API_CALL_DELAY = 100 // Minimum 100ms between API calls
-
-// Popular Australian cities for instant suggestions
-const popularCities: LocationSuggestion[] = [
-  { display_name: "Sydney, NSW", lat: "-33.8688", lon: "151.2093", place_id: 1 },
-  { display_name: "Melbourne, VIC", lat: "-37.8136", lon: "144.9631", place_id: 2 },
-  { display_name: "Brisbane, QLD", lat: "-27.4698", lon: "153.0251", place_id: 3 },
-  { display_name: "Perth, WA", lat: "-31.9505", lon: "115.8605", place_id: 4 },
-  { display_name: "Adelaide, SA", lat: "-34.9285", lon: "138.6007", place_id: 5 },
-  { display_name: "Gold Coast, QLD", lat: "-28.0167", lon: "153.4000", place_id: 6 },
-  { display_name: "Newcastle, NSW", lat: "-32.9283", lon: "151.7817", place_id: 7 },
-  { display_name: "Canberra, ACT", lat: "-35.2809", lon: "149.1300", place_id: 8 },
-  { display_name: "Sunshine Coast, QLD", lat: "-26.6500", lon: "153.0667", place_id: 9 },
-  { display_name: "Wollongong, NSW", lat: "-34.4331", lon: "150.8831", place_id: 10 },
-  { display_name: "Hobart, TAS", lat: "-42.8821", lon: "147.3272", place_id: 11 },
-  { display_name: "Geelong, VIC", lat: "-38.1499", lon: "144.3617", place_id: 12 },
-  { display_name: "Townsville, QLD", lat: "-19.2590", lon: "146.8169", place_id: 13 },
-  { display_name: "Cairns, QLD", lat: "-16.9186", lon: "145.7781", place_id: 14 },
-  { display_name: "Toowoomba, QLD", lat: "-27.5667", lon: "151.9500", place_id: 15 },
-]
-
-export function LocationAutocomplete({ value, onChange, placeholder = "Search cities...", className }: LocationAutocompleteProps) {
-  const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [showSuggestions, setShowSuggestions] = useState<boolean>(false)
+export function LocationAutocomplete({ 
+  value, 
+  onChange, 
+  placeholder = "Search locations...",
+  className = ""
+}: LocationAutocompleteProps) {
+  const [suggestions, setSuggestions] = useState<any[]>([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const debounceRef = useRef<NodeJS.Timeout | undefined>(undefined)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [isFocused, setIsFocused] = useState(false)
+  
   const abortControllerRef = useRef<AbortController | null>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const suggestionsRef = useRef<HTMLDivElement>(null)
 
   const searchLocations = useCallback(async (query: string) => {
-    if (query.length < 2) {
+    if (!query.trim() || query.length < 2) {
       setSuggestions([])
       return
     }
 
-    // Check cache first
-    const cacheKey = query.toLowerCase().trim()
+    const cacheKey = query.toLowerCase()
     if (searchCache.has(cacheKey)) {
-      setSuggestions(searchCache.get(cacheKey)!)
+      setSuggestions(searchCache.get(cacheKey) || [])
       return
     }
-
-    // Rate limiting
-    const now = Date.now()
-    if (now - lastApiCall < API_CALL_DELAY) {
-      return
-    }
-    lastApiCall = now
 
     // Cancel previous request
     if (abortControllerRef.current) {
       abortControllerRef.current.abort()
     }
 
-    // Create new abort controller
     abortControllerRef.current = new AbortController()
-
     setIsLoading(true)
     setError(null)
 
@@ -166,40 +120,58 @@ export function LocationAutocomplete({ value, onChange, placeholder = "Search ci
     if (!query.trim()) {
       setSuggestions([])
       setShowSuggestions(false)
-      onChange('') // Clear the filter
       return
     }
 
-    // Clear previous debounce
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current)
-    }
-
+    // Show suggestions immediately for mobile
+    setShowSuggestions(true)
+    
     // Debounce the search
-    debounceRef.current = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       searchLocations(query)
     }, 300)
 
-    setShowSuggestions(true)
+    return () => clearTimeout(timeoutId)
   }
 
-  const handleSuggestionClick = (suggestion: LocationSuggestion) => {
-    onChange(suggestion.display_name)
+  const handleSuggestionClick = (suggestion: any) => {
+    onChange(suggestion.display_name, parseFloat(suggestion.lat), parseFloat(suggestion.lon))
     setShowSuggestions(false)
     setSuggestions([])
+    inputRef.current?.blur()
   }
 
-  const handleFocus = () => {
-    setShowSuggestions(true)
-    // Show popular cities when focused and no input
-    if (!value.trim()) {
-      setSuggestions(popularCities)
+  const handleInputFocus = () => {
+    setIsFocused(true)
+    if (value.trim() && suggestions.length > 0) {
+      setShowSuggestions(true)
     }
   }
 
+  const handleInputBlur = () => {
+    setIsFocused(false)
+    // Delay hiding suggestions to allow for clicks
+    setTimeout(() => {
+      setShowSuggestions(false)
+    }, 200)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      setShowSuggestions(false)
+      inputRef.current?.blur()
+    }
+  }
+
+  // Close suggestions when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+      if (
+        suggestionsRef.current && 
+        !suggestionsRef.current.contains(event.target as Node) &&
+        inputRef.current && 
+        !inputRef.current.contains(event.target as Node)
+      ) {
         setShowSuggestions(false)
       }
     }
@@ -209,53 +181,63 @@ export function LocationAutocomplete({ value, onChange, placeholder = "Search ci
   }, [])
 
   return (
-    <div className="relative w-full">
-      <div className="relative w-full">
+    <div className="relative">
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
         <Input
           ref={inputRef}
           type="text"
           value={value}
           onChange={handleInputChange}
-          onFocus={handleFocus}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          autoComplete="off"
-          aria-label="City search"
-          className={cn(
-            "pr-10 w-full",
-            className
-          )}
+          className={`pl-10 pr-4 h-12 md:h-10 text-base md:text-sm ${className}`}
         />
-        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
-          ) : (
-            <MapPin className="h-4 w-4 text-gray-400" />
-          )}
-        </div>
       </div>
 
       {showSuggestions && (suggestions.length > 0 || isLoading) && (
-        <div className="absolute z-[9999] w-full mt-1 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-md shadow-lg max-h-60 overflow-auto">
+        <div 
+          ref={suggestionsRef}
+          className="absolute z-[9999] w-full mt-1 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-md shadow-lg max-h-60 overflow-auto"
+        >
+          {isLoading && (
+            <div className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+              Searching...
+            </div>
+          )}
+          
+          {!isLoading && suggestions.length === 0 && value.trim() && (
+            <div className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+              No locations found
+            </div>
+          )}
+          
           {suggestions.map((suggestion) => (
             <button
               key={suggestion.place_id}
               type="button"
-              className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-zinc-700 focus:bg-gray-100 dark:focus:bg-zinc-700 focus:outline-none text-sm text-gray-900 dark:text-white touch-manipulation"
+              className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-zinc-700 focus:bg-gray-100 dark:focus:bg-zinc-700 focus:outline-none text-sm text-gray-900 dark:text-white touch-manipulation active:bg-gray-200 dark:active:bg-zinc-600"
               onClick={() => handleSuggestionClick(suggestion)}
-              onTouchEnd={() => handleSuggestionClick(suggestion)}
+              onTouchEnd={(e) => {
+                e.preventDefault()
+                handleSuggestionClick(suggestion)
+              }}
               tabIndex={0}
             >
-              <div className="flex items-center">
-                <MapPin className="h-3 w-3 text-gray-400 mr-2 flex-shrink-0" />
-                <span className="truncate">{suggestion.display_name}</span>
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                <span>{suggestion.display_name}</span>
               </div>
             </button>
           ))}
-          {error && (
-            <div className="px-4 py-2 text-sm text-red-600 dark:text-red-400">
-              {error}
-            </div>
-          )}
+        </div>
+      )}
+
+      {error && (
+        <div className="absolute z-[9999] w-full mt-1 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-3">
+          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
         </div>
       )}
     </div>

@@ -28,7 +28,8 @@ export default function JobBoardPage() {
   const handleJobSelect = (job: Job) => {
     // On mobile, navigate to the full job page instead of showing details
     if (window.innerWidth < 768) {
-      const jobSlug = `${job.id}-${job.job_title.toLowerCase().replace(/\s+/g, '-')}-${job.location_display?.toLowerCase().replace(/\s+/g, '-') || ''}`
+      // Create a proper job slug that matches the expected format
+      const jobSlug = `${job.id}-${job.job_title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`
       router.push(`/jobs/${jobSlug}`)
     } else {
       setSelectedJob(job)
