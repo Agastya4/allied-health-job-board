@@ -12,15 +12,15 @@ function getStateLabel(abbr: string) {
 }
 
 interface CatchAllPageProps {
-  params: { params: string[] }
+  params: Promise<{ params: string[] }>
 }
 
 function normalize(str: string) {
   return str ? str.trim().toLowerCase().replace(/\s+/g, '-') : '';
 }
 
-export default function LocationsCatchAllPage({ params }: CatchAllPageProps) {
-  const pathParams = params.params;
+export default async function LocationsCatchAllPage({ params }: CatchAllPageProps) {
+  const { params: pathParams } = await params;
   // pathParams: [state, category] or [state, city, category]
   if (!Array.isArray(pathParams) || pathParams.length < 2 || pathParams.length > 3) {
     notFound();

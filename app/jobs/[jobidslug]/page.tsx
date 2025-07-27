@@ -12,8 +12,9 @@ async function getJob(jobidslug: string) {
   return data.job
 }
 
-export async function generateMetadata({ params }: { params: { jobidslug: string } }): Promise<Metadata> {
-  const job = await getJob(params.jobidslug)
+export async function generateMetadata({ params }: { params: Promise<{ jobidslug: string }> }): Promise<Metadata> {
+  const { jobidslug } = await params
+  const job = await getJob(jobidslug)
   if (!job) return {}
   return {
     title: `${job.job_title} at ${job.company_name} | ${job.location_display}`,
@@ -25,8 +26,9 @@ export async function generateMetadata({ params }: { params: { jobidslug: string
   }
 }
 
-export default async function JobDetailPage({ params }: { params: { jobidslug: string } }) {
-  const job = await getJob(params.jobidslug)
+export default async function JobDetailPage({ params }: { params: Promise<{ jobidslug: string }> }) {
+  const { jobidslug } = await params
+  const job = await getJob(jobidslug)
   if (!job) return notFound()
   // Remove requirements extraction logic
   return (
