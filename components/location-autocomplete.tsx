@@ -98,51 +98,48 @@ export function LocationAutocomplete({ value, onChange, placeholder = "Search ci
     setError(null)
 
     try {
-      // Search for any type of location in Australia (not just cities)
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          query + ", Australia"
-        )}&countrycodes=au&limit=15&addressdetails=1`,
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ', Australia')}&countrycodes=au&limit=10&addressdetails=1`,
         {
           signal: abortControllerRef.current.signal,
-          headers: {
-            'Accept': 'application/json',
-          }
         }
       )
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new Error('Failed to fetch locations')
       }
 
       const data = await response.json()
       
       // Filter and format results
-      const filteredResults = data
+      const formattedResults = data
         .filter((item: any) => {
-          // Only include Australian locations
-          return item.address?.country === 'Australia' || 
-                 item.display_name.includes('Australia')
+          // Filter for cities, towns, suburbs in Australia
+          const type = item.type
+          const address = item.address
+          return (
+            (type === 'city' || type === 'town' || type === 'suburb') &&
+            address?.country === 'Australia'
+          )
         })
         .map((item: any) => ({
           display_name: formatDisplayName(item),
           lat: item.lat,
           lon: item.lon,
           place_id: item.place_id,
-          address: item.address
+          address: item.address,
         }))
-        .slice(0, 10) // Limit to 10 results
+        .slice(0, 10)
 
       // Cache the results
-      searchCache.set(cacheKey, filteredResults)
-      setSuggestions(filteredResults)
-    } catch (err) {
-      if (err instanceof Error && err.name === 'AbortError') {
-        // Request was cancelled, ignore
-        return
+      searchCache.set(cacheKey, formattedResults)
+      setSuggestions(formattedResults)
+    } catch (error: any) {
+      if (error.name === 'AbortError') {
+        return // Request was cancelled
       }
-      console.error('Location search error:', err)
-      setError('Failed to search locations')
+      console.error('Location search error:', error)
+      setError('Failed to load locations. Please try again.')
       setSuggestions([])
     } finally {
       setIsLoading(false)
@@ -150,31 +147,20 @@ export function LocationAutocomplete({ value, onChange, placeholder = "Search ci
   }, [])
 
   const formatDisplayName = (item: any): string => {
-    const address = item.address || {}
-    
-    // Try to create a clean display name
-    const parts = []
-    
-    if (address.city) parts.push(address.city)
-    else if (address.town) parts.push(address.town)
-    else if (address.suburb) parts.push(address.suburb)
-    
-    if (address.state) parts.push(address.state)
-    
-    if (parts.length > 0) {
-      return parts.join(', ')
+    const address = item.address
+    if (address?.city) {
+      return `${address.city}, ${address.state || ''}`
+    } else if (address?.town) {
+      return `${address.town}, ${address.state || ''}`
+    } else if (address?.suburb) {
+      return `${address.suburb}, ${address.state || ''}`
     }
-    
-    // Fallback to the original display name but clean it up
-    return item.display_name
-      .split(',')
-      .slice(0, 2) // Take first two parts
-      .map((part: string) => part.trim())
-      .join(', ')
+    return item.display_name.split(',')[0] + ', ' + (address?.state || '')
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value
+    onChange(query)
     
     // Clear suggestions if input is empty
     if (!query.trim()) {
@@ -249,13 +235,14 @@ export function LocationAutocomplete({ value, onChange, placeholder = "Search ci
       </div>
 
       {showSuggestions && (suggestions.length > 0 || isLoading) && (
-        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-[9999] w-full mt-1 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-md shadow-lg max-h-60 overflow-auto">
           {suggestions.map((suggestion) => (
             <button
               key={suggestion.place_id}
               type="button"
-              className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-zinc-700 focus:bg-gray-100 dark:focus:bg-zinc-700 focus:outline-none text-sm text-gray-900 dark:text-white"
+              className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-zinc-700 focus:bg-gray-100 dark:focus:bg-zinc-700 focus:outline-none text-sm text-gray-900 dark:text-white touch-manipulation"
               onClick={() => handleSuggestionClick(suggestion)}
+              onTouchEnd={() => handleSuggestionClick(suggestion)}
               tabIndex={0}
             >
               <div className="flex items-center">

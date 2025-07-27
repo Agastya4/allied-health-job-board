@@ -77,13 +77,31 @@ export default function JobBoardPage() {
         {/* Mobile Content Area */}
         <div className="flex-1 overflow-hidden">
           {mobileTab === 'jobs' && (
-            <JobList
-              jobs={jobs}
-              loading={jobsLoading}
-              onSelectJob={handleJobSelect}
-              selectedJobId={selectedJob ? selectedJob.id : null}
-              onPostJob={() => setShowAuthModal(true)}
-            />
+            <div className="h-full flex flex-col">
+              {/* Mobile Filters at Top */}
+              <div className="border-b border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900">
+                <div className="p-4">
+                  <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Filters</h2>
+                  <JobSidebar 
+                    user={user} 
+                    onFiltersChange={setFilters} 
+                    onPostJob={() => setShowAuthModal(true)}
+                    initialFilters={filters}
+                  />
+                </div>
+              </div>
+              
+              {/* Job List Below Filters */}
+              <div className="flex-1 overflow-hidden">
+                <JobList
+                  jobs={jobs}
+                  loading={jobsLoading}
+                  onSelectJob={handleJobSelect}
+                  selectedJobId={selectedJob ? selectedJob.id : null}
+                  onPostJob={() => setShowAuthModal(true)}
+                />
+              </div>
+            </div>
           )}
           
           {mobileTab === 'details' && (

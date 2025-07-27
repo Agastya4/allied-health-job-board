@@ -112,8 +112,8 @@ export function Navbar() {
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 bg-black/50 z-50 md:hidden" onClick={() => setMobileMenuOpen(false)}>
-          <div className="absolute top-0 right-0 w-64 h-full bg-white dark:bg-zinc-900 shadow-lg p-4" onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-6">
+          <div className="absolute top-0 right-0 w-64 h-full bg-white dark:bg-zinc-900 shadow-lg flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-zinc-700">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Menu</h2>
               <Button
                 variant="ghost"
@@ -126,28 +126,30 @@ export function Navbar() {
             </div>
             
             {/* Mobile Navigation Links */}
-            <div className="space-y-4 mb-6">
-              {navLinks.map(link => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`block py-2 px-3 rounded-lg font-medium transition ${
-                    link.match.test(pathname)
-                      ? 'text-violet-700 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20'
-                      : 'text-gray-700 dark:text-white hover:text-violet-700 dark:hover:text-violet-400 hover:bg-gray-50 dark:hover:bg-zinc-800'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+            <div className="flex-1 p-4">
+              <div className="space-y-4">
+                {navLinks.map(link => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block py-2 px-3 rounded-lg font-medium transition ${
+                      link.match.test(pathname)
+                        ? 'text-violet-700 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20'
+                        : 'text-gray-700 dark:text-white hover:text-violet-700 dark:hover:text-violet-400 hover:bg-gray-50 dark:hover:bg-zinc-800'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             </div>
 
-            {/* Mobile User Section */}
-            <div className="border-t border-gray-200 dark:border-zinc-700 pt-4">
+            {/* Mobile User Section - At Bottom */}
+            <div className="border-t border-gray-200 dark:border-zinc-700 p-4 space-y-3">
               {user ? (
-                <div className="space-y-3">
-                  <div className="text-gray-700 dark:text-white font-medium">{user.name}</div>
+                <>
+                  <div className="text-gray-700 dark:text-white font-medium text-center">{user.name}</div>
                   <Link href="/post-job" onClick={() => setMobileMenuOpen(false)}>
                     <Button className="w-full bg-violet-600 hover:bg-violet-700 text-white flex items-center gap-2">
                       <PlusCircle className="h-4 w-4" />
@@ -165,7 +167,7 @@ export function Navbar() {
                     <LogOut className="h-4 w-4 mr-2" />
                     Sign Out
                   </Button>
-                </div>
+                </>
               ) : (
                 <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>
                   <Button className="w-full bg-violet-600 hover:bg-violet-700 text-white">

@@ -41,14 +41,14 @@ export default function LandingPage() {
       </div>
 
       {/* Why Choose Us Section - UNDER the main content */}
-      <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-20">
+      <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-20 pb-20 md:pb-20">
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 text-gray-900 dark:text-white">
           Why Choose AlliedHealthJobs.au?
         </h2>
         
         <div className="grid md:grid-cols-2 gap-6 md:gap-8">
           {/* Job Seekers Container - Left */}
-          <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 md:p-8 shadow-lg border border-gray-200 dark:border-zinc-800">
+          <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-gray-200 dark:border-zinc-800">
             <div className="text-center mb-6">
               <h3 className="text-xl md:text-2xl font-bold text-violet-600 dark:text-violet-400 mb-2">
                 For Job Seekers
@@ -102,7 +102,7 @@ export default function LandingPage() {
           </div>
 
           {/* Employers Container - Right */}
-          <div className="bg-white dark:bg-zinc-900 rounded-2xl p-6 md:p-8 shadow-lg border border-gray-200 dark:border-zinc-800">
+          <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-gray-200 dark:border-zinc-800">
             <div className="text-center mb-6">
               <h3 className="text-xl md:text-2xl font-bold text-violet-600 dark:text-violet-400 mb-2">
                 For Employers
