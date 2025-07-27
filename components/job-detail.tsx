@@ -242,19 +242,20 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
 
           <Separator className="my-6" />
 
-          {/* Quick Actions */}
-          <div className="space-y-3">
+          {/* Quick Actions (Sticky for desktop) */}
+          <div className="space-y-3 sticky bottom-0 bg-white dark:bg-zinc-900 pt-4 pb-4 z-10">
             <Link
               href={`/jobs/${job.id}-${jobSlug}`}
               className="block w-full"
             >
-              <Button className="w-full bg-violet-600 hover:bg-violet-700 text-white h-12 md:h-10">
+              <Button className="w-full border-2 border-violet-600 text-violet-600 hover:bg-violet-50 h-12 md:h-10" variant="outline">
                 View Full Page
               </Button>
             </Link>
             <Button
               onClick={handleApply}
-              className="w-full bg-green-600 hover:bg-green-700 text-white h-12 md:h-10"
+              className="w-full border-2 border-violet-600 text-violet-600 hover:bg-violet-50 h-12 md:h-10"
+              variant="outline"
             >
               Apply Now
             </Button>
@@ -262,15 +263,7 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
         </div>
       </div>
 
-      {/* Mobile Sticky Apply Button */}
-      <div className="md:hidden p-4 border-t border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-        <Button
-          onClick={handleApply}
-          className="w-full bg-green-600 hover:bg-green-700 text-white h-12"
-        >
-          Apply Now
-        </Button>
-      </div>
+      {/* Mobile Sticky Apply Button (remove, now handled by sticky desktop section) */}
     </div>
   )
 }

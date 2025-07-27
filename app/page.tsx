@@ -2,8 +2,29 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Typewriter } from "@/components/typewriter"
+import { useJobs } from "@/hooks/use-jobs"
+import { useState, useMemo } from "react"
+import { useRouter } from "next/navigation"
+import { JobCard } from "@/components/job-card"
 
 export default function LandingPage() {
+  const { jobs, loading } = useJobs()
+  const [search, setSearch] = useState("")
+  const router = useRouter()
+
+  // Sort jobs by created_at descending and take the latest 15
+  const latestJobs = useMemo(() => {
+    const sorted = [...jobs].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    if (!search) return sorted.slice(0, 15)
+    // Filter by any word in job details, title, or company
+    const lower = search.toLowerCase()
+    return sorted.filter(job =>
+      (job.job_details && job.job_details.toLowerCase().includes(lower)) ||
+      (job.job_title && job.job_title.toLowerCase().includes(lower)) ||
+      (job.company_name && job.company_name.toLowerCase().includes(lower))
+    ).slice(0, 15)
+  }, [jobs, search])
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-violet-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 relative">
       {/* Main Content Section */}
@@ -43,6 +64,47 @@ export default function LandingPage() {
               </Button>
             </Link>
           </div>
+        </div>
+      </div>
+
+      {/* Master Search and Latest Jobs Section */}
+      <div className="w-full max-w-4xl mx-auto px-4 pb-8">
+        <div className="mb-6">
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search for any job, company, or keyword..."
+            className="w-full rounded-lg border-2 border-violet-200 dark:border-violet-700 bg-white dark:bg-zinc-900 px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-violet-400 transition"
+          />
+        </div>
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Latest Jobs</h2>
+          {loading ? (
+            <div className="text-gray-600 dark:text-gray-400 py-8 text-center">Loading jobs...</div>
+          ) : latestJobs.length === 0 ? (
+            <div className="text-gray-600 dark:text-gray-400 py-8 text-center">No jobs found.</div>
+          ) : (
+            <div className="grid gap-3 md:gap-4">
+              {latestJobs.map(job => (
+                <div key={job.id} onClick={() => router.push(`/jobs/${job.id}-${(job.job_title + '-' + (job.location_display || '')).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`)} className="cursor-pointer">
+                  <JobCard
+                    job={{
+                      ...job,
+                      is_new: false,
+                      company_logo_url: job.company_logo_url || "",
+                      salary_range: job.salary_range ?? null,
+                      posted_ago: job.posted_ago ?? null,
+                      is_bookmarked: job.is_bookmarked ?? false,
+                    }}
+                    onClick={() => router.push(`/jobs/${job.id}-${(job.job_title + '-' + (job.location_display || '')).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`)}
+                    isSelected={false}
+                    onBookmarkToggle={() => {}}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
