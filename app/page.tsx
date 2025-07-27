@@ -1,6 +1,7 @@
 "use client"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Typewriter } from "@/components/typewriter"
 
 export default function LandingPage() {
   return (
@@ -21,8 +22,13 @@ export default function LandingPage() {
             <span className="text-violet-600 dark:text-violet-400">Healthcare Match</span>
           </h1>
 
-          <p className="text-base md:text-lg lg:text-xl text-center text-gray-600 dark:text-gray-300 mb-8 md:mb-12 max-w-3xl leading-relaxed w-full px-4">
-            From entry-level positions to senior roles, we help professionals at every stage find their next opportunity.
+          <p className="text-base md:text-lg lg:text-xl text-center text-gray-600 dark:text-gray-300 mb-8 md:mb-12 max-w-3xl leading-relaxed w-full px-4 min-h-[1.5em]">
+            <Typewriter 
+              text="From entry-level positions to senior roles, we help professionals at every stage find their next opportunity."
+              speed={30}
+              delay={500}
+              className="text-base md:text-lg lg:text-xl text-center text-gray-600 dark:text-gray-300"
+            />
           </p>
 
           <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full max-w-lg justify-center items-center px-4">
