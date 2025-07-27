@@ -9,6 +9,9 @@ if (!JWT_SECRET) {
   throw new Error("JWT_SECRET or NEXTAUTH_SECRET environment variable is required")
 }
 
+// Type assertion to ensure JWT_SECRET is not undefined
+const JWT_SECRET_ASSERTED = JWT_SECRET as string
+
 export interface User {
   id: number
   email: string
@@ -44,7 +47,7 @@ export function generateToken(user: User): string {
         name: user.name,
         role: user.role,
       },
-      JWT_SECRET,
+      JWT_SECRET_ASSERTED,
       { expiresIn: "30d" },
     )
   } catch (error) {
@@ -55,7 +58,14 @@ export function generateToken(user: User): string {
 
 export function verifyToken(token: string): User | null {
   try {
-    return jwt.verify(token, JWT_SECRET) as User
+    const decoded = jwt.verify(token, JWT_SECRET_ASSERTED) as any
+    return {
+      id: decoded.id,
+      email: decoded.email,
+      name: decoded.name,
+      role: decoded.role,
+      avatar_url: decoded.avatar_url,
+    }
   } catch (error) {
     console.error("Token verification error:", error)
     return null

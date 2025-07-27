@@ -30,7 +30,7 @@ export async function GET() {
       ORDER BY table_name
     `
     
-    console.log("Tables found:", tables.map(t => t.table_name))
+    console.log("Tables found:", tables.map((t: any) => t.table_name))
 
     // Test jobs table
     let jobCount = 0
@@ -57,7 +57,7 @@ export async function GET() {
       message: "Database connection successful",
       timestamp: new Date().toISOString(),
       data: {
-        tables: tables.map(t => t.table_name),
+        tables: tables.map((t: any) => t.table_name),
         jobCount,
         userCount,
       },
