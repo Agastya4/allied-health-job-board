@@ -3,7 +3,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Typewriter } from "@/components/typewriter"
 import { useJobs } from "@/hooks/use-jobs"
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { JobCard } from "@/components/job-card"
 
@@ -11,6 +11,16 @@ export default function LandingPage() {
   const { jobs, loading } = useJobs()
   const [search, setSearch] = useState("")
   const router = useRouter()
+
+  // Apply gradient background to body when component mounts
+  useEffect(() => {
+    document.body.classList.add('landing-gradient-bg')
+    
+    // Cleanup: remove the class when component unmounts
+    return () => {
+      document.body.classList.remove('landing-gradient-bg')
+    }
+  }, [])
 
   // Sort jobs by created_at descending and take the latest 15
   const latestJobs = useMemo(() => {
@@ -26,7 +36,7 @@ export default function LandingPage() {
   }, [jobs, search])
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-black via-zinc-900 to-black dark:from-black dark:via-zinc-900 dark:to-black relative">
+    <div className="min-h-screen w-full relative">
       {/* Main Content Section */}
       <div className="flex items-center justify-center px-4 py-12 md:py-20 relative z-10">
         <div className="w-full flex flex-col items-center justify-center max-w-4xl mx-auto">
@@ -68,7 +78,7 @@ export default function LandingPage() {
       </div>
 
       {/* Master Search and Latest Jobs Section */}
-      <div className="w-full max-w-4xl mx-auto px-4 pb-8">
+      <div className="w-full max-w-4xl mx-auto px-4 pb-8 relative z-10">
         <div className="mb-6">
           <input
             type="text"
@@ -109,14 +119,14 @@ export default function LandingPage() {
       </div>
 
       {/* Why Choose Us Section - UNDER the main content */}
-      <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-20 pb-20 md:pb-20 relative z-10">
+      <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-20 pb-20 md:pb-20 relative z-10 bg-transparent">
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 text-gray-900 dark:text-white">
           Why Choose AlliedHealthJobs.au?
         </h2>
         
         <div className="grid md:grid-cols-2 gap-6 md:gap-8">
           {/* Job Seekers Container - Left */}
-          <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-gray-200 dark:border-zinc-800">
+          <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-gray-200 dark:border-zinc-800">
             <div className="text-center mb-6">
               <h3 className="text-xl md:text-2xl font-bold text-violet-600 dark:text-violet-400 mb-2">
                 For Job Seekers
@@ -170,7 +180,7 @@ export default function LandingPage() {
           </div>
 
           {/* Employers Container - Right */}
-          <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-gray-200 dark:border-zinc-800">
+          <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-gray-200 dark:border-zinc-800">
             <div className="text-center mb-6">
               <h3 className="text-xl md:text-2xl font-bold text-violet-600 dark:text-violet-400 mb-2">
                 For Employers
