@@ -2,10 +2,14 @@ import { type NextRequest, NextResponse } from "next/server"
 import { getJobById, deleteJob } from "@/lib/database"
 import { getUserFromRequest } from "@/lib/auth"
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const user = getUserFromRequest(request)
-    const jobId = Number.parseInt(params.id)
+    const { id } = await params
+    const jobId = Number.parseInt(id)
 
     if (isNaN(jobId)) {
       return NextResponse.json({ error: "Invalid job ID" }, { status: 400 })
@@ -23,13 +27,17 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const user = getUserFromRequest(request)
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
-    const jobId = Number.parseInt(params.id)
+    const { id } = await params
+    const jobId = Number.parseInt(id)
     if (isNaN(jobId)) {
       return NextResponse.json({ error: "Invalid job ID" }, { status: 400 })
     }
