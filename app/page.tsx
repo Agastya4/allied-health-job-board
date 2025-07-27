@@ -26,7 +26,7 @@ export default function LandingPage() {
   }, [jobs, search])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-violet-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 relative">
+    <div className="min-h-screen w-full bg-gradient-to-b from-black via-zinc-900 to-black dark:from-black dark:via-zinc-900 dark:to-black relative">
       {/* Main Content Section */}
       <div className="flex items-center justify-center px-4 py-12 md:py-20 relative z-10">
         <div className="w-full flex flex-col items-center justify-center max-w-4xl mx-auto">
