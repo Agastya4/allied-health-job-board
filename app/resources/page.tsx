@@ -3,278 +3,327 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/use-auth";
-import Link from "next/link";
+import { useToast } from "@/components/ui/use-toast";
+import { Upload, X, Plus } from "lucide-react";
 
 const ADMIN_EMAIL = "patelagastya1@gmail.com";
 
-const placeholderPosts = [
-  {
-    id: 1,
-    title: "Cut These 15 Words from Your Allied Health Resume (They're Killing Your Chances)",
-    excerpt: "Overused phrases like 'excellent communication skills' and 'team player' can actually hurt your resume. Learn which words to cut and what to say instead.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "12 min read",
-  },
-  {
-    id: 2,
-    title: "The 5-Second Rule: What Hiring Managers Actually Look for in Allied Health CVs",
-    excerpt: "Recruiters spend just seconds scanning your CV. Discover what catches their attention first and how to make your application stand out.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "10 min read",
-  },
-  {
-    id: 3,
-    title: "LinkedIn Mistakes That Are Costing Allied Health Professionals Job Opportunities",
-    excerpt: "Common profile errors, poor networking habits, and missed visibility opportunities can cost you jobs. Fix these LinkedIn mistakes today.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "15 min read",
-  },
-  {
-    id: 4,
-    title: "How to Beat Tall Poppy Syndrome in Australian Allied Health Workplaces",
-    excerpt: "Practical strategies for dealing with workplace jealousy when you excel or get promoted in allied health settings.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "14 min read",
-  },
-  {
-    id: 5,
-    title: "8 Things You Didn't Know Could Get You Fired as an Allied Health Professional",
-    excerpt: "Lesser-known termination risks like social media posts, boundary violations, and documentation errors you need to avoid.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "13 min read",
-  },
-  {
-    id: 6,
-    title: "The Politics of Allied Health: Navigating Workplace Hierarchies Without Losing Your Soul",
-    excerpt: "Handle difficult colleagues, manage up effectively, and build strategic relationships in complex healthcare environments.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "16 min read",
-  },
-  {
-    id: 7,
-    title: "How to Beat FOBO: The Fear of Becoming Obsolete in Allied Health",
-    excerpt: "Address technology anxiety, upskilling strategies, and staying relevant in evolving healthcare.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "11 min read",
-  },
-  {
-    id: 8,
-    title: "Imposter Syndrome is Ruining Your Allied Health Career (Here's How to Fix It)",
-    excerpt: "Practical techniques for building confidence and owning your expertise as an allied health professional.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "12 min read",
-  },
-  {
-    id: 9,
-    title: "The Salary Conversation: What to Say When Asked About Money (Script Included)",
-    excerpt: "Word-for-word responses for salary questions during interviews and performance reviews in allied health.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "9 min read",
-  },
-  {
-    id: 10,
-    title: "Side Hustles for Allied Health Professionals: 7 Ways to Boost Your Income",
-    excerpt: "Legitimate opportunities like telehealth consulting, training delivery, and freelance assessments to increase your earnings.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "14 min read",
-  },
-  {
-    id: 11,
-    title: "The Complete Guide to Physiotherapy Career Progression in Australia (2025)",
-    excerpt: "Comprehensive roadmap from graduate to senior physiotherapist, including specializations, certifications, and salary expectations.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "25 min read",
-  },
-  {
-    id: 12,
-    title: "Occupational Therapy Salary Guide: What You Should Be Earning in 2025",
-    excerpt: "Detailed breakdown of OT salaries by experience level, location, and specialization across Australia.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "18 min read",
-  },
-  {
-    id: 13,
-    title: "Speech Pathology Career Path: From Graduate to Clinical Specialist",
-    excerpt: "Complete career development guide for speech pathologists, including specializations, certifications, and advancement strategies.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "22 min read",
-  },
-  {
-    id: 14,
-    title: "Psychology in Allied Health: Building a Successful Private Practice",
-    excerpt: "Step-by-step guide to establishing and growing a psychology practice, from business planning to client acquisition.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "28 min read",
-  },
-  {
-    id: 15,
-    title: "Dietetics and Nutrition: The Ultimate Career Development Guide",
-    excerpt: "Comprehensive guide to advancing your career in dietetics, from clinical roles to private practice and consulting.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "20 min read",
-  },
-  {
-    id: 16,
-    title: "Social Work in Healthcare: Navigating Complex Systems and Building Impact",
-    excerpt: "Deep dive into healthcare social work, including hospital settings, community health, and mental health specializations.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "24 min read",
-  },
-  {
-    id: 17,
-    title: "Podiatry Career Guide: From General Practice to Sports Specialization",
-    excerpt: "Complete career roadmap for podiatrists, covering clinical practice, sports podiatry, and business development.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "19 min read",
-  },
-  {
-    id: 18,
-    title: "Audiology Career Development: From Clinical Practice to Research",
-    excerpt: "Comprehensive guide to audiology careers, including clinical practice, research opportunities, and industry leadership.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "21 min read",
-  },
-  {
-    id: 19,
-    title: "Exercise Physiology: Building a Career in Preventive Healthcare",
-    excerpt: "Complete guide to exercise physiology careers, from clinical practice to corporate wellness and research.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "23 min read",
-  },
-  {
-    id: 20,
-    title: "Optometry Career Path: From Clinical Practice to Specialized Care",
-    excerpt: "Comprehensive career development guide for optometrists, including specializations and business opportunities.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "17 min read",
-  },
-  {
-    id: 21,
-    title: "Pharmacy in Allied Health: Beyond Dispensing to Patient Care",
-    excerpt: "Exploring the expanding role of pharmacists in allied health, from clinical pharmacy to specialized services.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "20 min read",
-  },
-  {
-    id: 22,
-    title: "Radiography Career Guide: From Diagnostic Imaging to Advanced Practice",
-    excerpt: "Complete career development guide for radiographers, including specializations and advanced practice opportunities.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "19 min read",
-  },
-  {
-    id: 23,
-    title: "The Future of Allied Health: Technology Trends That Will Shape Your Career",
-    excerpt: "Comprehensive analysis of emerging technologies in allied health and how they will impact different professions.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "26 min read",
-  },
-  {
-    id: 24,
-    title: "Mental Health in Allied Health: Supporting Colleagues and Patients",
-    excerpt: "Essential guide to mental health awareness and support in allied health workplaces and patient care.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "16 min read",
-  },
-  {
-    id: 25,
-    title: "Continuing Professional Development: A Complete Guide for Allied Health Professionals",
-    excerpt: "Comprehensive guide to CPD requirements, opportunities, and strategies for career advancement across all allied health professions.",
-    coverUrl: "/placeholder.jpg",
-    readTime: "22 min read",
-  },
-];
+interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  coverUrl: string;
+  author: string;
+  publishedAt: string;
+  readTime: string;
+}
 
 export default function ResourcesPage() {
   const { user } = useAuth();
-  const [search, setSearch] = useState("");
-  const [posts, setPosts] = useState(placeholderPosts);
+  const { toast } = useToast();
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [isPosting, setIsPosting] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
-  // Filter posts by search
-  const filteredPosts = posts.filter(post =>
-    post.title.toLowerCase().includes(search.toLowerCase())
-  );
-
-  // Blog post form state (admin only)
-  const [form, setForm] = useState<{ title: string; excerpt: string; cover: File | null; article: string }>({ title: "", excerpt: "", cover: null, article: "" });
-  const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  // Blog post form state
+  const [form, setForm] = useState({
+    title: "",
+    excerpt: "",
+    content: "",
+    coverFile: null as File | null,
+    coverPreview: null as string | null,
+  });
 
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setForm(f => ({ ...f, cover: file }));
-      setCoverPreview(URL.createObjectURL(file));
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        toast({
+          title: "File too large",
+          description: "Please select an image smaller than 5MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setForm(prev => ({ 
+        ...prev, 
+        coverFile: file,
+        coverPreview: URL.createObjectURL(file)
+      }));
     }
   };
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setForm(f => ({ ...f, [name]: value }));
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handlePost = (e: React.FormEvent) => {
+  const calculateReadTime = (content: string): string => {
+    const wordsPerMinute = 200;
+    const wordCount = content.split(/\s+/).length;
+    const minutes = Math.ceil(wordCount / wordsPerMinute);
+    return `${minutes} min read`;
+  };
+
+  const handlePost = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement blob upload and post creation
-    alert("Blog post creation not implemented in this placeholder.");
+    
+    if (!form.title.trim() || !form.excerpt.trim() || !form.content.trim()) {
+      toast({
+        title: "Missing information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsPosting(true);
+
+    try {
+      // Simulate image upload (in real app, upload to cloud storage)
+      const coverUrl = form.coverPreview || "/placeholder.jpg";
+      
+      // Create new blog post
+      const newPost: BlogPost = {
+        id: Date.now().toString(),
+        title: form.title,
+        excerpt: form.excerpt,
+        content: form.content,
+        coverUrl,
+        author: user?.email || "Admin",
+        publishedAt: new Date().toISOString(),
+        readTime: calculateReadTime(form.content),
+      };
+
+      // Add to posts list
+      setPosts(prev => [newPost, ...prev]);
+
+      // Reset form
+      setForm({
+        title: "",
+        excerpt: "",
+        content: "",
+        coverFile: null,
+        coverPreview: null,
+      });
+
+      setShowForm(false);
+
+      toast({
+        title: "Blog post published!",
+        description: "Your article has been successfully published.",
+      });
+
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to publish blog post. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsPosting(false);
+    }
+  };
+
+  const removeCover = () => {
+    setForm(prev => ({ 
+      ...prev, 
+      coverFile: null, 
+      coverPreview: null 
+    }));
   };
 
   return (
     <div className="max-w-7xl mx-auto py-12 px-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-        <h1 className="text-3xl font-bold">Resources</h1>
-        <Input
-          type="text"
-          placeholder="Search by heading..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-full md:w-80"
-        />
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Resources</h1>
+        
+        {/* Admin controls */}
+        {user?.email === ADMIN_EMAIL && (
+          <div className="flex gap-2">
+            <Button 
+              onClick={() => setShowForm(!showForm)}
+              className="bg-violet-600 hover:bg-violet-700 text-white"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              {showForm ? "Cancel" : "New Blog Post"}
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Admin blog post form */}
-      {user?.email === ADMIN_EMAIL && (
-        <form onSubmit={handlePost} className="mb-12 bg-white dark:bg-zinc-900 rounded-lg shadow p-6 space-y-4">
-          <h2 className="text-xl font-semibold mb-2">Post a New Blog Article</h2>
-          <div>
-            <label className="block mb-1 font-medium">Cover Image</label>
-            <input type="file" accept="image/*" onChange={handleCoverChange} />
-            {coverPreview && <img src={coverPreview} alt="Cover preview" className="mt-2 w-64 h-40 object-cover rounded" />}
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Title</label>
-            <Input name="title" value={form.title} onChange={handleFormChange} required />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Excerpt</label>
-            <Input name="excerpt" value={form.excerpt} onChange={handleFormChange} required />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Article</label>
-            <textarea name="article" value={form.article} onChange={handleFormChange} required className="w-full min-h-[120px] p-2 rounded border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white" />
-          </div>
-          <Button type="submit" className="bg-violet-600 hover:bg-violet-700 text-white">Post Article</Button>
-        </form>
+      {user?.email === ADMIN_EMAIL && showForm && (
+        <Card className="mb-8 bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800">
+          <CardHeader>
+            <CardTitle className="text-xl text-gray-900 dark:text-white">
+              Create New Blog Post
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handlePost} className="space-y-6">
+              {/* Cover Image */}
+              <div className="space-y-2">
+                <Label htmlFor="cover" className="text-gray-900 dark:text-white">
+                  Cover Image
+                </Label>
+                <div className="flex items-center gap-4">
+                  <div className="relative">
+                    <input
+                      id="cover"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleCoverChange}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor="cover"
+                      className="flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-zinc-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-800 transition"
+                    >
+                      <Upload className="h-4 w-4" />
+                      Choose Image
+                    </label>
+                  </div>
+                  {form.coverPreview && (
+                    <div className="relative">
+                      <img 
+                        src={form.coverPreview} 
+                        alt="Cover preview" 
+                        className="w-32 h-20 object-cover rounded-lg border"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={removeCover}
+                        className="absolute -top-2 -right-2 h-6 w-6 p-0 bg-red-500 hover:bg-red-600 text-white"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Recommended size: 1200x630px. Max file size: 5MB.
+                </p>
+              </div>
+
+              {/* Title */}
+              <div className="space-y-2">
+                <Label htmlFor="title" className="text-gray-900 dark:text-white">
+                  Title *
+                </Label>
+                <Input
+                  id="title"
+                  name="title"
+                  value={form.title}
+                  onChange={handleFormChange}
+                  placeholder="Enter the blog post title..."
+                  required
+                  className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white"
+                />
+              </div>
+
+              {/* Excerpt */}
+              <div className="space-y-2">
+                <Label htmlFor="excerpt" className="text-gray-900 dark:text-white">
+                  Excerpt *
+                </Label>
+                <Textarea
+                  id="excerpt"
+                  name="excerpt"
+                  value={form.excerpt}
+                  onChange={handleFormChange}
+                  placeholder="Brief description of the article..."
+                  required
+                  className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white"
+                  rows={3}
+                />
+              </div>
+
+              {/* Content */}
+              <div className="space-y-2">
+                <Label htmlFor="content" className="text-gray-900 dark:text-white">
+                  Content *
+                </Label>
+                <Textarea
+                  id="content"
+                  name="content"
+                  value={form.content}
+                  onChange={handleFormChange}
+                  placeholder="Write your blog post content here..."
+                  required
+                  className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white"
+                  rows={12}
+                />
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Word count: {form.content.split(/\s+/).filter(word => word.length > 0).length}
+                </p>
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex gap-2">
+                <Button 
+                  type="submit" 
+                  disabled={isPosting}
+                  className="bg-violet-600 hover:bg-violet-700 text-white"
+                >
+                  {isPosting ? "Publishing..." : "Publish Post"}
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline"
+                  onClick={() => setShowForm(false)}
+                  disabled={isPosting}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       )}
 
-      {/* Blog post grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredPosts.map(post => (
-          <Link key={post.id} href={`/resources/${post.id}`} passHref legacyBehavior>
-            <a className="block">
-              <Card className="overflow-hidden cursor-pointer hover:shadow-lg transition">
-                <img src={post.coverUrl} alt={post.title} className="w-full h-40 object-cover" />
-                <div className="p-4">
-                  <div className="font-semibold text-lg mb-1">{post.title}</div>
-                  <div className="text-gray-500 text-sm mb-2">{post.readTime}</div>
-                  <div className="text-gray-700 dark:text-gray-300 text-sm line-clamp-2">{post.excerpt}</div>
+      {/* Blog posts grid */}
+      {posts.length === 0 ? (
+        <div className="text-center py-12">
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            No blog posts yet
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            {user?.email === ADMIN_EMAIL 
+              ? "Create your first blog post using the form above."
+              : "Check back soon for helpful resources and articles."
+            }
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {posts.map(post => (
+            <Card key={post.id} className="overflow-hidden hover:shadow-lg transition cursor-pointer">
+              <img src={post.coverUrl} alt={post.title} className="w-full h-40 object-cover" />
+              <div className="p-4">
+                <div className="font-semibold text-lg mb-1 text-gray-900 dark:text-white line-clamp-2">
+                  {post.title}
                 </div>
-              </Card>
-            </a>
-          </Link>
-        ))}
-      </div>
+                <div className="text-gray-500 text-sm mb-2">{post.readTime}</div>
+                <div className="text-gray-700 dark:text-gray-300 text-sm line-clamp-2">
+                  {post.excerpt}
+                </div>
+                <div className="text-xs text-gray-500 mt-2">
+                  {new Date(post.publishedAt).toLocaleDateString()}
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
