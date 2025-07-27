@@ -9,6 +9,10 @@ import { AuthForm } from "@/components/auth-form"
 import { useAuth } from "@/hooks/use-auth"
 import { useJobs, type JobFilters, type Job } from "@/hooks/use-jobs"
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable"
+import { Button } from "@/components/ui/button"
+import { Filter, List, FileText, PlusCircle } from "lucide-react"
+
+type MobileTab = 'jobs' | 'details' | 'filters'
 
 export default function JobBoardPage() {
   const { user, loading: authLoading } = useAuth()
@@ -17,9 +21,14 @@ export default function JobBoardPage() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(jobs[0] || null)
   const [showApplyModal, setShowApplyModal] = useState(false)
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const [mobileTab, setMobileTab] = useState<MobileTab>('jobs')
 
   const handleJobSelect = (job: Job) => {
     setSelectedJob(job)
+    // On mobile, switch to details tab when job is selected
+    if (window.innerWidth < 768) {
+      setMobileTab('details')
+    }
   }
 
   const handleApplyJob = (job: Job) => {
@@ -37,10 +46,37 @@ export default function JobBoardPage() {
 
   return (
     <div className="flex-1 min-h-0 flex bg-white dark:bg-zinc-950 text-gray-900 dark:text-white overflow-hidden">
-      <JobSidebar user={user} onFiltersChange={setFilters} onPostJob={() => setShowAuthModal(true)} />
-      <div className="flex-1 flex flex-col h-full">
-        <ResizablePanelGroup direction="horizontal" className="h-full w-full">
-          <ResizablePanel defaultSize={45} minSize={25} maxSize={70}>
+      {/* Desktop Layout - Hidden on Mobile */}
+      <div className="hidden md:flex w-full h-full">
+        <JobSidebar user={user} onFiltersChange={setFilters} onPostJob={() => setShowAuthModal(true)} />
+        <div className="flex-1 flex flex-col h-full">
+          <ResizablePanelGroup direction="horizontal" className="h-full w-full">
+            <ResizablePanel defaultSize={45} minSize={25} maxSize={70}>
+              <JobList
+                jobs={jobs}
+                loading={jobsLoading}
+                onSelectJob={handleJobSelect}
+                selectedJobId={selectedJob ? selectedJob.id : null}
+                onPostJob={() => setShowAuthModal(true)}
+              />
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel defaultSize={55} minSize={30} maxSize={75}>
+              <JobDetail
+                job={selectedJob}
+                onClose={() => setSelectedJob(null)}
+                onApply={handleApplyJob}
+              />
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </div>
+      </div>
+
+      {/* Mobile Layout */}
+      <div className="md:hidden flex flex-col w-full h-full">
+        {/* Mobile Content Area */}
+        <div className="flex-1 overflow-hidden">
+          {mobileTab === 'jobs' && (
             <JobList
               jobs={jobs}
               loading={jobsLoading}
@@ -48,17 +84,98 @@ export default function JobBoardPage() {
               selectedJobId={selectedJob ? selectedJob.id : null}
               onPostJob={() => setShowAuthModal(true)}
             />
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={55} minSize={30} maxSize={75}>
-            <JobDetail
-              job={selectedJob}
-              onClose={() => setSelectedJob(null)}
-              onApply={handleApplyJob}
-            />
-          </ResizablePanel>
-        </ResizablePanelGroup>
+          )}
+          
+          {mobileTab === 'details' && (
+            <div className="h-full">
+              {selectedJob ? (
+                <JobDetail
+                  job={selectedJob}
+                  onClose={() => setSelectedJob(null)}
+                  onApply={handleApplyJob}
+                />
+              ) : (
+                <div className="h-full flex items-center justify-center">
+                  <div className="text-center text-gray-500">
+                    <FileText className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                    <p>Select a job to view details</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          
+          {mobileTab === 'filters' && (
+            <div className="h-full overflow-y-auto">
+              <div className="p-4">
+                <h2 className="text-lg font-semibold mb-4">Filters</h2>
+                <JobSidebar 
+                  user={user} 
+                  onFiltersChange={setFilters} 
+                  onPostJob={() => setShowAuthModal(true)}
+                  initialFilters={filters}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Mobile Bottom Navigation */}
+        <div className="border-t border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
+          <div className="flex">
+            <Button
+              variant="ghost"
+              className={`flex-1 py-3 flex flex-col items-center gap-1 ${
+                mobileTab === 'jobs' 
+                  ? 'text-violet-700 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20' 
+                  : 'text-gray-600 dark:text-gray-400'
+              }`}
+              onClick={() => setMobileTab('jobs')}
+            >
+              <List className="h-5 w-5" />
+              <span className="text-xs">Jobs</span>
+            </Button>
+            
+            <Button
+              variant="ghost"
+              className={`flex-1 py-3 flex flex-col items-center gap-1 ${
+                mobileTab === 'details' 
+                  ? 'text-violet-700 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20' 
+                  : 'text-gray-600 dark:text-gray-400'
+              }`}
+              onClick={() => setMobileTab('details')}
+            >
+              <FileText className="h-5 w-5" />
+              <span className="text-xs">Details</span>
+            </Button>
+            
+            <Button
+              variant="ghost"
+              className={`flex-1 py-3 flex flex-col items-center gap-1 ${
+                mobileTab === 'filters' 
+                  ? 'text-violet-700 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20' 
+                  : 'text-gray-600 dark:text-gray-400'
+              }`}
+              onClick={() => setMobileTab('filters')}
+            >
+              <Filter className="h-5 w-5" />
+              <span className="text-xs">Filters</span>
+            </Button>
+          </div>
+        </div>
+
+        {/* Mobile Floating Action Button for Post Job */}
+        {user && (
+          <Button
+            className="fixed bottom-20 right-4 w-14 h-14 rounded-full bg-violet-600 hover:bg-violet-700 text-white shadow-lg md:hidden"
+            onClick={() => setShowAuthModal(true)}
+          >
+            <PlusCircle className="h-6 w-6" />
+          </Button>
+        )}
       </div>
+
+      {/* Modals */}
       {showApplyModal && selectedJob && <ApplyJobModal job={selectedJob} onClose={() => setShowApplyModal(false)} />}
       {showAuthModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
