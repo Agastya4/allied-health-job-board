@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button"
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-violet-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-violet-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 relative">
       {/* Main Content Section */}
-      <div className="flex items-center justify-center px-4 py-12 md:py-20">
+      <div className="flex items-center justify-center px-4 py-12 md:py-20 relative z-10">
         <div className="w-full flex flex-col items-center justify-center max-w-4xl mx-auto">
           <div className="mb-6 md:mb-8 w-full flex justify-center">
             <Link href="/resources">
@@ -41,7 +41,7 @@ export default function LandingPage() {
       </div>
 
       {/* Why Choose Us Section - UNDER the main content */}
-      <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-20 pb-20 md:pb-20">
+      <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-20 pb-20 md:pb-20 relative z-10">
         <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 text-gray-900 dark:text-white">
           Why Choose AlliedHealthJobs.au?
         </h2>

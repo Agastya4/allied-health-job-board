@@ -32,7 +32,7 @@ export function Navbar() {
           alt="AlliedHealthJobs.au Logo"
           width={240}
           height={240}
-          className="h-12 w-auto md:h-60 md:w-60 object-contain md:-my-20"
+          className="h-10 w-auto md:h-56 md:w-56 object-contain md:-my-16"
           priority
         />
       </Link>
@@ -149,7 +149,7 @@ export function Navbar() {
             <div className="border-t border-gray-200 dark:border-zinc-700 p-4 space-y-3">
               {user ? (
                 <>
-                  <div className="text-gray-700 dark:text-white font-medium text-center">{user.name}</div>
+                  <div className="text-gray-700 dark:text-white font-medium text-center mb-2">{user.name}</div>
                   <Link href="/post-job" onClick={() => setMobileMenuOpen(false)}>
                     <Button className="w-full bg-violet-600 hover:bg-violet-700 text-white flex items-center gap-2">
                       <PlusCircle className="h-4 w-4" />

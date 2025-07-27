@@ -10,9 +10,10 @@ import { useAuth } from "@/hooks/use-auth"
 import { useJobs, type JobFilters, type Job } from "@/hooks/use-jobs"
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable"
 import { Button } from "@/components/ui/button"
-import { Filter, List, FileText, PlusCircle } from "lucide-react"
+import { Filter, List, PlusCircle } from "lucide-react"
+import { useRouter } from "next/navigation"
 
-type MobileTab = 'jobs' | 'details' | 'filters'
+type MobileTab = 'jobs' | 'filters'
 
 export default function JobBoardPage() {
   const { user, loading: authLoading } = useAuth()
@@ -22,12 +23,15 @@ export default function JobBoardPage() {
   const [showApplyModal, setShowApplyModal] = useState(false)
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [mobileTab, setMobileTab] = useState<MobileTab>('jobs')
+  const router = useRouter()
 
   const handleJobSelect = (job: Job) => {
-    setSelectedJob(job)
-    // On mobile, switch to details tab when job is selected
+    // On mobile, navigate to the full job page instead of showing details
     if (window.innerWidth < 768) {
-      setMobileTab('details')
+      const jobSlug = `${job.id}-${job.job_title.toLowerCase().replace(/\s+/g, '-')}-${job.location_display?.toLowerCase().replace(/\s+/g, '-') || ''}`
+      router.push(`/jobs/${jobSlug}`)
+    } else {
+      setSelectedJob(job)
     }
   }
 
@@ -77,49 +81,14 @@ export default function JobBoardPage() {
         {/* Mobile Content Area */}
         <div className="flex-1 overflow-hidden">
           {mobileTab === 'jobs' && (
-            <div className="h-full flex flex-col">
-              {/* Mobile Filters at Top */}
-              <div className="border-b border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900">
-                <div className="p-4">
-                  <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Filters</h2>
-                  <JobSidebar 
-                    user={user} 
-                    onFiltersChange={setFilters} 
-                    onPostJob={() => setShowAuthModal(true)}
-                    initialFilters={filters}
-                  />
-                </div>
-              </div>
-              
-              {/* Job List Below Filters */}
-              <div className="flex-1 overflow-hidden">
-                <JobList
-                  jobs={jobs}
-                  loading={jobsLoading}
-                  onSelectJob={handleJobSelect}
-                  selectedJobId={selectedJob ? selectedJob.id : null}
-                  onPostJob={() => setShowAuthModal(true)}
-                />
-              </div>
-            </div>
-          )}
-          
-          {mobileTab === 'details' && (
             <div className="h-full">
-              {selectedJob ? (
-                <JobDetail
-                  job={selectedJob}
-                  onClose={() => setSelectedJob(null)}
-                  onApply={handleApplyJob}
-                />
-              ) : (
-                <div className="h-full flex items-center justify-center">
-                  <div className="text-center text-gray-500">
-                    <FileText className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                    <p>Select a job to view details</p>
-                  </div>
-                </div>
-              )}
+              <JobList
+                jobs={jobs}
+                loading={jobsLoading}
+                onSelectJob={handleJobSelect}
+                selectedJobId={null}
+                onPostJob={() => setShowAuthModal(true)}
+              />
             </div>
           )}
           
@@ -152,19 +121,6 @@ export default function JobBoardPage() {
             >
               <List className="h-5 w-5" />
               <span className="text-xs">Jobs</span>
-            </Button>
-            
-            <Button
-              variant="ghost"
-              className={`flex-1 py-3 flex flex-col items-center gap-1 ${
-                mobileTab === 'details' 
-                  ? 'text-violet-700 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20' 
-                  : 'text-gray-600 dark:text-gray-400'
-              }`}
-              onClick={() => setMobileTab('details')}
-            >
-              <FileText className="h-5 w-5" />
-              <span className="text-xs">Details</span>
             </Button>
             
             <Button
