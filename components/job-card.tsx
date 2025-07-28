@@ -7,7 +7,7 @@ import { MapPin, DollarSign, Briefcase, GraduationCap, Laptop, Building, Bookmar
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { cn, getOccupationName } from "@/lib/utils"
 
 interface Job {
   id: number
@@ -23,6 +23,7 @@ interface Job {
   posted_ago: string | null
   is_bookmarked: boolean
   job_details?: string // Added job_details to the interface
+  job_categories?: string[] // Added job_categories to the interface
 }
 
 interface JobCardProps {
@@ -36,6 +37,7 @@ interface JobCardProps {
 // List of Australian state abbreviations
 const STATE_ABBREVIATIONS = ["NSW", "VIC", "QLD", "SA", "WA", "TAS", "ACT", "NT"];
 
+// Function to get occupation name from job categories
 function extractCityState(location: string): string {
   const STATE_ABBREVIATIONS = ["NSW", "VIC", "QLD", "SA", "WA", "TAS", "ACT", "NT"];
   const parts = location.split(',').map(s => s.trim());
@@ -144,6 +146,12 @@ export function JobCard({ job, onClick, isSelected, onBookmarkToggle, shiftDown 
           <div className="flex flex-wrap gap-2 mb-3">
             <Badge
               variant="outline"
+              className="bg-violet-50 dark:bg-violet-900/20 border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-300 flex items-center gap-1 text-xs"
+            >
+              {getOccupationName(job.job_categories)}
+            </Badge>
+            <Badge
+              variant="outline"
               className="bg-gray-100 dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-white flex items-center gap-1 text-xs"
             >
               <MapPin className="h-3 w-3" />
@@ -187,6 +195,12 @@ export function JobCard({ job, onClick, isSelected, onBookmarkToggle, shiftDown 
           </div>
           <p className="text-gray-700 dark:text-white text-sm mb-2">{job.company_name}</p>
           <div className="flex flex-wrap gap-2">
+            <Badge
+              variant="outline"
+              className="bg-violet-50 dark:bg-violet-900/20 border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-300 flex items-center gap-1"
+            >
+              {getOccupationName(job.job_categories)}
+            </Badge>
             <Badge
               variant="outline"
               className="bg-gray-100 dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-white flex items-center gap-1"

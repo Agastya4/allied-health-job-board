@@ -8,7 +8,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/Logo.png" type="image/png" />
       </head>
       <body className="h-screen w-screen min-h-0 flex flex-col">
         <ThemeProvider>

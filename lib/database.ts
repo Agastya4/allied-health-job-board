@@ -154,10 +154,8 @@ function applyFiltersToJobs(jobs: JobWithBookmark[], filters: JobFilters): JobWi
     )
   }
 
-  // Occupation filter
-  if (filters.occupation && filters.occupation !== "any") {
-    filteredJobs = filteredJobs.filter((job) => job.job_categories.includes(filters.occupation!))
-  }
+  // Occupation filter is now handled at database level
+  // Client-side occupation filtering removed since it's done in the SQL query
 
   // City filter - only filter if there's actually a city specified
   if (filters.city && filters.city.trim() !== "" && filters.city !== "any") {
@@ -252,24 +250,54 @@ export async function getJobs(filters: JobFilters = {}, userId?: number): Promis
       return []
     }
 
+    // Normalize occupation filter to match the format used when creating jobs
+    const normalizeString = (str: string) => str && typeof str === 'string' ? str.trim().toLowerCase().replace(/\s+/g, '-') : '';
+    const normalizedOccupation = filters.occupation ? normalizeString(filters.occupation) : undefined;
+
     // Try to fetch from database
-    const jobs = await sql`
-      SELECT 
-        id, user_id, practice_email, job_title, practice_location, location_display,
-        location_lat, location_lng, job_type, job_categories, experience_level,
-        work_setting, salary_range, job_details, company_name, contact_phone,
-        contact_email, company_website, company_logo_url, status,
-        created_at, updated_at, city, state, payment_status
-      FROM jobs 
-      WHERE status = 'active' AND (
-        payment_status IS NULL OR 
-        (payment_status != 'failed' AND payment_status != 'refunded')
-      )
-      -- Show all active jobs except failed/refunded during transition period
-      -- TODO: Once payment system is fully implemented, restrict to 'paid' only
-      ORDER BY created_at DESC 
-      LIMIT 100
-    `
+    let jobs
+    if (normalizedOccupation && normalizedOccupation !== "any") {
+      console.log('Fetching jobs with occupation filter:', filters.occupation, 'normalized to:', normalizedOccupation)
+      jobs = await sql`
+        SELECT 
+          id, user_id, practice_email, job_title, practice_location, location_display,
+          location_lat, location_lng, job_type, job_categories, experience_level,
+          work_setting, salary_range, job_details, company_name, contact_phone,
+          contact_email, company_website, company_logo_url, status,
+          created_at, updated_at, city, state, payment_status
+        FROM jobs 
+        WHERE status = 'active' AND (
+          payment_status IS NULL OR 
+          (payment_status != 'failed' AND payment_status != 'refunded')
+        ) AND ${normalizedOccupation} = ANY(job_categories)
+        ORDER BY created_at DESC 
+        LIMIT 100
+      `
+      console.log(`Found ${jobs.length} jobs for occupation: ${filters.occupation} (normalized: ${normalizedOccupation})`)
+      if (jobs.length > 0) {
+        console.log('Sample job categories:', jobs.slice(0, 3).map((job: any) => ({
+          id: job.id,
+          title: job.job_title,
+          categories: job.job_categories
+        })))
+      }
+    } else {
+      jobs = await sql`
+        SELECT 
+          id, user_id, practice_email, job_title, practice_location, location_display,
+          location_lat, location_lng, job_type, job_categories, experience_level,
+          work_setting, salary_range, job_details, company_name, contact_phone,
+          contact_email, company_website, company_logo_url, status,
+          created_at, updated_at, city, state, payment_status
+        FROM jobs 
+        WHERE status = 'active' AND (
+          payment_status IS NULL OR 
+          (payment_status != 'failed' AND payment_status != 'refunded')
+        )
+        ORDER BY created_at DESC 
+        LIMIT 100
+      `
+    }
 
     console.log(`Found ${jobs.length} jobs from database`)
 
@@ -293,15 +321,30 @@ export async function getJobs(filters: JobFilters = {}, userId?: number): Promis
     }
 
     // Process and filter jobs
-    let processedJobs = jobs.map((job: any) => ({
-      ...job,
-      job_categories: Array.isArray(job.job_categories) ? job.job_categories : [],
-      company_logo_url: job.company_logo_url || "/placeholder.svg?height=40&width=40&text=Logo",
-      posted_ago: getTimeAgo(new Date(job.created_at)),
-      is_bookmarked: bookmarkedJobIds.includes(job.id),
-      city: job.city || "",
-      state: job.state || "",
-    })) as JobWithBookmark[]
+    let processedJobs = jobs.map((job: any) => {
+      // Handle job_categories - they might be stored as JSON string or array
+      let jobCategories: string[] = []
+      if (Array.isArray(job.job_categories)) {
+        jobCategories = job.job_categories
+      } else if (typeof job.job_categories === 'string') {
+        try {
+          jobCategories = JSON.parse(job.job_categories)
+        } catch (e) {
+          console.warn('Failed to parse job_categories for job', job.id, job.job_categories)
+          jobCategories = []
+        }
+      }
+      
+      return {
+        ...job,
+        job_categories: jobCategories,
+        company_logo_url: job.company_logo_url || "/placeholder.svg?height=40&width=40&text=Logo",
+        posted_ago: getTimeAgo(new Date(job.created_at)),
+        is_bookmarked: bookmarkedJobIds.includes(job.id),
+        city: job.city || "",
+        state: job.state || "",
+      }
+    }) as JobWithBookmark[]
 
     // Apply client-side filtering
     processedJobs = applyFiltersToJobs(processedJobs, filters)

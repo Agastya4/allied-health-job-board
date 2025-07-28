@@ -35,7 +35,11 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
   if (!job) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-gray-600 dark:text-gray-400">
-        <p>No job selected or job not found.</p>
+        <div className="text-center">
+          <Briefcase className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Select a Job</h3>
+          <p className="text-gray-600 dark:text-gray-400">Choose a job from the list to view details</p>
+        </div>
       </div>
     )
   }
@@ -48,9 +52,9 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
   // Remove requirements extraction logic
   let jobDetails = job.job_details
   return (
-    <div className="h-screen bg-white dark:bg-zinc-900 border-l border-gray-200 dark:border-zinc-800 flex flex-col">
+    <div className="h-full bg-white dark:bg-zinc-900 border-l border-gray-200 dark:border-zinc-800 flex flex-col">
       {/* Mobile Header */}
-      <div className="md:hidden p-4 border-b border-gray-200 dark:border-zinc-800">
+      <div className="md:hidden p-4 border-b border-gray-200 dark:border-zinc-800 flex-shrink-0">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
@@ -69,7 +73,7 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
       </div>
 
       {/* Desktop Header */}
-      <div className="hidden md:block p-6 border-b border-gray-200 dark:border-zinc-800">
+      <div className="hidden md:block p-6 border-b border-gray-200 dark:border-zinc-800 flex-shrink-0">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-4 flex-1">
             <Image
@@ -139,7 +143,7 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
       </div>
 
       {/* Mobile Company Info */}
-      <div className="md:hidden p-4 border-b border-gray-200 dark:border-zinc-800">
+      <div className="md:hidden p-4 border-b border-gray-200 dark:border-zinc-800 flex-shrink-0">
         <div className="flex items-center gap-3 mb-3">
           <Image
             src={job.company_logo_url || "/placeholder.svg"}
@@ -186,8 +190,8 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-4 md:p-6">
+      <div className="flex-1 overflow-y-auto min-h-0 flex flex-col">
+        <div className="p-4 md:p-6 pb-8 flex-1">
           {/* Job Details */}
           <div className="mb-6">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Job Description</h2>
@@ -242,8 +246,8 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
 
           <Separator className="my-6" />
 
-          {/* Quick Actions (Sticky for desktop) */}
-          <div className="space-y-3 sticky bottom-0 bg-white dark:bg-zinc-900 pt-4 pb-4 z-10">
+          {/* Quick Actions */}
+          <div className="space-y-3">
             <Link
               href={`/jobs/${job.id}-${jobSlug}`}
               className="block w-full"

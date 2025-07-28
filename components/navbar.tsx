@@ -12,6 +12,7 @@ import { useState } from "react"
 const navLinks = [
   { href: "/jobs", label: "Job Search", match: /^\/jobs/ },
   { href: "/locations", label: "Locations", match: /^\/locations/ },
+  { href: "/career-info", label: "Career Info", match: /^\/career-info/ },
   { href: "/employer", label: "For Employers", match: /^\/employer/ },
   { href: "/resources", label: "Resources", match: /^\/resources/ },
 ]
