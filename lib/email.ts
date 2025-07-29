@@ -3,7 +3,7 @@ import { Resend } from 'resend'
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function sendVerificationEmail({ to, token }: { to: string; token: string }) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://alliedhealthjobs.au'
   const verifyUrl = `${baseUrl}/verify-email?token=${encodeURIComponent(token)}`
   return resend.emails.send({
     from: 'contact@alliedhealthjobs.au',
