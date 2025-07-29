@@ -24,6 +24,10 @@ function VerifyEmailContent() {
         if (data.success) {
           setStatus("success")
           setMessage(data.message || "Email verified successfully.")
+          // Redirect to /employer after a short delay
+          setTimeout(() => {
+            router.push("/employer")
+          }, 1200)
         } else {
           setStatus("error")
           setMessage(data.error || "Verification failed.")
@@ -49,7 +53,7 @@ function VerifyEmailContent() {
         </CardHeader>
         <CardContent className="flex flex-col items-center gap-4">
           {status === "success" && (
-            <Button className="bg-violet-600 hover:bg-violet-700 text-white" onClick={() => router.push("/sign-in")}>Sign In</Button>
+            <span className="text-green-600 dark:text-green-400">Redirecting to employer page...</span>
           )}
           {status === "error" && (
             <Button variant="outline" onClick={() => router.push("/")}>Go Home</Button>

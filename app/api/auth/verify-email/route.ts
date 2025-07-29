@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { setUserVerified, getUserByVerificationToken } from "@/lib/database"
+import { generateToken } from "@/lib/auth"
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -15,5 +16,15 @@ export async function GET(request: NextRequest) {
   if (!verified) {
     return NextResponse.json({ success: false, error: "Could not verify user" }, { status: 400 })
   }
-  return NextResponse.json({ success: true, message: "Email verified successfully. You can now sign in." })
+  // Generate JWT and set as HTTP-only cookie
+  const jwt = generateToken({ id: user.id, email: user.email, name: user.name, role: user.role, avatar_url: user.avatar_url })
+  const response = NextResponse.json({ success: true, message: "Email verified and signed in." })
+  response.cookies.set("auth-token", jwt, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 30 // 30 days
+  })
+  return response
 } 
