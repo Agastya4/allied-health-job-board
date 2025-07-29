@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       FROM jobs 
       WHERE status = 'active' 
       ORDER BY created_at DESC
-      LIMIT 50
+      LIMIT 500
     `
 
     console.log("Current jobs state:", currentJobs)
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
       FROM jobs 
       WHERE status = 'active'
       ORDER BY created_at DESC
-      LIMIT 20
+      LIMIT 200
     `
 
     return NextResponse.json({

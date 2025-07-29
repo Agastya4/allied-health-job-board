@@ -271,7 +271,7 @@ export async function getJobs(filters: JobFilters = {}, userId?: number): Promis
           (payment_status != 'failed' AND payment_status != 'refunded')
         ) AND ${normalizedOccupation} = ANY(job_categories)
         ORDER BY created_at DESC 
-        LIMIT 100
+        LIMIT 1000
       `
       console.log(`Found ${jobs.length} jobs for occupation: ${filters.occupation} (normalized: ${normalizedOccupation})`)
       if (jobs.length > 0) {
@@ -295,7 +295,7 @@ export async function getJobs(filters: JobFilters = {}, userId?: number): Promis
           (payment_status != 'failed' AND payment_status != 'refunded')
         )
         ORDER BY created_at DESC 
-        LIMIT 100
+        LIMIT 1000
       `
     }
 
