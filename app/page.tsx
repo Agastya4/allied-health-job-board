@@ -36,34 +36,6 @@ export default function LandingPage() {
     ).slice(0, 15)
   }, [jobs, search])
 
-  // Generate structured data for the homepage
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "AlliedHealthJobs.au",
-    "description": "Find the best allied health jobs in Australia. Browse physiotherapy, occupational therapy, speech pathology, and other healthcare positions.",
-    "url": "https://alliedhealthjobs.au",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://alliedhealthjobs.au/jobs?search={search_term_string}"
-      },
-      "query-input": "required name=search_term_string"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "AlliedHealthJobs.au",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://alliedhealthjobs.au/Logo.png"
-      }
-    },
-    "sameAs": [
-      "https://alliedhealthjobs.au"
-    ]
-  }
-
   return (
     <>
       <SEO
@@ -82,10 +54,6 @@ export default function LandingPage() {
         url="/"
         type="website"
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
       <div className="min-h-screen w-full relative">
         {/* Main Content Section */}
         <div className="flex items-center justify-center px-4 py-12 md:py-20 relative z-10">
@@ -98,31 +66,32 @@ export default function LandingPage() {
               </Link>
             </div>
 
-          <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold text-center mb-4 md:mb-6 tracking-tight w-full">
-            Find Your Perfect<br />
-            <span className="text-violet-600 dark:text-violet-400">Healthcare Match</span>
-          </h1>
+            <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold text-center mb-4 md:mb-6 tracking-tight w-full">
+              Find Your Perfect<br />
+              <span className="text-violet-600 dark:text-violet-400">Healthcare Match</span>
+            </h1>
 
-          <p className="text-base md:text-lg lg:text-xl text-center text-gray-600 dark:text-gray-300 mb-8 md:mb-12 max-w-3xl leading-relaxed w-full px-4 min-h-[1.5em]">
-            <Typewriter 
-              text="From entry-level positions to senior roles, we help professionals at every stage find their next opportunity."
-              speed={30}
-              delay={500}
-              className="text-base md:text-lg lg:text-xl text-center text-gray-600 dark:text-gray-300"
-            />
-          </p>
+            <p className="text-base md:text-lg lg:text-xl text-center text-gray-600 dark:text-gray-300 mb-8 md:mb-12 max-w-3xl leading-relaxed w-full px-4 min-h-[1.5em]">
+              <Typewriter 
+                text="From entry-level positions to senior roles, we help professionals at every stage find their next opportunity."
+                speed={30}
+                delay={500}
+                className="text-base md:text-lg lg:text-xl text-center text-gray-600 dark:text-gray-300"
+              />
+            </p>
 
-          <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full max-w-lg justify-center items-center px-4">
-            <Link href="/jobs" className="flex-1 w-full">
-              <Button className="w-full py-3 md:py-4 text-base md:text-lg font-semibold bg-violet-600 hover:bg-violet-700 text-white dark:bg-violet-500 dark:hover:bg-violet-600 rounded-xl shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl">
-                Find Jobs
-              </Button>
-            </Link>
-            <Link href="/post-job" className="flex-1 w-full">
-              <Button variant="outline" className="w-full py-3 md:py-4 text-base md:text-lg font-semibold border-2 border-violet-600 dark:border-violet-400 bg-transparent text-violet-600 dark:text-violet-400 hover:bg-violet-600 hover:text-white dark:hover:bg-violet-400 dark:hover:text-white rounded-xl shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl">
-                Post a Job
-              </Button>
-            </Link>
+            <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full max-w-lg justify-center items-center px-4">
+              <Link href="/jobs" className="flex-1 w-full">
+                <Button className="w-full py-3 md:py-4 text-base md:text-lg font-semibold bg-violet-600 hover:bg-violet-700 text-white dark:bg-violet-500 dark:hover:bg-violet-600 rounded-xl shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl">
+                  Find Jobs
+                </Button>
+              </Link>
+              <Link href="/post-job" className="flex-1 w-full">
+                <Button variant="outline" className="w-full py-3 md:py-4 text-base md:text-lg font-semibold border-2 border-violet-600 dark:border-violet-400 bg-transparent text-violet-600 dark:text-violet-400 hover:bg-violet-600 hover:text-white dark:hover:bg-violet-400 dark:hover:text-white rounded-xl shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl">
+                  Post a Job
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
 
