@@ -2,6 +2,7 @@
 import Link from "next/link"
 import { useState } from "react"
 import { STATES, CITIES, JOB_CATEGORIES } from "./seo-links"
+import { SEO } from "@/components/seo"
 
 function slugify(text: string): string {
   return text
@@ -39,28 +40,45 @@ for (const state of STATES) {
 
 export default function LocationsPage() {
   return (
-    <div className="max-w-7xl mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold mb-8 text-center">Browse Jobs by Location</h1>
-      <div className="mt-16">
-        <h2 className="text-2xl font-bold mb-6">Browse Jobs by Category and Location</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {seoLinks.map(link => (
-            <a key={link.href} href={link.href} className="block text-violet-700 hover:underline text-base">
-              {link.label}
-            </a>
-          ))}
+    <>
+      <SEO 
+        title="Browse Jobs by Location - AlliedHealthJobs.au"
+        description="Find allied health jobs by location across Australia. Browse physiotherapy, occupational therapy, speech pathology, and other healthcare positions by state and city."
+        keywords={[
+          'allied health jobs by location',
+          'healthcare jobs by city',
+          'physiotherapy jobs by location',
+          'occupational therapy jobs by location',
+          'speech pathology jobs by location',
+          'healthcare jobs Australia',
+          'allied health jobs by state'
+        ]}
+        url="/locations"
+        type="website"
+      />
+      <div className="max-w-7xl mx-auto py-12 px-4">
+        <h1 className="text-3xl font-bold mb-8 text-center">Browse Jobs by Location</h1>
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold mb-6">Browse Jobs by Category and Location</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {seoLinks.map(link => (
+              <a key={link.href} href={link.href} className="block text-violet-700 hover:underline text-base">
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold mb-6">Browse Jobs by Category and State</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {stateCategoryLinks.map(link => (
+              <a key={link.href} href={link.href} className="block text-violet-700 hover:underline text-base">
+                {link.label}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
-      <div className="mt-16">
-        <h2 className="text-2xl font-bold mb-6">Browse Jobs by Category and State</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {stateCategoryLinks.map(link => (
-            <a key={link.href} href={link.href} className="block text-violet-700 hover:underline text-base">
-              {link.label}
-            </a>
-          ))}
-        </div>
-      </div>
-    </div>
+    </>
   )
 } 

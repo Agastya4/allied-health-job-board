@@ -12,7 +12,8 @@ import { JobPostingForm } from "@/components/job-posting-form"
 import { useTheme } from "@/components/theme-provider"
 import { useAuth } from "@/hooks/use-auth"
 import { useToast } from "@/components/ui/use-toast"
-import Head from "next/head";
+import Head from "next/head"
+import { SEO } from "@/components/seo"
 
 interface PracticeDetails {
   practiceName: string;
@@ -195,10 +196,20 @@ export default function EmployerDashboardPage() {
 
   return (
     <>
-      <Head>
-        <title>Employer Portal</title>
-      </Head>
-      <div className="flex min-h-screen bg-white dark:bg-zinc-950 text-gray-900 dark:text-white">
+      <SEO 
+        title="Employer Dashboard - AlliedHealthJobs.au"
+        description="Manage your allied health job listings, practice details, and recruitment campaigns. Post jobs and find qualified healthcare professionals."
+        keywords={[
+          'employer dashboard',
+          'job management',
+          'recruitment dashboard',
+          'hire healthcare professionals',
+          'allied health recruitment'
+        ]}
+        url="/employer"
+        type="website"
+      />
+      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-violet-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
         {/* Sidebar removed. Main content now full width. */}
         <div className="flex-1 p-6 overflow-y-auto scrollbar-thin">
           {/* User bar at top right */}

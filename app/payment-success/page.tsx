@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { CheckCircle, Home, Briefcase } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
+import { SEO } from "@/components/seo"
 
 function PaymentSuccessContent() {
   const router = useRouter()
@@ -135,19 +136,33 @@ function PaymentSuccessContent() {
 
 export default function PaymentSuccessPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardContent className="p-6">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600 mx-auto mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-400">Loading...</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    }>
-      <PaymentSuccessContent />
-    </Suspense>
+    <>
+      <SEO 
+        title="Payment Successful - AlliedHealthJobs.au"
+        description="Your job posting payment was successful. Your allied health job listing is now live and visible to candidates."
+        keywords={[
+          'payment successful',
+          'job posting payment',
+          'allied health job posting',
+          'healthcare recruitment payment'
+        ]}
+        url="/payment-success"
+        type="website"
+      />
+      <Suspense fallback={
+        <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 flex items-center justify-center p-4">
+          <Card className="w-full max-w-md">
+            <CardContent className="p-6">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600 mx-auto mb-4"></div>
+                <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      }>
+        <PaymentSuccessContent />
+      </Suspense>
+    </>
   )
 } 
