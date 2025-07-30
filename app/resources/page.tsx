@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/components/ui/use-toast";
 import { Upload, X, Plus } from "lucide-react";
+import { SEO } from "@/components/seo";
 
 const ADMIN_EMAIL = "patelagastya1@gmail.com";
 
@@ -325,5 +326,6 @@ export default function ResourcesPage() {
         </div>
       )}
     </div>
+    </>
   );
 }

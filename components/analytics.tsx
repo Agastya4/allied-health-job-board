@@ -1,12 +1,16 @@
 'use client'
 
 import Script from 'next/script'
+import { Analytics as VercelAnalytics } from '@vercel/analytics/next'
 
 export function Analytics() {
   const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
   return (
     <>
+      {/* Vercel Analytics - Always enabled */}
+      <VercelAnalytics />
+
       {/* Google Analytics */}
       {GA_MEASUREMENT_ID && (
         <>
