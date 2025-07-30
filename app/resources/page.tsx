@@ -141,7 +141,24 @@ export default function ResourcesPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto py-12 px-4">
+    <>
+      <SEO 
+        title="Resources & Guides - AlliedHealthJobs.au"
+        description="Access helpful resources, career guides, and professional development articles for allied health professionals in Australia."
+        keywords={[
+          'allied health resources',
+          'healthcare career guides',
+          'physiotherapy resources',
+          'occupational therapy guides',
+          'speech pathology resources',
+          'healthcare professional development',
+          'allied health articles',
+          'healthcare career advice'
+        ]}
+        url="/resources"
+        type="website"
+      />
+      <div className="max-w-7xl mx-auto py-12 px-4">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Resources</h1>
         
