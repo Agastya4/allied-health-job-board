@@ -6,6 +6,7 @@ import { useJobs } from "@/hooks/use-jobs"
 import { useState, useMemo, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { JobCard } from "@/components/job-card"
+import { SEO } from "@/components/seo"
 
 export default function LandingPage() {
   const { jobs, loading } = useJobs()
@@ -36,7 +37,24 @@ export default function LandingPage() {
   }, [jobs, search])
 
   return (
-    <div className="min-h-screen w-full relative">
+    <>
+      <SEO 
+        title="AlliedHealthJobs.au - Find Allied Health Jobs in Australia"
+        description="Find the best allied health jobs in Australia. Browse physiotherapy, occupational therapy, speech pathology, and other healthcare positions. Post jobs and connect with qualified professionals."
+        keywords={[
+          'allied health jobs Australia',
+          'physiotherapy jobs Australia',
+          'occupational therapy jobs Australia',
+          'speech pathology jobs Australia',
+          'healthcare jobs Australia',
+          'allied health careers',
+          'healthcare recruitment',
+          'medical jobs Australia'
+        ]}
+        url="/"
+        type="website"
+      />
+      <div className="min-h-screen w-full relative">
       {/* Main Content Section */}
       <div className="flex items-center justify-center px-4 py-12 md:py-20 relative z-10">
         <div className="w-full flex flex-col items-center justify-center max-w-4xl mx-auto">
@@ -235,5 +253,6 @@ export default function LandingPage() {
         </div>
       </div>
     </div>
+    </>
   )
 }

@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://alliedhealthjobs.au/sitemap.xml
+
+# Disallow admin and API routes
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /sign-in/
+Disallow: /verify-email/
+
+# Allow important pages
+Allow: /jobs/
+Allow: /resources/
+Allow: /career-info/
+Allow: /locations/ 

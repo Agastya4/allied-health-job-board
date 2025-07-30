@@ -1,0 +1,27 @@
+{
+  "name": "AlliedHealthJobs.au",
+  "short_name": "AlliedHealthJobs",
+  "description": "Find the best allied health jobs in Australia",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#7c3aed",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/Logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/Logo.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "health"],
+  "lang": "en-AU",
+  "dir": "ltr"
+} 
