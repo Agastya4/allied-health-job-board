@@ -30,6 +30,7 @@ export function LocationAutocomplete({
   const inputRef = useRef<HTMLInputElement>(null)
   const suggestionsRef = useRef<HTMLDivElement>(null)
 
+  const GEOAPIFY_API_KEY = process.env.NEXT_PUBLIC_GEOAPIFY_KEY || "YOUR_GEOAPIFY_API_KEY_HERE";
   const searchLocations = useCallback(async (query: string) => {
     if (!query.trim() || query.length < 2) {
       setSuggestions([])
@@ -52,8 +53,9 @@ export function LocationAutocomplete({
     setError(null)
 
     try {
+      // Use Geoapify Places API for location search
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ', Australia')}&countrycodes=au&limit=10&addressdetails=1`,
+        `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(query)}&filter=countrycode:au&limit=10&apiKey=${GEOAPIFY_API_KEY}`,
         {
           signal: abortControllerRef.current.signal,
         }
@@ -64,28 +66,29 @@ export function LocationAutocomplete({
       }
 
       const data = await response.json()
-      
-      // Filter and format results
-      const formattedResults = data
+      // Geoapify returns features array
+      const formattedResults = (data.features || [])
         .filter((item: any) => {
-          // Filter for cities, towns, suburbs in Australia
-          const type = item.type
-          const address = item.address
+          // Only include cities, towns, villages, suburbs, localities in Australia
+          const type = item.properties.result_type
           return (
-            (type === 'city' || type === 'town' || type === 'suburb') &&
-            address?.country === 'Australia'
+            (type === 'city' || type === 'town' || type === 'village' || type === 'suburb' || type === 'locality' || type === 'hamlet')
           )
         })
         .map((item: any) => ({
-          display_name: formatDisplayName(item),
-          lat: item.lat,
-          lon: item.lon,
-          place_id: item.place_id,
-          address: item.address,
+          display_name: formatDisplayNameGeoapify(item),
+          lat: item.geometry.coordinates[1],
+          lon: item.geometry.coordinates[0],
+          place_id: item.properties.place_id,
+          address: {
+            city: item.properties.city || item.properties.name || '',
+            state: item.properties.state || '',
+            country: item.properties.country || '',
+          },
         }))
+        .sort((a: any, b: any) => a.display_name.localeCompare(b.display_name))
         .slice(0, 10)
 
-      // Cache the results
       searchCache.set(cacheKey, formattedResults)
       setSuggestions(formattedResults)
     } catch (error: any) {
@@ -100,16 +103,11 @@ export function LocationAutocomplete({
     }
   }, [])
 
-  const formatDisplayName = (item: any): string => {
-    const address = item.address
-    if (address?.city) {
-      return `${address.city}, ${address.state || ''}`
-    } else if (address?.town) {
-      return `${address.town}, ${address.state || ''}`
-    } else if (address?.suburb) {
-      return `${address.suburb}, ${address.state || ''}`
-    }
-    return item.display_name.split(',')[0] + ', ' + (address?.state || '')
+  // Helper for Geoapify formatting
+  const formatDisplayNameGeoapify = (item: any): string => {
+    const city = item.properties.city || item.properties.name || ''
+    const state = item.properties.state || ''
+    return city && state ? `${city}, ${state}` : city || state || ''
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,7 +141,7 @@ export function LocationAutocomplete({
 
   const handleInputFocus = () => {
     setIsFocused(true)
-    if (value.trim() && suggestions.length > 0) {
+    if (value.trim()) {
       setShowSuggestions(true)
     }
   }
@@ -197,7 +195,7 @@ export function LocationAutocomplete({
         />
       </div>
 
-      {showSuggestions && (suggestions.length > 0 || isLoading) && (
+      {showSuggestions && (
         <div 
           ref={suggestionsRef}
           className="absolute z-[9999] w-full mt-1 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-md shadow-lg max-h-60 overflow-auto"

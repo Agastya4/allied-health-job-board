@@ -7,6 +7,7 @@ import { useState, useMemo, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { JobCard } from "@/components/job-card"
 import { SEO } from "@/components/seo"
+import { InternalLinks } from "@/components/internal-links"
 
 export default function LandingPage() {
   const { jobs, loading } = useJobs()
@@ -160,7 +161,7 @@ export default function LandingPage() {
                     <span className="text-violet-600 dark:text-violet-400 text-sm font-bold">1</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Specialized Allied Health Focus</h4>
+                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Specialised Focus in Allied Health</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Jobs specifically curated for physiotherapists, occupational therapists, speech pathologists, and other allied health professionals.</p>
                   </div>
                 </div>
@@ -170,7 +171,7 @@ export default function LandingPage() {
                     <span className="text-violet-600 dark:text-violet-400 text-sm font-bold">2</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Advanced Search & Filters</h4>
+                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Advanced Search and Filters</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Find jobs by location, specialty, experience level, and work setting with our powerful search tools.</p>
                   </div>
                 </div>
@@ -180,7 +181,7 @@ export default function LandingPage() {
                     <span className="text-violet-600 dark:text-violet-400 text-sm font-bold">3</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Career Resources & Guidance</h4>
+                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Career Resources and Guidance</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Access comprehensive career advice, resume tips, and industry insights to advance your career.</p>
                   </div>
                 </div>
@@ -190,8 +191,28 @@ export default function LandingPage() {
                     <span className="text-violet-600 dark:text-violet-400 text-sm font-bold">4</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Direct Application Process</h4>
+                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Simplified Application Process</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Apply directly to employers with our streamlined application system and track your applications.</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-violet-100 dark:bg-violet-900 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-violet-600 dark:text-violet-400 text-sm font-bold">5</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Locum, Temp-Casual & Permanent Jobs</h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Find flexible work arrangements including locum, temporary, casual, and permanent positions.</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-violet-100 dark:bg-violet-900 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-violet-600 dark:text-violet-400 text-sm font-bold">6</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Nationwide Coverage</h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Access job opportunities across all Australian states and territories.</p>
                   </div>
                 </div>
               </div>
@@ -214,8 +235,8 @@ export default function LandingPage() {
                     <span className="text-violet-600 dark:text-violet-400 text-sm font-bold">1</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Targeted Allied Health Audience</h4>
-                    <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Reach qualified professionals specifically in physiotherapy, occupational therapy, speech pathology, and related fields.</p>
+                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Highly Targeted Audience</h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Attracting qualified allied health professionals only - physiotherapists, occupational therapists, speech pathologists, and related fields.</p>
                   </div>
                 </div>
                 
@@ -224,8 +245,8 @@ export default function LandingPage() {
                     <span className="text-violet-600 dark:text-violet-400 text-sm font-bold">2</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Easy Job Posting Process</h4>
-                    <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Simple, step-by-step job posting with templates and guidance to create compelling job listings.</p>
+                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">National Reach Across Australia</h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Connect with candidates from all states and territories across Australia.</p>
                   </div>
                 </div>
                 
@@ -234,8 +255,8 @@ export default function LandingPage() {
                     <span className="text-violet-600 dark:text-violet-400 text-sm font-bold">3</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Quality Candidate Applications</h4>
-                    <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Receive applications from qualified, pre-screened candidates who are actively seeking opportunities in allied health.</p>
+                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Ideal for Urgent & Hard-to-Fill Roles</h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Perfect for finding qualified candidates quickly for specialized positions and urgent hiring needs.</p>
                   </div>
                 </div>
                 
@@ -244,15 +265,111 @@ export default function LandingPage() {
                     <span className="text-violet-600 dark:text-violet-400 text-sm font-bold">4</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Affordable & Transparent Pricing</h4>
-                    <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Competitive pricing with no hidden fees. Pay only for successful job postings that reach your target audience.</p>
+                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">You Pay Less ($50), But Your Ad is Seen by More of the Right People</h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Affordable pricing with maximum exposure to your target audience of allied health professionals.</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-violet-100 dark:bg-violet-900 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-violet-600 dark:text-violet-400 text-sm font-bold">5</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm md:text-base">Professional Ad Format with Logo & Contact Details</h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm">Your ads appear in a clean, professional format with options to include your logo, organisation info, and contact details.</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Comparison Table Section */}
+          <div className="mt-12 md:mt-16">
+            <h3 className="text-xl md:text-2xl font-bold text-center mb-8 text-gray-900 dark:text-white">
+              Why Choose AlliedHealthJobs.au Over Other Job Boards?
+            </h3>
+            
+            <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-gray-200 dark:border-zinc-800 overflow-x-auto">
+              <table className="w-full text-sm md:text-base">
+                <thead>
+                  <tr className="border-b border-gray-200 dark:border-zinc-700">
+                    <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Feature</th>
+                    <th className="text-center py-3 px-4 font-semibold text-gray-900 dark:text-white">AlliedHealthJobs.au</th>
+                    <th className="text-center py-3 px-4 font-semibold text-gray-500 dark:text-gray-400">Other Job Boards</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-zinc-700">
+                  <tr>
+                    <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">Specialization</td>
+                    <td className="py-3 px-4 text-center">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        ✓ Allied Health Focus
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-center text-gray-600 dark:text-gray-400">General healthcare or all industries</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">Job Posting Cost</td>
+                    <td className="py-3 px-4 text-center">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        $50
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-center text-gray-600 dark:text-gray-400">$100-300+</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">Target Audience</td>
+                    <td className="py-3 px-4 text-center">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        Qualified Allied Health Professionals
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-center text-gray-600 dark:text-gray-400">Mixed audience, less targeted</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">Application Quality</td>
+                    <td className="py-3 px-4 text-center">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        High - Pre-screened Candidates
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-center text-gray-600 dark:text-gray-400">Variable quality</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">Ad Format</td>
+                    <td className="py-3 px-4 text-center">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        Professional with Logo & Details
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-center text-gray-600 dark:text-gray-400">Basic format</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">Career Resources</td>
+                    <td className="py-3 px-4 text-center">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        Comprehensive Blog & Guides
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-center text-gray-600 dark:text-gray-400">Limited resources</td>
+                  </tr>
+                  <tr>
+                    <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">Job Types</td>
+                    <td className="py-3 px-4 text-center">
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        Locum, Temp, Casual, Permanent
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-center text-gray-600 dark:text-gray-400">Limited options</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
+      {/* Internal Links Section */}
+      <InternalLinks />
     </>
   )
 }

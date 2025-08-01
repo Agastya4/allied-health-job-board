@@ -94,7 +94,7 @@ export function JobSidebar({ user, onFiltersChange, onPostJob, initialFilters }:
     .map((city) => city && city.trim())
     .filter((city) => !!city)
     .map((city) => city!.toLowerCase().replace(/\s+/g, "-"));
-  const cityValue = typeof filters.city === 'string' && normalizedCityOptions.includes(filters.city) ? filters.city : "any";
+  const cityValue = typeof filters.city === 'string' ? filters.city : "any";
   // Defensive: ensure occupation, locationRequirement, jobType, experienceLevel are valid
   const occupationValue = occupationOptions.includes(filters.occupation ?? "") ? filters.occupation : "any";
   const locationRequirementValue = locationRequirementOptions.includes(filters.locationRequirement ?? "") ? filters.locationRequirement : "any";
@@ -109,9 +109,8 @@ export function JobSidebar({ user, onFiltersChange, onPostJob, initialFilters }:
       // For job title, allow empty string to show all jobs
       newFilters.jobTitle = value;
     } else if (key === 'city' && value) {
-      // Extract city name from full location string (e.g., "Sydney, NSW, Australia" -> "sydney")
-      const cityName = value.split(',')[0]?.trim().toLowerCase().replace(/\s+/g, '-') || '';
-      newFilters.city = cityName;
+      // Allow partial, case-insensitive match
+      newFilters.city = value.trim().toLowerCase();
     } else if (key === 'city' && (value === 'any' || value === '')) {
       // Remove city filter when empty or "any"
       delete newFilters.city;

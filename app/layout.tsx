@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-verification-code',
+    google: 'G-XXXXXXXXXX', // Replace with your actual Google Analytics ID
     yandex: 'your-yandex-verification-code',
     yahoo: 'your-yahoo-verification-code',
   },

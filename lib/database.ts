@@ -157,18 +157,13 @@ function applyFiltersToJobs(jobs: JobWithBookmark[], filters: JobFilters): JobWi
   // Occupation filter is now handled at database level
   // Client-side occupation filtering removed since it's done in the SQL query
 
-  // City filter - only filter if there's actually a city specified
+  // City filter - allow partial, case-insensitive match
   if (filters.city && filters.city.trim() !== "" && filters.city !== "any") {
     const normalizedFilterCity = filters.city.toLowerCase().replace(/\s+/g, '-');
-    console.log("Filtering by city:", { filterCity: normalizedFilterCity })
     filteredJobs = filteredJobs.filter((job) => {
       const jobCity = (job.city || "").toLowerCase().replace(/\s+/g, '-');
-      console.log("Comparing cities:", { jobCity, filterCity: normalizedFilterCity, match: jobCity === normalizedFilterCity })
-      // Skip jobs with 'unknown' city unless specifically filtering for it
-      if (jobCity === 'unknown' && normalizedFilterCity !== 'unknown') {
-        return false;
-      }
-      return jobCity === normalizedFilterCity;
+      // Allow partial match
+      return jobCity.includes(normalizedFilterCity);
     })
   }
 

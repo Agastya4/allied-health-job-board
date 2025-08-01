@@ -126,6 +126,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const [logoUrl, setLogoUrl] = useState<string>("")
+  const [logoPreview, setLogoPreview] = useState<string>("")
   const [showPayment, setShowPayment] = useState(false)
   const [createdJobId, setCreatedJobId] = useState<number | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -198,91 +199,31 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
   }
 
   const handleLocationChange = (value: string, lat?: number, lng?: number) => {
-    // Extract city and state from the full address
+    // Always save the raw input
     let city = ""
     let state = ""
-    
-    // Split the address into parts
-    const parts = value.split(",").map(s => s.trim())
-    
-    // State abbreviations and full names with mapping to abbreviations
-    const stateAbbreviations = ["NSW", "VIC", "QLD", "SA", "WA", "TAS", "ACT", "NT"]
-    const stateNames = ["NEW SOUTH WALES", "VICTORIA", "QUEENSLAND", "SOUTH AUSTRALIA", "WESTERN AUSTRALIA", "TASMANIA", "AUSTRALIAN CAPITAL TERRITORY", "NORTHERN TERRITORY"]
-    
-    // Map full state names to abbreviations
-    const stateMap: Record<string, string> = {
-      "NEW SOUTH WALES": "nsw",
-      "NSW": "nsw",
-      "VICTORIA": "vic", 
-      "VIC": "vic",
-      "QUEENSLAND": "qld",
-      "QLD": "qld",
-      "SOUTH AUSTRALIA": "sa",
-      "SA": "sa",
-      "WESTERN AUSTRALIA": "wa",
-      "WA": "wa",
-      "TASMANIA": "tas",
-      "TAS": "tas",
-      "AUSTRALIAN CAPITAL TERRITORY": "act",
-      "ACT": "act",
-      "NORTHERN TERRITORY": "nt",
-      "NT": "nt"
-    }
-    
-    // Find the state (look for abbreviation or full name)
-    let stateIndex = -1
-    for (let i = parts.length - 1; i >= 0; i--) {
-      const part = parts[i].toUpperCase()
-      if (stateAbbreviations.includes(part) || stateNames.includes(part)) {
-        state = part
-        stateIndex = i
-        break
-      }
-    }
-    
-    // If state found, extract city from the part before it
-    if (stateIndex > 0) {
-      city = parts[stateIndex - 1]
-    } else if (stateIndex === 0 && parts.length > 1) {
-      // State is first, city is second
-      city = parts[1]
-    } else if (!state && parts.length >= 2) {
-      // No state found, try to infer from last two parts
-      const lastPart = parts[parts.length - 1].toUpperCase()
-      const secondLastPart = parts[parts.length - 2].toUpperCase()
-      
-      // Check if last part is a state abbreviation
-      if (stateAbbreviations.includes(lastPart)) {
-        state = lastPart
-        city = parts[parts.length - 2]
-      } else if (stateAbbreviations.includes(secondLastPart)) {
-        state = secondLastPart
-        city = parts[parts.length - 1]
+    // If lat/lng are provided, assume a suggestion was selected
+    if (lat && lng) {
+      // Try to extract city/state from the value (e.g., "Sydney, NSW")
+      const parts = value.split(',').map(s => s.trim())
+      if (parts.length >= 2) {
+        city = parts[0]
+        state = parts[1]
       } else {
-        // Fallback: assume last part is state, second to last is city
-        state = parts[parts.length - 1]
-        city = parts[parts.length - 2]
+        city = value
+        state = ""
       }
-    } else if (!state && parts.length === 1) {
-      // Only one part, treat as city
-      city = parts[0]
-      state = ""
+    } else {
+      // Free text: try to extract city/state from the input
+      const parts = value.split(',').map(s => s.trim())
+      if (parts.length >= 2) {
+        city = parts[0]
+        state = parts[1]
+      } else {
+        city = value
+        state = ""
+      }
     }
-    
-    // Clean up city and state
-    city = city.replace(/^(street|road|way|drive|avenue|boulevard|place|lane|court|terrace|close|crescent|parade|highway|freeway|motorway)\s+/i, "").trim()
-    
-    // Normalize state to abbreviation (always lowercase)
-    const normalizedState = stateMap[state.toUpperCase()] || state.toLowerCase()
-    
-    console.log("Location parsing:", {
-      original: value,
-      parts: parts,
-      extractedCity: city,
-      extractedState: state,
-      normalizedState: normalizedState
-    })
-    
     setFormData((prev) => ({
       ...prev,
       practiceLocation: value,
@@ -290,28 +231,31 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
       locationLat: lat || 0,
       locationLng: lng || 0,
       city: city.toLowerCase().replace(/\s+/g, '-'),
-      state: normalizedState,
+      state: state.toLowerCase().replace(/\s+/g, '-'),
     }))
   }
 
   const handleLogoUpload = async (file: File) => {
+    // Show local preview immediately
+    const previewUrl = URL.createObjectURL(file)
+    setLogoPreview(previewUrl)
+    setLogoFile(file)
     try {
       const formData = new FormData()
       formData.append("file", file)
-
       const response = await fetch("/api/upload", {
         method: "POST",
         body: formData,
       })
-
       const data = await response.json()
-
       if (!response.ok) {
         throw new Error(data.error || "Upload failed")
       }
-
       setLogoUrl(data.url)
+      setLogoPreview("") // Clear preview after upload
       setLogoFile(file)
+      // Reset file input so the same file can be re-uploaded if needed
+      if (fileInputRef.current) fileInputRef.current.value = ""
     } catch (error) {
       console.error("Logo upload failed:", error)
       toast({
@@ -319,6 +263,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
         description: "Failed to upload logo. Please try again.",
         variant: "destructive",
       })
+      setLogoPreview("")
     }
   }
 
@@ -555,12 +500,12 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
 
               <div>
                 <Label htmlFor="practiceLocation" className="text-gray-900 dark:text-white">
-                  Practice Location *
+                  Practice City *
                 </Label>
                 <LocationAutocomplete
                   value={formData.practiceLocation}
                   onChange={handleLocationChange}
-                  placeholder="Start typing your location..."
+                  placeholder="Enter practice city..."
                   className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700"
                 />
                 {errors.practiceLocation && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.practiceLocation}</p>}
@@ -757,7 +702,13 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                 </label>
                 <div className="flex items-center gap-4">
                   <div className="w-24 h-24 bg-gray-100 dark:bg-zinc-800 rounded-lg flex items-center justify-center border border-gray-300 dark:border-zinc-700">
-                    {logoUrl ? (
+                    {logoPreview ? (
+                      <img
+                        src={logoPreview}
+                        alt="Logo preview"
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    ) : (logoUrl ? (
                       <img
                         src={logoUrl || "/placeholder.svg"}
                         alt="Logo preview"
@@ -765,7 +716,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                       />
                     ) : (
                       <div className="w-16 h-16 bg-gray-200 dark:bg-zinc-700 rounded"></div>
-                    )}
+                    ))}
                   </div>
                   <Button
                     type="button"

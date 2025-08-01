@@ -10,9 +10,18 @@ Disallow: /admin/
 Disallow: /_next/
 Disallow: /sign-in/
 Disallow: /verify-email/
+Disallow: /payment-success/
+Disallow: /payment-cancel/
+Disallow: /test-locations/
 
 # Allow important pages
 Allow: /jobs/
 Allow: /resources/
 Allow: /career-info/
-Allow: /locations/ 
+Allow: /locations/
+Allow: /blog/
+Allow: /employer/
+Allow: /post-job/
+
+# Crawl delay for better server performance
+Crawl-delay: 1 

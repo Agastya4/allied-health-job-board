@@ -6,7 +6,7 @@ export async function sendVerificationEmail({ to, token }: { to: string; token: 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://alliedhealthjobs.au'
   const verifyUrl = `${baseUrl}/verify-email?token=${encodeURIComponent(token)}`
   return resend.emails.send({
-    from: 'contact@alliedhealthjobs.au',
+    from: 'Allied Health Jobs <contact@alliedhealthjobs.au>',
     to,
     subject: 'Verify your email address',
     html: `<p>Thank you for signing up! Please verify your email by clicking the link below:</p>
