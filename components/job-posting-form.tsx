@@ -310,12 +310,23 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!validateForm()) return
+    console.log("Form submission started")
+    console.log("Form data:", formData)
+    
+    if (!validateForm()) {
+      console.log("Form validation failed")
+      return
+    }
+    
+    console.log("Form validation passed, creating job...")
     setIsSubmitting(true)
+    
     try {
       const normalizedCity = normalizeString(formData.city)
       const normalizedState = normalizeString(formData.state)
       const normalizedCategories = normalizeCategories(formData.jobCategories)
+      
+      console.log("Normalized data:", { normalizedCity, normalizedState, normalizedCategories })
       
       // Create job with pending payment status
       const jobData = {
@@ -341,7 +352,10 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
         payment_status: 'pending' as const,
       }
       
+      console.log("Job data to be created:", jobData)
+      
       const job = await createJob(jobData)
+      console.log("Job created successfully:", job)
       setCreatedJobId(job.id)
       setShowPayment(true)
       
