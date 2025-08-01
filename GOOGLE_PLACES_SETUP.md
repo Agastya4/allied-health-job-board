@@ -1,56 +1,135 @@
-# Google Places API Setup
+# Free Australian Address Validation Setup
 
-To use the faster Google Places API for location search, follow these steps:
+This guide explains the Australian address validation system that uses **OpenStreetMap's Nominatim API** - completely free with no API keys required!
 
-## 1. Get a Google Places API Key
+## ✅ No Setup Required!
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Enable the following APIs:
-   - **Places API**
-   - **Geocoding API** (optional, for additional features)
-4. Go to "Credentials" and create an API key
-5. Restrict the API key to:
-   - Only the APIs you enabled
-   - Your domain (for security)
+The address validation system is **ready to use immediately** with no configuration needed. It uses OpenStreetMap's free Nominatim API which:
 
-## 2. Add the API Key to Your Environment
+- ✅ **No API keys required**
+- ✅ **No registration needed**
+- ✅ **No billing setup**
+- ✅ **Completely free forever**
+- ✅ **Australian address validation**
+- ✅ **Real-time suggestions**
 
-Create a `.env.local` file in your project root and add:
+## How It Works
 
-```env
-NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=your_actual_api_key_here
-```
+The system uses OpenStreetMap's Nominatim API to:
 
-## 3. Restart Your Development Server
+1. **Search Australian addresses** as users type
+2. **Provide real-time suggestions** for valid addresses
+3. **Validate address format** and extract components
+4. **Get precise coordinates** for mapping
 
-After adding the environment variable, restart your Next.js development server:
+## Features
 
-```bash
-npm run dev
-# or
-pnpm dev
-```
+### **Real-time Address Suggestions**
+- Type "123 George Street, Sydney" → See suggestions
+- Select suggestion → Address validated and formatted
+- Works with any Australian address format
 
-## 4. Test the Location Search
+### **Australian Address Validation**
+- Confirms addresses are in Australia
+- Extracts city, state, postcode
+- Gets precise latitude/longitude coordinates
+- Validates address format
 
-The location search should now be much faster and more reliable!
+### **Visual Feedback**
+- 🔄 Loading spinner while searching
+- ✅ Green checkmark when valid
+- 📍 Map pin icon when typing
+- Helpful text guidance
 
-## Performance Benefits
+## Usage Examples
 
-- **Speed**: ~100-200ms response time (vs 500-1000ms with OpenStreetMap)
-- **Reliability**: Google's infrastructure is more stable
-- **Accuracy**: Better city name recognition and formatting
-- **Caching**: Built-in caching for repeated searches
+### **Valid Australian Addresses:**
+- **"123 George Street, Sydney NSW"** → ✅ Validated
+- **"Melbourne VIC"** → ✅ City and state format
+- **"Brisbane QLD 4000"** → ✅ Full address with postcode
+- **"Perth WA"** → ✅ State capital format
 
-## Cost
+### **Address Components Extracted:**
+- **City/Suburb**: Sydney, Melbourne, Brisbane
+- **State**: NSW, VIC, QLD, WA, SA, TAS, ACT, NT
+- **Postcode**: 2000, 3000, 4000, etc.
+- **Coordinates**: Latitude and longitude for mapping
 
-Google Places API has a generous free tier:
-- 1,000 requests per day free
-- $0.017 per 1,000 additional requests
+## Technical Details
 
-For most job board applications, this will be well within the free tier.
+### **API Endpoints Used:**
+1. **Search API**: `https://nominatim.openstreetmap.org/search`
+   - Searches for Australian addresses
+   - Returns formatted suggestions
+   - Limited to Australia only
 
-## Fallback
+2. **Lookup API**: `https://nominatim.openstreetmap.org/lookup`
+   - Gets detailed address information
+   - Extracts address components
+   - Provides coordinates
 
-If the Google Places API key is not configured, the component will show an error message and fall back to showing only the popular cities list. 
+### **Rate Limiting:**
+- **1 request per second** (OpenStreetMap's limit)
+- **500ms debounce** to prevent excessive requests
+- **Graceful error handling** if limits exceeded
+
+## Testing the System
+
+1. **Go to the job posting form**
+2. **Type an Australian address** like "123 George Street, Sydney NSW"
+3. **Wait for suggestions** to appear (may take 1-2 seconds)
+4. **Select a suggestion** to validate the address
+5. **See the green checkmark** when address is valid
+
+## Troubleshooting
+
+### **No suggestions appearing:**
+- Ensure address query is at least 3 characters
+- Check that it's an Australian address
+- Wait 1-2 seconds for API response (free API is slower)
+
+### **Address validation fails:**
+- Try a more specific address
+- Use standard Australian address format
+- Check browser console for any errors
+
+### **Slow response times:**
+- This is normal for free APIs
+- Suggestions appear within 1-2 seconds
+- Consider this when designing UX
+
+## Benefits of OpenStreetMap
+
+### **Advantages:**
+- ✅ **Completely free** - no costs ever
+- ✅ **No setup required** - works immediately
+- ✅ **Open source** - community maintained
+- ✅ **Global coverage** - works worldwide
+- ✅ **No API keys** - no security concerns
+
+### **Limitations:**
+- ⚠️ **Slower response** (1-2 seconds vs 200ms)
+- ⚠️ **Rate limited** (1 request per second)
+- ⚠️ **Less precise** than Google Places
+- ⚠️ **No advanced features** like autocomplete
+
+## Alternative Options
+
+If you need faster or more precise address validation in the future:
+
+1. **Google Places API** - Faster, more precise, but requires API key and billing
+2. **Here Maps API** - Good alternative with free tier
+3. **Mapbox API** - Another option with generous free tier
+
+## Support
+
+The current system works out of the box with no configuration needed. If you encounter issues:
+
+1. Check browser console for errors
+2. Verify the address is Australian
+3. Wait for API response (may take 1-2 seconds)
+4. Try a more specific address format
+
+## Ready to Use!
+
+The Australian address validation system is **immediately available** and working. No setup, no configuration, no API keys required - just start using it! 

@@ -508,27 +508,34 @@ export async function createJob(jobData: any): Promise<Job> {
   }
 
   try {
+    // Import location matcher
+    const { parseLocation } = await import('./location-matcher')
+    
     // Normalize and validate fields
     const normalizeString = (str: string) => str && typeof str === 'string' ? str.trim().toLowerCase().replace(/\s+/g, '-') : '';
     const normalizeCategories = (categories: any) => Array.isArray(categories) ? categories.map(normalizeString) : [];
-    const city = normalizeString(jobData.city);
-    const state = normalizeString(jobData.state);
+    
+    // Parse location using the new location matcher
+    const locationMatch = parseLocation(jobData.practice_location)
+    const city = locationMatch.normalizedCity || normalizeString(jobData.city);
+    const state = locationMatch.normalizedState || normalizeString(jobData.state);
     const job_categories = normalizeCategories(jobData.job_categories);
     const company_logo_url = jobData.company_logo_url || "/placeholder.svg?height=40&width=40&text=Logo";
     
     console.log("createJob - location data:", {
-      originalCity: jobData.city,
-      originalState: jobData.state,
+      originalLocation: jobData.practice_location,
+      locationMatch,
       normalizedCity: city,
       normalizedState: state,
       locationDisplay: jobData.location_display,
-      practiceLocation: jobData.practice_location
+      isLocationMatched: locationMatch.isMatched
     });
     
-    if (!city || !state || !job_categories.length) {
-      console.error("createJob error: Missing required location/category fields", { city, state, job_categories });
-      throw new Error("City, state, and at least one job category are required.");
+    if (!job_categories.length) {
+      console.error("createJob error: Missing required job categories", { job_categories });
+      throw new Error("At least one job category is required.");
     }
+    
     const result = await sql`
       INSERT INTO jobs (
         user_id, practice_email, job_title, practice_location, location_display,
@@ -555,7 +562,8 @@ export async function createJob(jobData: any): Promise<Job> {
       id: job.id,
       storedCity: job.city,
       storedState: job.state,
-      locationDisplay: job.location_display
+      locationDisplay: job.location_display,
+      practiceLocation: job.practice_location
     });
     
     return {

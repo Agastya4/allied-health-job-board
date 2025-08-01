@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getJobs, createJob } from "@/lib/database"
 import { getUserFromRequest } from "@/lib/auth"
+import { searchJobs, searchJobsWithFilters } from "@/lib/search-engine"
 
 export async function GET(request: NextRequest) {
   try {
@@ -21,11 +22,39 @@ export async function GET(request: NextRequest) {
       experienceLevel: searchParams.get("experienceLevel") || undefined,
     }
 
-    console.log("Filters applied:", filters)
+    // New search parameter
+    const searchQuery = searchParams.get("search") || undefined
 
-    // Only get jobs from the database
-    const jobs = await getJobs(filters, user?.id)
-    console.log(`Successfully fetched ${jobs.length} jobs`)
+    console.log("Filters applied:", filters)
+    console.log("Search query:", searchQuery)
+
+    // Get all jobs from the database
+    const allJobs = await getJobs({}, user?.id)
+    console.log(`Successfully fetched ${allJobs.length} jobs`)
+
+    let jobs = allJobs
+
+    // Apply advanced search if search query is provided
+    if (searchQuery && searchQuery.trim()) {
+      const searchResults = searchJobsWithFilters(
+        allJobs,
+        searchQuery,
+        {
+          city: filters.city,
+          state: filters.state,
+          jobType: filters.jobType,
+          experienceLevel: filters.experienceLevel,
+          occupation: filters.occupation,
+        }
+      )
+      
+      // Extract jobs from search results and maintain order
+      jobs = searchResults.map(result => result.job)
+      console.log(`Search found ${jobs.length} matching jobs`)
+    } else {
+      // Apply traditional filters if no search query
+      jobs = await getJobs(filters, user?.id)
+    }
 
     return NextResponse.json({
       jobs,

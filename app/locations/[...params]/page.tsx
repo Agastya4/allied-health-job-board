@@ -1,200 +1,150 @@
-import LocationJobBoardClient from "@/components/LocationJobBoardClient";
-import { JOB_CATEGORIES, STATES } from "../seo-links";
-import { notFound } from "next/navigation";
-import { Metadata } from "next";
+"use client"
 
-function getLabel(arr: { value: string; label: string }[], value: string) {
-  const found = arr.find((item) => item.value === value);
-  return found ? found.label : value;
-}
-function getStateLabel(abbr: string) {
-  const found = STATES.find((s) => s.abbr.toLowerCase() === abbr.toLowerCase());
-  return found ? found.name : abbr;
-}
+import { useState, useEffect } from "react"
+import { useParams } from "next/navigation"
+import { JobCard } from "@/components/job-card"
+import { SEO } from "@/components/seo"
+import { useJobs } from "@/hooks/use-jobs"
+import { getJobsForLocationPage, getJobsForCategoryPage } from "@/lib/job-sorter"
+import { STATES, CITIES, JOB_CATEGORIES } from "../seo-links"
 
-interface CatchAllPageProps {
-  params: Promise<{ params: string[] }>
+interface LocationPageProps {
+  params: {
+    params: string[]
+  }
 }
 
-function normalize(str: string) {
-  return str ? str.trim().toLowerCase().replace(/\s+/g, '-') : '';
-}
-
-export async function generateMetadata({ params }: { params: Promise<{ params: string[] }> }): Promise<Metadata> {
-  const { params: pathParams } = await params;
+export default function LocationPage({ params }: LocationPageProps) {
+  const { params: pathParams } = useParams()
+  const [pageTitle, setPageTitle] = useState("")
+  const [pageDescription, setPageDescription] = useState("")
   
-  if (!Array.isArray(pathParams) || pathParams.length < 2 || pathParams.length > 3) {
-    return {
-      title: "Location Not Found - AlliedHealthJobs.au",
-      description: "The requested location page could not be found.",
-    }
-  }
-
-  const state = pathParams[0];
-  let city = "";
-  let category = "";
+  // Parse URL parameters
+  const segments = Array.isArray(pathParams) ? pathParams : [pathParams]
+  const state = segments[0] || ""
+  const city = segments[1] || ""
+  const category = segments[2] || ""
   
-  if (pathParams.length === 2) {
-    category = pathParams[1];
-  } else if (pathParams.length === 3) {
-    city = pathParams[1];
-    category = pathParams[2];
-  }
-
-  const categoryLabel = getLabel(JOB_CATEGORIES, category);
-  const stateLabel = getStateLabel(state);
-  const cityLabel = city
-    ? city.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
-    : "";
-
-  let title = "";
-  let description = "";
-  let keywords: string[] = [];
-
-  if (cityLabel) {
-    title = `${categoryLabel} Jobs in ${cityLabel}, ${stateLabel} - AlliedHealthJobs.au`;
-    description = `Find ${categoryLabel.toLowerCase()} jobs in ${cityLabel}, ${stateLabel}. Browse and apply for ${categoryLabel.toLowerCase()} positions in ${cityLabel} and surrounding areas.`;
-    keywords = [
-      `${categoryLabel.toLowerCase()} jobs ${cityLabel}`,
-      `${categoryLabel.toLowerCase()} jobs ${stateLabel}`,
-      `${categoryLabel.toLowerCase()} ${cityLabel}`,
-      `allied health jobs ${cityLabel}`,
-      `healthcare jobs ${cityLabel}`,
-      `${categoryLabel.toLowerCase()} careers ${cityLabel}`,
-      `allied health ${cityLabel}`,
-      `healthcare ${cityLabel}`
-    ];
-  } else {
-    title = `${categoryLabel} Jobs in ${stateLabel} - AlliedHealthJobs.au`;
-    description = `Find ${categoryLabel.toLowerCase()} jobs across ${stateLabel}. Browse and apply for ${categoryLabel.toLowerCase()} positions throughout ${stateLabel}.`;
-    keywords = [
-      `${categoryLabel.toLowerCase()} jobs ${stateLabel}`,
-      `${categoryLabel.toLowerCase()} ${stateLabel}`,
-      `allied health jobs ${stateLabel}`,
-      `healthcare jobs ${stateLabel}`,
-      `${categoryLabel.toLowerCase()} careers ${stateLabel}`,
-      `allied health ${stateLabel}`,
-      `healthcare ${stateLabel}`
-    ];
-  }
-
-  const url = `https://alliedhealthjobs.au/locations/${pathParams.join('/')}`;
-
-  return {
-    title,
-    description,
-    keywords,
-    openGraph: {
-      title,
-      description,
-      type: 'website',
-      url,
-      siteName: 'AlliedHealthJobs.au',
-      images: [
-        {
-          url: '/Logo.png',
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: ['/Logo.png'],
-    },
-    alternates: {
-      canonical: url,
-    },
-  }
-}
-
-export default async function LocationsCatchAllPage({ params }: CatchAllPageProps) {
-  const { params: pathParams } = await params;
-  // pathParams: [state, category] or [state, city, category]
-  if (!Array.isArray(pathParams) || pathParams.length < 2 || pathParams.length > 3) {
-    notFound();
-  }
-  const state = pathParams[0];
-  let city = "";
-  let category = "";
-  if (pathParams.length === 2) {
-    category = pathParams[1];
-  } else if (pathParams.length === 3) {
-    city = pathParams[1];
-    category = pathParams[2];
-  }
-  const categoryLabel = getLabel(JOB_CATEGORIES, category);
-  const stateLabel = getStateLabel(state);
-  const cityLabel = city
-    ? city.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
-    : "";
-  let title = "";
-  if (cityLabel) {
-    title = `${categoryLabel} Jobs in ${cityLabel}, ${stateLabel}`;
-  } else {
-    title = `${categoryLabel} Jobs in ${stateLabel}`;
-  }
-  const prompt = "Browse and apply for jobs below.";
-  // Normalize state and city for the API/database
-  const normalizedState = normalize(state);
-  const normalizedCity = normalize(city);
-
-  // Generate structured data for location-based job search
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": title,
-    "description": `Find ${categoryLabel.toLowerCase()} jobs in ${cityLabel || stateLabel}`,
-    "url": `https://alliedhealthjobs.au/locations/${pathParams.join('/')}`,
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://alliedhealthjobs.au"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Locations",
-          "item": "https://alliedhealthjobs.au/locations"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": stateLabel,
-          "item": `https://alliedhealthjobs.au/locations/${state}`
-        },
-        ...(cityLabel ? [{
-          "@type": "ListItem",
-          "position": 4,
-          "name": cityLabel,
-          "item": `https://alliedhealthjobs.au/locations/${state}/${city}`
-        }] : []),
-        {
-          "@type": "ListItem",
-          "position": cityLabel ? 5 : 4,
-          "name": categoryLabel,
-          "item": `https://alliedhealthjobs.au/locations/${pathParams.join('/')}`
-        }
-      ]
+  // Get all jobs
+  const { jobs, loading } = useJobs()
+  
+  // Filter jobs for this location/category
+  const [filteredJobs, setFilteredJobs] = useState<any[]>([])
+  
+  useEffect(() => {
+    if (jobs.length > 0) {
+      let filtered: any[] = []
+      
+      if (category) {
+        // Category-specific location page
+        filtered = getJobsForLocationPage(jobs, state, city, category)
+      } else if (city) {
+        // City-specific page
+        filtered = getJobsForLocationPage(jobs, state, city)
+      } else {
+        // State-specific page
+        filtered = getJobsForLocationPage(jobs, state)
+      }
+      
+      setFilteredJobs(filtered)
     }
+  }, [jobs, state, city, category])
+  
+  // Generate page title and description
+  useEffect(() => {
+    const stateInfo = STATES.find(s => s.abbr.toLowerCase() === state)
+    const cityInfo = city ? CITIES[stateInfo?.abbr as keyof typeof CITIES]?.find(c => 
+      c.toLowerCase().replace(/\s+/g, '-') === city
+    ) : null
+    const categoryInfo = category ? JOB_CATEGORIES.find(c => c.value === category) : null
+    
+    let title = ""
+    let description = ""
+    
+    if (category && city) {
+      title = `${categoryInfo?.label} Jobs in ${cityInfo}, ${stateInfo?.abbr}`
+      description = `Find ${categoryInfo?.label.toLowerCase()} jobs in ${cityInfo}, ${stateInfo?.name}. Browse the latest opportunities and apply today.`
+    } else if (category) {
+      title = `${categoryInfo?.label} Jobs in ${stateInfo?.name}`
+      description = `Find ${categoryInfo?.label.toLowerCase()} jobs in ${stateInfo?.name}. Browse the latest opportunities and apply today.`
+    } else if (city) {
+      title = `Allied Health Jobs in ${cityInfo}, ${stateInfo?.abbr}`
+      description = `Find allied health jobs in ${cityInfo}, ${stateInfo?.name}. Browse physiotherapy, occupational therapy, speech pathology, and other healthcare positions.`
+    } else {
+      title = `Allied Health Jobs in ${stateInfo?.name}`
+      description = `Find allied health jobs in ${stateInfo?.name}. Browse physiotherapy, occupational therapy, speech pathology, and other healthcare positions.`
+    }
+    
+    setPageTitle(title)
+    setPageDescription(description)
+  }, [state, city, category])
+  
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto py-12 px-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading jobs...</p>
+        </div>
+      </div>
+    )
   }
-
+  
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      <SEO
+        title={pageTitle}
+        description={pageDescription}
+        keywords={[
+          'allied health jobs',
+          'healthcare jobs',
+          'physiotherapy jobs',
+          'occupational therapy jobs',
+          'speech pathology jobs',
+          'healthcare careers',
+          state,
+          city || '',
+          category || ''
+        ].filter(Boolean)}
+        url={`/locations/${state}${city ? `/${city}` : ''}${category ? `/${category}` : ''}`}
+        type="website"
       />
-      <div className="h-screen w-screen min-h-0">
-        <LocationJobBoardClient city={normalizedCity} state={normalizedState} category={category} title={title} prompt={prompt} />
+      <div className="max-w-7xl mx-auto py-12 px-4">
+        <h1 className="text-3xl font-bold mb-8 text-center">{pageTitle}</h1>
+        
+        {filteredJobs.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600 dark:text-gray-400 text-lg mb-4">
+              No jobs found for this location and category.
+            </p>
+            <p className="text-gray-500 dark:text-gray-500">
+              Try browsing other locations or check back later for new opportunities.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-4">
+            {filteredJobs.map(job => (
+              <JobCard
+                key={job.id}
+                job={{
+                  ...job,
+                  is_new: false,
+                  company_logo_url: job.company_logo_url || "",
+                  salary_range: job.salary_range ?? null,
+                  posted_ago: job.posted_ago ?? null,
+                  is_bookmarked: job.is_bookmarked ?? false,
+                }}
+              />
+            ))}
+          </div>
+        )}
+        
+        <div className="mt-12 text-center">
+          <p className="text-gray-600 dark:text-gray-400">
+            Found {filteredJobs.length} job{filteredJobs.length !== 1 ? 's' : ''} in this location
+          </p>
+        </div>
       </div>
     </>
-  );
+  )
 } 

@@ -19,6 +19,8 @@ import { useToast } from "@/components/ui/use-toast"
 import { useAuth } from "@/hooks/use-auth"
 import { useRouter } from "next/navigation"
 import { PaymentForm } from "@/components/payment-form"
+import { parseLocation } from "@/lib/location-matcher"
+import { AustralianAddressAutocomplete } from "@/components/australian-address-autocomplete"
 
 interface JobPostingFormProps {
   onClose: () => void
@@ -130,6 +132,20 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
   const [showPayment, setShowPayment] = useState(false)
   const [createdJobId, setCreatedJobId] = useState<number | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const locationInputRef = useRef<HTMLInputElement>(null)
+
+  // Refs for form fields to enable scrolling to errors
+  const practiceEmailRef = useRef<HTMLInputElement>(null)
+  const jobTitleRef = useRef<HTMLInputElement>(null)
+  const practiceLocationRef = useRef<HTMLInputElement>(null)
+  const jobTypeRef = useRef<HTMLButtonElement>(null)
+  const jobCategoriesRef = useRef<HTMLDivElement>(null)
+  const experienceLevelRef = useRef<HTMLButtonElement>(null)
+  const jobDetailsRef = useRef<HTMLTextAreaElement>(null)
+  const companyNameRef = useRef<HTMLInputElement>(null)
+  const contactPhoneRef = useRef<HTMLInputElement>(null)
+  const contactEmailRef = useRef<HTMLInputElement>(null)
+  const acceptTermsRef = useRef<HTMLButtonElement>(null)
 
   // Check authentication and load practice details
   useEffect(() => {
@@ -175,13 +191,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
         // Set location if available
         if (details.suburb && details.state) {
           const locationDisplay = `${details.suburb}, ${details.state.toUpperCase()}`
-          setFormData(prev => ({
-            ...prev,
-            practiceLocation: locationDisplay,
-            locationDisplay: locationDisplay,
-            city: details.suburb.toLowerCase().replace(/\s+/g, '-'),
-            state: details.state.toLowerCase(),
-          }))
+          handleLocationChange(locationDisplay)
         }
       }
     } catch (error) {
@@ -198,40 +208,18 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
     }
   }
 
-  const handleLocationChange = (value: string, lat?: number, lng?: number) => {
-    // Always save the raw input
-    let city = ""
-    let state = ""
-    // If lat/lng are provided, assume a suggestion was selected
-    if (lat && lng) {
-      // Try to extract city/state from the value (e.g., "Sydney, NSW")
-      const parts = value.split(',').map(s => s.trim())
-      if (parts.length >= 2) {
-        city = parts[0]
-        state = parts[1]
-      } else {
-        city = value
-        state = ""
-      }
-    } else {
-      // Free text: try to extract city/state from the input
-      const parts = value.split(',').map(s => s.trim())
-      if (parts.length >= 2) {
-        city = parts[0]
-        state = parts[1]
-      } else {
-        city = value
-        state = ""
-      }
-    }
+  const handleLocationChange = (value: string, addressDetails?: any) => {
+    // Parse the location input
+    const locationMatch = parseLocation(value)
+    
     setFormData((prev) => ({
       ...prev,
       practiceLocation: value,
       locationDisplay: value,
-      locationLat: lat || 0,
-      locationLng: lng || 0,
-      city: city.toLowerCase().replace(/\s+/g, '-'),
-      state: state.toLowerCase().replace(/\s+/g, '-'),
+      city: locationMatch.normalizedCity,
+      state: locationMatch.normalizedState,
+      locationLat: addressDetails?.latitude || 0,
+      locationLng: addressDetails?.longitude || 0,
     }))
   }
 
@@ -270,13 +258,38 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
   const normalizeString = (str: string) => str.trim().toLowerCase().replace(/\s+/g, '-');
   const normalizeCategories = (categories: string[]) => categories.map(normalizeString);
 
+  const scrollToFirstError = () => {
+    const errorFields = [
+      { field: 'practiceEmail', ref: practiceEmailRef },
+      { field: 'jobTitle', ref: jobTitleRef },
+      { field: 'practiceLocation', ref: practiceLocationRef },
+      { field: 'jobType', ref: jobTypeRef },
+      { field: 'jobCategories', ref: jobCategoriesRef },
+      { field: 'experienceLevel', ref: experienceLevelRef },
+      { field: 'jobDetails', ref: jobDetailsRef },
+      { field: 'companyName', ref: companyNameRef },
+      { field: 'contactPhone', ref: contactPhoneRef },
+      { field: 'contactEmail', ref: contactEmailRef },
+      { field: 'acceptTerms', ref: acceptTermsRef },
+    ]
+
+    for (const { field, ref } of errorFields) {
+      if (errors[field] && ref.current) {
+        ref.current.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        })
+        ref.current.focus()
+        break
+      }
+    }
+  }
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
     if (!formData.practiceEmail) newErrors.practiceEmail = "Practice email is required"
     if (!formData.jobTitle) newErrors.jobTitle = "Job title is required"
     if (!formData.practiceLocation) newErrors.practiceLocation = "Practice location is required"
-    if (!formData.city) newErrors.city = "City is required (select a valid location)"
-    if (!formData.state) newErrors.state = "State is required (select a valid location)"
     if (!formData.jobType) newErrors.jobType = "Job type is required"
     if (formData.jobCategories.length === 0) newErrors.jobCategories = "At least one job category is required"
     if (!formData.experienceLevel) newErrors.experienceLevel = "Experience level is required"
@@ -286,7 +299,13 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
     if (!formData.contactEmail) newErrors.contactEmail = "Contact email is required"
     if (!formData.acceptTerms) newErrors.acceptTerms = "You must accept the terms and conditions"
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    
+    if (Object.keys(newErrors).length > 0) {
+      // Scroll to first error after a brief delay to ensure DOM is updated
+      setTimeout(scrollToFirstError, 100)
+      return false
+    }
+    return true
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -473,11 +492,12 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                     Practice Email *
                   </Label>
                   <Input
+                    ref={practiceEmailRef}
                     id="practiceEmail"
                     type="email"
                     value={formData.practiceEmail}
                     onChange={(e) => handleInputChange("practiceEmail", e.target.value)}
-                    className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700"
+                    className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.practiceEmail ? 'border-red-500 focus:border-red-500' : ''}`}
                     placeholder="practice@example.com"
                   />
                   {errors.practiceEmail && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.practiceEmail}</p>}
@@ -488,10 +508,11 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                     Company Name *
                   </Label>
                   <Input
+                    ref={companyNameRef}
                     id="companyName"
                     value={formData.companyName}
                     onChange={(e) => handleInputChange("companyName", e.target.value)}
-                    className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700"
+                    className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.companyName ? 'border-red-500 focus:border-red-500' : ''}`}
                     placeholder="Your Practice Name"
                   />
                   {errors.companyName && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.companyName}</p>}
@@ -500,15 +521,20 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
 
               <div>
                 <Label htmlFor="practiceLocation" className="text-gray-900 dark:text-white">
-                  Practice City *
+                  Practice Location *
                 </Label>
-                <LocationAutocomplete
-                  value={formData.practiceLocation}
-                  onChange={handleLocationChange}
-                  placeholder="Enter practice city..."
-                  className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700"
-                />
+                <div className={errors.practiceLocation ? 'border border-red-500 rounded-md' : ''}>
+                  <AustralianAddressAutocomplete
+                    value={formData.practiceLocation}
+                    onChange={handleLocationChange}
+                    placeholder="Enter Australian address (e.g., 123 George Street, Sydney NSW 2000)"
+                    className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.practiceLocation ? 'border-red-500 focus:border-red-500' : ''}`}
+                  />
+                </div>
                 {errors.practiceLocation && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.practiceLocation}</p>}
+                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  Enter a valid Australian address. The system will validate and format it correctly.
+                </p>
               </div>
             </div>
 
@@ -521,10 +547,11 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                   Job Title *
                 </Label>
                 <Input
+                  ref={jobTitleRef}
                   id="jobTitle"
                   value={formData.jobTitle}
                   onChange={(e) => handleInputChange("jobTitle", e.target.value)}
-                  className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700"
+                  className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.jobTitle ? 'border-red-500 focus:border-red-500' : ''}`}
                   placeholder="e.g., Senior Physiotherapist"
                 />
                 {errors.jobTitle && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.jobTitle}</p>}
@@ -535,10 +562,11 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                   Job Details *
                 </Label>
                 <Textarea
+                  ref={jobDetailsRef}
                   id="jobDetails"
                   value={formData.jobDetails}
                   onChange={(e) => handleInputChange("jobDetails", e.target.value)}
-                  className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 min-h-[120px]"
+                  className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 min-h-[120px] ${errors.jobDetails ? 'border-red-500 focus:border-red-500' : ''}`}
                   placeholder="Describe the role, responsibilities, and benefits..."
                 />
                 {errors.jobDetails && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.jobDetails}</p>}
@@ -550,7 +578,10 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                     Job Type *
                   </Label>
                   <Select value={jobTypeValue} onValueChange={(value) => handleInputChange("jobType", value)}>
-                    <SelectTrigger className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700">
+                    <SelectTrigger 
+                      ref={jobTypeRef}
+                      className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.jobType ? 'border-red-500 focus:border-red-500' : ''}`}
+                    >
                       <SelectValue placeholder="Select job type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -572,7 +603,10 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                     value={experienceLevelValue}
                     onValueChange={(value) => handleInputChange("experienceLevel", value)}
                   >
-                    <SelectTrigger className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700">
+                    <SelectTrigger 
+                      ref={experienceLevelRef}
+                      className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.experienceLevel ? 'border-red-500 focus:border-red-500' : ''}`}
+                    >
                       <SelectValue placeholder="Select experience level" />
                     </SelectTrigger>
                     <SelectContent>
@@ -589,12 +623,14 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
 
               <div>
                 <Label className="text-gray-900 dark:text-white">Job Categories *</Label>
-                <MultiSelect
-                  options={jobCategories}
-                  value={formData.jobCategories}
-                  onChange={(value) => handleInputChange("jobCategories", value)}
-                  placeholder="Select job categories"
-                />
+                <div ref={jobCategoriesRef} className={errors.jobCategories ? 'border border-red-500 rounded-md p-1' : ''}>
+                  <MultiSelect
+                    options={jobCategories}
+                    value={formData.jobCategories}
+                    onChange={(value) => handleInputChange("jobCategories", value)}
+                    placeholder="Select job categories"
+                  />
+                </div>
                 {errors.jobCategories && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.jobCategories}</p>}
               </div>
 
@@ -653,11 +689,12 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                     Contact Phone *
                   </Label>
                   <Input
+                    ref={contactPhoneRef}
                     id="contactPhone"
                     type="tel"
                     value={formData.contactPhone}
                     onChange={(e) => handleInputChange("contactPhone", e.target.value)}
-                    className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700"
+                    className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.contactPhone ? 'border-red-500 focus:border-red-500' : ''}`}
                     placeholder="0412 345 678"
                   />
                   {errors.contactPhone && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.contactPhone}</p>}
@@ -668,11 +705,12 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                     Contact Email *
                   </Label>
                   <Input
+                    ref={contactEmailRef}
                     id="contactEmail"
                     type="email"
                     value={formData.contactEmail}
                     onChange={(e) => handleInputChange("contactEmail", e.target.value)}
-                    className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700"
+                    className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.contactEmail ? 'border-red-500 focus:border-red-500' : ''}`}
                     placeholder="contact@example.com"
                   />
                   {errors.contactEmail && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.contactEmail}</p>}
@@ -746,9 +784,11 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
             <div className="space-y-4">
               <div className="flex items-start space-x-2">
                 <Checkbox
+                  ref={acceptTermsRef}
                   id="acceptTerms"
                   checked={formData.acceptTerms}
                   onCheckedChange={(checked) => handleInputChange("acceptTerms", checked)}
+                  className={errors.acceptTerms ? 'border-red-500' : ''}
                 />
                 <Label htmlFor="acceptTerms" className="text-sm text-gray-900 dark:text-white leading-relaxed">
                   I accept the terms and conditions and privacy policy. I understand that job postings are subject to

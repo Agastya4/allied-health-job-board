@@ -39,6 +39,7 @@ export interface JobFilters {
   state?: string
   jobType?: string
   experienceLevel?: string
+  search?: string
 }
 
 export function useJobs(filters: JobFilters = {}) {

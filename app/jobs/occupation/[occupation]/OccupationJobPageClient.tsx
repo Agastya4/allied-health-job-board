@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react"
 import { StandardizedJobPreview } from "@/components/standardized-job-preview"
 import { Badge } from "@/components/ui/badge"
+import { useJobs } from "@/hooks/use-jobs"
+import { getJobsForCategoryPage } from "@/lib/job-sorter"
+import type { Job } from "@/lib/database"
 
 const occupationNames = {
   "physiotherapy": "Physiotherapy",
@@ -25,7 +28,26 @@ interface OccupationJobPageClientProps {
 
 export default function OccupationJobPageClient({ occupation }: OccupationJobPageClientProps) {
   const [masterSearch, setMasterSearch] = useState("")
+  const [filteredJobs, setFilteredJobs] = useState<Job[]>([])
   const occupationName = occupationNames[occupation as keyof typeof occupationNames] || occupation
+
+  // Get all jobs
+  const { jobs, loading } = useJobs()
+
+  // Filter jobs for this occupation
+  useEffect(() => {
+    if (jobs.length > 0) {
+      // Convert jobs to the correct type for the job sorter
+      const jobsWithCorrectType = jobs.map(job => ({
+        ...job,
+        created_at: new Date(job.created_at),
+        updated_at: new Date(job.updated_at)
+      })) as Job[]
+      
+      const filtered = getJobsForCategoryPage(jobsWithCorrectType, occupation)
+      setFilteredJobs(filtered)
+    }
+  }, [jobs, occupation])
 
   // Set master search to occupation name when component mounts
   useEffect(() => {
@@ -40,7 +62,7 @@ export default function OccupationJobPageClient({ occupation }: OccupationJobPag
         {occupationName} Jobs
       </h1>
       <Badge variant="outline" className="bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300">
-        Pre-filtered for {occupationName}
+        {filteredJobs.length} job{filteredJobs.length !== 1 ? 's' : ''} found
       </Badge>
     </div>
   )

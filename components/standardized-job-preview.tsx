@@ -173,8 +173,8 @@ export function StandardizedJobPreview({
               />
             </ResizablePanel>
             <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={55} minSize={30} maxSize={75} className="h-full min-h-0 flex flex-col justify-center overflow-hidden">
-              <div className="h-full min-h-0 flex flex-col justify-center overflow-y-auto">
+            <ResizablePanel defaultSize={55} minSize={30} maxSize={75} className="h-full min-h-0">
+              <div className="h-full min-h-0">
                 <JobDetail
                   job={selectedJob}
                   onClose={() => setSelectedJob(null)}
