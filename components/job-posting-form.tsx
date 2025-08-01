@@ -228,30 +228,51 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
     const previewUrl = URL.createObjectURL(file)
     setLogoPreview(previewUrl)
     setLogoFile(file)
+    
     try {
       const formData = new FormData()
       formData.append("file", file)
+      
+      console.log("Uploading logo file:", file.name, file.size)
+      
       const response = await fetch("/api/upload", {
         method: "POST",
         body: formData,
       })
-      const data = await response.json()
+      
+      console.log("Upload response status:", response.status)
+      
       if (!response.ok) {
-        throw new Error(data.error || "Upload failed")
+        const errorData = await response.json()
+        throw new Error(errorData.error || `Upload failed with status ${response.status}`)
       }
+      
+      const data = await response.json()
+      console.log("Upload successful:", data)
+      
       setLogoUrl(data.url)
-      setLogoPreview("") // Clear preview after upload
-      setLogoFile(file)
+      // Keep the preview for a moment, then clear it
+      setTimeout(() => setLogoPreview(""), 1000)
+      
       // Reset file input so the same file can be re-uploaded if needed
       if (fileInputRef.current) fileInputRef.current.value = ""
+      
+      toast({
+        title: "Logo uploaded successfully",
+        description: "Your company logo has been uploaded.",
+        duration: 2000,
+      })
+      
     } catch (error) {
       console.error("Logo upload failed:", error)
+      
+      // Don't clear the preview on error - let user see what they selected
       toast({
-        title: "Error",
-        description: "Failed to upload logo. Please try again.",
+        title: "Upload failed",
+        description: error instanceof Error ? error.message : "Failed to upload logo. Please try again.",
         variant: "destructive",
+        duration: 4000,
       })
-      setLogoPreview("")
     }
   }
 
@@ -286,25 +307,67 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
   }
 
   const validateForm = () => {
+    console.log("=== Form Validation ===")
+    console.log("Current form data:", formData)
+    
     const newErrors: Record<string, string> = {}
-    if (!formData.practiceEmail) newErrors.practiceEmail = "Practice email is required"
-    if (!formData.jobTitle) newErrors.jobTitle = "Job title is required"
-    if (!formData.practiceLocation) newErrors.practiceLocation = "Practice location is required"
-    if (!formData.jobType) newErrors.jobType = "Job type is required"
-    if (formData.jobCategories.length === 0) newErrors.jobCategories = "At least one job category is required"
-    if (!formData.experienceLevel) newErrors.experienceLevel = "Experience level is required"
-    if (!formData.jobDetails) newErrors.jobDetails = "Job details are required"
-    if (!formData.companyName) newErrors.companyName = "Company name is required"
-    if (!formData.contactPhone) newErrors.contactPhone = "Contact phone is required"
-    if (!formData.contactEmail) newErrors.contactEmail = "Contact email is required"
-    if (!formData.acceptTerms) newErrors.acceptTerms = "You must accept the terms and conditions"
+    
+    if (!formData.practiceEmail) {
+      newErrors.practiceEmail = "Practice email is required"
+      console.log("❌ Missing: practiceEmail")
+    }
+    if (!formData.jobTitle) {
+      newErrors.jobTitle = "Job title is required"
+      console.log("❌ Missing: jobTitle")
+    }
+    if (!formData.practiceLocation) {
+      newErrors.practiceLocation = "Practice location is required"
+      console.log("❌ Missing: practiceLocation")
+    }
+    if (!formData.jobType) {
+      newErrors.jobType = "Job type is required"
+      console.log("❌ Missing: jobType")
+    }
+    if (formData.jobCategories.length === 0) {
+      newErrors.jobCategories = "At least one job category is required"
+      console.log("❌ Missing: jobCategories")
+    }
+    if (!formData.experienceLevel) {
+      newErrors.experienceLevel = "Experience level is required"
+      console.log("❌ Missing: experienceLevel")
+    }
+    if (!formData.jobDetails) {
+      newErrors.jobDetails = "Job details are required"
+      console.log("❌ Missing: jobDetails")
+    }
+    if (!formData.companyName) {
+      newErrors.companyName = "Company name is required"
+      console.log("❌ Missing: companyName")
+    }
+    if (!formData.contactPhone) {
+      newErrors.contactPhone = "Contact phone is required"
+      console.log("❌ Missing: contactPhone")
+    }
+    if (!formData.contactEmail) {
+      newErrors.contactEmail = "Contact email is required"
+      console.log("❌ Missing: contactEmail")
+    }
+    if (!formData.acceptTerms) {
+      newErrors.acceptTerms = "You must accept the terms and conditions"
+      console.log("❌ Missing: acceptTerms")
+    }
+    
+    console.log("Validation errors:", newErrors)
     setErrors(newErrors)
     
     if (Object.keys(newErrors).length > 0) {
+      console.log("❌ Form validation failed with", Object.keys(newErrors).length, "errors")
       // Scroll to first error after a brief delay to ensure DOM is updated
       setTimeout(scrollToFirstError, 100)
       return false
     }
+    
+    console.log("✅ Form validation passed")
     return true
   }
 
