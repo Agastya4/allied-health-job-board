@@ -101,8 +101,8 @@ export default async function LocationPage({ params }: LocationPageProps) {
                   is_new: false,
                   company_logo_url: job.company_logo_url || "",
                   salary_range: job.salary_range ?? null,
-                  posted_ago: job.posted_ago ?? null,
-                  is_bookmarked: job.is_bookmarked ?? false,
+                  posted_ago: null,
+                  is_bookmarked: false,
                 }}
               />
             ))}

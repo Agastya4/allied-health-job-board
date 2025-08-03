@@ -28,7 +28,7 @@ interface StandardizedJobPreviewProps {
   title?: string
   // Prompt text below title
   prompt?: string
-  // Whether to show the sidebar (default: true)
+  // Whether to show the sidebar (default: false - removed filters)
   showSidebar?: boolean
   // Whether to auto-select first job (default: false)
   autoSelectFirst?: boolean
@@ -48,7 +48,7 @@ export function StandardizedJobPreview({
   searchPlaceholder = "Search for any job, company, location, or occupation...",
   title,
   prompt,
-  showSidebar = true,
+  showSidebar = false,
   autoSelectFirst = false,
   shiftDown = false,
   backButton,
@@ -122,12 +122,9 @@ export function StandardizedJobPreview({
     <div className="flex-1 min-h-0 flex bg-white dark:bg-zinc-950 text-gray-900 dark:text-white overflow-hidden">
       {/* Desktop Layout - Hidden on Mobile */}
       <div className="hidden md:flex w-full h-full">
-        {showSidebar && (
-          <JobSidebar user={user} onFiltersChange={setFilters} onPostJob={() => setShowAuthModal(true)} />
-        )}
-        <div className="flex-1 flex flex-col h-full">
+        <div className="flex-1 flex flex-col h-full min-w-0">
           {/* Master Search Header */}
-          <div className="border-b border-gray-200 dark:border-zinc-800 p-4">
+          <div className="border-b border-gray-200 dark:border-zinc-800 p-4 flex-shrink-0">
             {customHeader ? (
               customHeader
             ) : (
@@ -160,7 +157,7 @@ export function StandardizedJobPreview({
           </div>
           
           <ResizablePanelGroup direction="horizontal" className="h-full w-full min-h-0">
-            <ResizablePanel defaultSize={45} minSize={25} maxSize={70}>
+            <ResizablePanel defaultSize={40} minSize={25} maxSize={65}>
               <JobList
                 jobs={filteredJobs}
                 loading={jobsLoading}
@@ -173,7 +170,7 @@ export function StandardizedJobPreview({
               />
             </ResizablePanel>
             <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={55} minSize={30} maxSize={75} className="h-full min-h-0">
+            <ResizablePanel defaultSize={60} minSize={35} maxSize={75} className="h-full min-h-0">
               <div className="h-full min-h-0">
                 <JobDetail
                   job={selectedJob}
@@ -189,7 +186,7 @@ export function StandardizedJobPreview({
       {/* Mobile Layout */}
       <div className="md:hidden flex flex-col w-full h-full">
         {/* Mobile Header with Master Search */}
-        <div className="border-b border-gray-200 dark:border-zinc-800 p-4">
+        <div className="border-b border-gray-200 dark:border-zinc-800 p-4 flex-shrink-0">
           {customHeader ? (
             customHeader
           ) : (
@@ -254,7 +251,7 @@ export function StandardizedJobPreview({
         </div>
 
         {/* Mobile Bottom Navigation */}
-        <div className="border-t border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
+        <div className="border-t border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex-shrink-0">
           <div className="flex">
             <Button
               variant="ghost"

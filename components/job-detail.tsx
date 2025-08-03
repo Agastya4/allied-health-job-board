@@ -49,8 +49,19 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
   }
 
   const jobSlug = slugify(`${job.job_title}-${job.location_display || ''}`)
-  // Remove requirements extraction logic
   let jobDetails = job.job_details
+
+  // Function to truncate text to 8 lines
+  const truncateToLines = (text: string, maxLines: number = 8) => {
+    const lines = text.split('\n')
+    if (lines.length <= maxLines) {
+      return text
+    }
+    return lines.slice(0, maxLines).join('\n') + '\n...'
+  }
+
+  const truncatedJobDetails = truncateToLines(jobDetails)
+
   return (
     <div className="h-full bg-white dark:bg-zinc-900 border-l border-gray-200 dark:border-zinc-800 flex flex-col">
       {/* Mobile Header */}
@@ -65,7 +76,7 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
             <ArrowLeft className="h-5 w-5" />
             <span className="sr-only">Back</span>
           </Button>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <h1 className="text-lg font-semibold text-gray-900 dark:text-white truncate">{job.job_title}</h1>
             <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{job.company_name}</p>
           </div>
@@ -75,27 +86,29 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
       {/* Desktop Header */}
       <div className="hidden md:block p-6 border-b border-gray-200 dark:border-zinc-800 flex-shrink-0">
         <div className="flex items-start justify-between">
-          <div className="flex items-start gap-4 flex-1">
-            <Image
-              src={job.company_logo_url || "/placeholder.svg"}
-              alt={`${job.company_name} logo`}
-              width={80}
-              height={80}
-              className="w-20 h-20 object-cover rounded-lg border border-gray-200 dark:border-zinc-700"
-            />
-            <div className="flex-1">
+          <div className="flex items-start gap-4 flex-1 min-w-0">
+            <div className="flex-shrink-0">
+              <Image
+                src={job.company_logo_url || "/placeholder.svg"}
+                alt={`${job.company_name} logo`}
+                width={80}
+                height={80}
+                className="w-20 h-20 object-cover rounded-lg border border-gray-200 dark:border-zinc-700"
+              />
+            </div>
+            <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between">
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{job.job_title}</h1>
-                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2">{job.company_name}</p>
-                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                    <MapPin className="h-4 w-4" />
-                    <span>{job.location_display}</span>
+                <div className="flex-1 min-w-0">
+                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1 truncate">{job.job_title}</h1>
+                  <p className="text-lg text-gray-700 dark:text-gray-300 mb-2 truncate">{job.company_name}</p>
+                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 flex-wrap">
+                    <MapPin className="h-4 w-4 flex-shrink-0" />
+                    <span className="truncate">{job.location_display}</span>
                     {job.posted_ago && (
                       <>
-                        <span>•</span>
-                        <Clock className="h-4 w-4" />
-                        <span>Posted {job.posted_ago}</span>
+                        <span className="flex-shrink-0">•</span>
+                        <Clock className="h-4 w-4 flex-shrink-0" />
+                        <span className="flex-shrink-0">Posted {job.posted_ago}</span>
                       </>
                     )}
                   </div>
@@ -104,7 +117,7 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
                   variant="ghost"
                   size="icon"
                   onClick={onClose}
-                  className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                  className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white flex-shrink-0 ml-2"
                 >
                   <X className="h-5 w-5" />
                   <span className="sr-only">Close</span>
@@ -150,13 +163,13 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
             alt={`${job.company_name} logo`}
             width={60}
             height={60}
-            className="w-15 h-15 object-cover rounded-lg border border-gray-200 dark:border-zinc-700"
+            className="w-15 h-15 object-cover rounded-lg border border-gray-200 dark:border-zinc-700 flex-shrink-0"
           />
-          <div>
-            <p className="text-lg font-semibold text-gray-900 dark:text-white">{job.company_name}</p>
+          <div className="flex-1 min-w-0">
+            <p className="text-lg font-semibold text-gray-900 dark:text-white truncate">{job.company_name}</p>
             <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-              <MapPin className="h-4 w-4" />
-              <span>{job.location_display}</span>
+              <MapPin className="h-4 w-4 flex-shrink-0" />
+              <span className="truncate">{job.location_display}</span>
             </div>
           </div>
         </div>
@@ -193,81 +206,93 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
       <div className="flex-1 overflow-y-auto min-h-0 flex flex-col">
         <div className="p-4 md:p-6 pb-8 flex-1">
           {/* Job Details */}
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Job Description</h2>
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Job Description</h2>
             <div className="prose prose-sm dark:prose-invert max-w-none">
-              <div className="whitespace-pre-line text-gray-700 dark:text-gray-300 leading-relaxed">
-                {jobDetails}
+              <div className="whitespace-pre-line text-gray-700 dark:text-gray-300 leading-relaxed text-base">
+                {truncatedJobDetails}
               </div>
             </div>
           </div>
 
-          <Separator className="my-6" />
+          <Separator className="my-8" />
 
           {/* Company Information */}
-          <div className="mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Company Information</h2>
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                <Building className="h-4 w-4" />
-                <span>{job.company_name}</span>
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Company Information</h2>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
+                <Building className="h-5 w-5 flex-shrink-0 mt-0.5" />
+                <div className="flex-1 min-w-0">
+                  <span className="font-medium">Company:</span>
+                  <span className="ml-2">{job.company_name}</span>
+                </div>
               </div>
               {job.practice_location && (
-                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                  <MapPin className="h-4 w-4" />
-                  <span>{job.practice_location}</span>
+                <div className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
+                  <MapPin className="h-5 w-5 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <span className="font-medium">Practice Location:</span>
+                    <span className="ml-2">{job.practice_location}</span>
+                  </div>
                 </div>
               )}
-              <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                <Mail className="h-4 w-4" />
-                <span>{job.contact_email}</span>
+              <div className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
+                <Mail className="h-5 w-5 flex-shrink-0 mt-0.5" />
+                <div className="flex-1 min-w-0">
+                  <span className="font-medium">Email:</span>
+                  <span className="ml-2 break-all">{job.contact_email}</span>
+                </div>
               </div>
               {job.contact_phone && (
-                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                  <Phone className="h-4 w-4" />
-                  <span>{job.contact_phone}</span>
+                <div className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
+                  <Phone className="h-5 w-5 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <span className="font-medium">Phone:</span>
+                    <span className="ml-2">{job.contact_phone}</span>
+                  </div>
                 </div>
               )}
               {job.company_website && (
-                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                  <Laptop className="h-4 w-4" />
-                  <Link
-                    href={job.company_website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-violet-700 dark:text-violet-400 hover:underline"
-                  >
-                    {job.company_website}
-                  </Link>
+                <div className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
+                  <Laptop className="h-5 w-5 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <span className="font-medium">Website:</span>
+                    <Link
+                      href={job.company_website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ml-2 text-violet-700 dark:text-violet-400 hover:underline break-all"
+                    >
+                      {job.company_website}
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>
           </div>
 
-          <Separator className="my-6" />
+          <Separator className="my-8" />
 
           {/* Quick Actions */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <Link
               href={`/jobs/${job.id}-${jobSlug}`}
               className="block w-full"
             >
-              <Button className="w-full border-2 border-violet-600 text-violet-600 hover:bg-violet-50 h-12 md:h-10" variant="outline">
+              <Button className="w-full border-2 border-violet-600 text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/20 h-12" variant="outline">
                 View Full Page
               </Button>
             </Link>
             <Button
               onClick={handleApply}
-              className="w-full border-2 border-violet-600 text-violet-600 hover:bg-violet-50 h-12 md:h-10"
-              variant="outline"
+              className="w-full bg-violet-600 hover:bg-violet-700 text-white h-12"
             >
               Apply Now
             </Button>
           </div>
         </div>
       </div>
-
-      {/* Mobile Sticky Apply Button (remove, now handled by sticky desktop section) */}
     </div>
   )
 }

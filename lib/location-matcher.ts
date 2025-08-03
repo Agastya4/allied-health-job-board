@@ -69,8 +69,14 @@ const STATE_MAPPING: Record<string, string> = {
 
 // Extract city and state from full address string
 function extractCityAndStateFromAddress(address: string): { city: string; state: string } {
+  console.log(`Extracting city and state from address: "${address}"`)
+  
   // Common patterns for Australian addresses
   const patterns = [
+    // Pattern: "Street, City, State Postcode" (e.g., "Moore Street, Liverpool, Sydney, NSW 2170")
+    /[^,]+,\s*([^,]+),\s*([^,]+),\s*([A-Z]{2,3})\s+\d{4}/i,
+    // Pattern: "Street, City, State" (e.g., "Moore Street, Liverpool, Sydney, NSW")
+    /[^,]+,\s*([^,]+),\s*([^,]+),\s*([A-Z]{2,3})/i,
     // Pattern: "City, State Postcode" (e.g., "Sydney, NSW 2000")
     /([^,]+),\s*([A-Z]{2,3})\s+\d{4}/i,
     // Pattern: "City, State" (e.g., "Sydney, NSW")
@@ -90,6 +96,7 @@ function extractCityAndStateFromAddress(address: string): { city: string; state:
     if (match) {
       const city = match[1].trim()
       const state = match[2].trim()
+      console.log(`  Pattern matched: city="${city}", state="${state}"`)
       return { city, state }
     }
   }
@@ -103,10 +110,28 @@ function extractCityAndStateFromAddress(address: string): { city: string; state:
       const beforeState = address.substring(0, stateIndex).trim()
       const parts = beforeState.split(/[,\s]+/).filter(part => part.length > 0)
       const city = parts[parts.length - 1] || ''
+      console.log(`  State abbreviation found: city="${city}", state="${abbr}"`)
       return { city, state: abbr }
     }
   }
 
+  // Special handling for complex addresses like "Moore Street, Liverpool, Sydney, Liverpool City Council, New South Wales, 2170, Australia"
+  if (address.includes('New South Wales') || address.includes('NSW')) {
+    const parts = address.split(',').map(part => part.trim())
+    // Look for a city name (usually the second or third part)
+    let city = ''
+    for (let i = 1; i < Math.min(parts.length, 4); i++) {
+      const part = parts[i]
+      if (part && !part.includes('Council') && !part.includes('Australia') && !part.match(/\d{4}/)) {
+        city = part
+        break
+      }
+    }
+    console.log(`  Complex address handling: city="${city}", state="NSW"`)
+    return { city: city || 'Sydney', state: 'NSW' }
+  }
+
+  console.log(`  No pattern matched, returning empty city and state`)
   return { city: '', state: '' }
 }
 

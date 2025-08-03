@@ -88,10 +88,11 @@ export async function POST(request: NextRequest) {
     }
     console.log("Creating job for user:", user.email)
     const body = await request.json()
+    
     // Validate required fields
     const requiredFields = [
       'practice_email', 'job_title', 'practice_location', 'location_display',
-      'city', 'state', 'job_type', 'job_categories', 'experience_level',
+      'job_type', 'job_categories', 'experience_level',
       'job_details', 'company_name', 'contact_phone', 'contact_email'
     ];
     const missingFields = requiredFields.filter(f => !body[f] || (Array.isArray(body[f]) && body[f].length === 0));
@@ -99,6 +100,26 @@ export async function POST(request: NextRequest) {
       console.error("Job creation error: Missing fields", missingFields);
       return NextResponse.json({ error: `Missing required fields: ${missingFields.join(', ')}` }, { status: 400 });
     }
+
+    // Derive city and state from location_display if not provided
+    let city = body.city;
+    let state = body.state;
+    
+    if (!city || !state) {
+      const locationDisplay = body.location_display;
+      if (locationDisplay && locationDisplay.includes(',')) {
+        const parts = locationDisplay.split(',').map((part: string) => part.trim());
+        if (parts.length >= 2) {
+          city = city || parts[0];
+          state = state || parts[1];
+        } else {
+          city = city || locationDisplay;
+        }
+      } else {
+        city = city || locationDisplay;
+      }
+    }
+
     const jobData = {
       user_id: user.id,
       practice_email: body.practice_email,
@@ -118,9 +139,11 @@ export async function POST(request: NextRequest) {
       contact_email: body.contact_email,
       company_website: body.company_website,
       company_logo_url: body.company_logo_url,
-      city: body.city,
-      state: body.state,
+      city: city,
+      state: state,
     }
+    
+    console.log("Job data to be created:", jobData)
     const job = await createJob(jobData)
     console.log("Job created successfully with ID:", job.id)
     return NextResponse.json(

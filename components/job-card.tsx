@@ -2,7 +2,7 @@
 import Image from "next/image"
 import type React from "react"
 
-import { MapPin, DollarSign, Briefcase, GraduationCap, Laptop, Building, Bookmark, BookmarkCheck } from "lucide-react"
+import { MapPin, DollarSign, Briefcase, GraduationCap, Laptop, Building, Bookmark, BookmarkCheck, Calendar, Clock } from "lucide-react"
 
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -22,8 +22,10 @@ interface Job {
   salary_range: string | null
   posted_ago: string | null
   is_bookmarked: boolean
-  job_details?: string // Added job_details to the interface
-  job_categories?: string[] // Added job_categories to the interface
+  job_details?: string
+  job_categories?: string[]
+  work_setting?: string
+  created_at?: string
 }
 
 interface JobCardProps {
@@ -31,7 +33,7 @@ interface JobCardProps {
   onClick: () => void
   isSelected: boolean
   onBookmarkToggle: (jobId: number) => void
-  shiftDown?: boolean // Add this prop
+  shiftDown?: boolean
 }
 
 // List of Australian state abbreviations
@@ -74,19 +76,24 @@ function extractCityState(location: string): string {
   return location;
 }
 
+// Function to format time ago
+function formatTimeAgo(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInMs = now.getTime() - date.getTime();
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  
+  if (diffInDays === 0) return "Today";
+  if (diffInDays === 1) return "Yesterday";
+  if (diffInDays < 7) return `${diffInDays} days ago`;
+  if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`;
+  return `${Math.floor(diffInDays / 30)} months ago`;
+}
+
 export function JobCard({ job, onClick, isSelected, onBookmarkToggle, shiftDown }: JobCardProps) {
   const handleBookmarkClick = (e: React.MouseEvent) => {
     e.stopPropagation()
     onBookmarkToggle(job.id)
-  }
-
-  // Extract requirements if present (split by 'Requirements:' or similar)
-  let requirements = ''
-  if (job.job_details) {
-    const reqMatch = job.job_details.match(/Requirements:(.*)$/i)
-    if (reqMatch) {
-      requirements = reqMatch[1].trim()
-    }
   }
 
   // Extract city and state from location_display for preview
@@ -98,133 +105,132 @@ export function JobCard({ job, onClick, isSelected, onBookmarkToggle, shiftDown 
   // Ensure logoSrc is always a valid, non-empty string
   const logoSrc = job.company_logo_url && job.company_logo_url.trim() !== "" ? job.company_logo_url : "/placeholder.svg"
 
+  // Format posted date
+  const postedDate = job.created_at ? formatTimeAgo(job.created_at) : job.posted_ago || "Recently"
+
   return (
     <Card
       className={cn(
-        "p-4 md:p-4 flex flex-col md:flex-row md:items-start gap-4 cursor-pointer transition-colors relative",
-        "bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-800",
+        "p-6 flex flex-col md:flex-row md:items-start gap-6 cursor-pointer transition-all duration-200",
+        "bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-800 hover:shadow-md",
         isSelected ? "border-violet-600 ring-2 ring-violet-600" : "",
-        shiftDown ? "mt-8" : "" // Add margin top if shiftDown is true
+        shiftDown ? "mt-8" : "",
+        job.is_featured ? "border-violet-300 dark:border-violet-700 bg-violet-50/50 dark:bg-violet-900/10" : ""
       )}
       onClick={onClick}
     >
-      {/* Mobile: Logo and company info at top */}
-      <div className="flex items-center gap-3 md:hidden">
-        <Image
-          src={logoSrc}
-          alt={`${job.company_name} logo`}
-          width={48}
-          height={48}
-          className="w-12 h-12 object-cover rounded-lg border border-gray-200 dark:border-zinc-700"
-        />
-        <div className="flex-1">
-          <p className="text-gray-700 dark:text-white text-sm font-medium">{job.company_name}</p>
-          <div className="flex items-center gap-2 mt-1">
-            {job.posted_ago === "new" && (
-              <Badge className="bg-violet-600 text-white px-2 py-1 rounded-md text-xs font-medium">New</Badge>
-            )}
-            {job.posted_ago && job.posted_ago !== "new" && (
-              <span className="text-sm text-gray-500 dark:text-gray-400">{job.posted_ago}</span>
-            )}
-          </div>
+      {/* Company Logo */}
+      <div className="flex-shrink-0">
+        <div className="w-16 h-16 bg-gray-100 dark:bg-zinc-800 rounded-xl flex items-center justify-center overflow-hidden border border-gray-200 dark:border-zinc-700">
+          <Image
+            src={logoSrc}
+            alt={`${job.company_name} logo`}
+            width={64}
+            height={64}
+            className="w-full h-full object-cover"
+          />
         </div>
       </div>
 
-      {/* Desktop: Logo on left */}
-      <Image
-        src={logoSrc}
-        alt={`${job.company_name} logo`}
-        width={56}
-        height={56}
-        className="hidden md:block w-14 h-14 object-cover rounded-lg border border-gray-200 dark:border-zinc-700"
-      />
-
-      <div className="flex-1">
-        {/* Mobile: Job title and badges */}
-        <div className="md:hidden">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">{job.job_title}</h3>
-          <div className="flex flex-wrap gap-2 mb-3">
-            <Badge
-              variant="outline"
-              className="bg-violet-50 dark:bg-violet-900/20 border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-300 flex items-center gap-1 text-xs"
-            >
-              {getOccupationName(job.job_categories)}
-            </Badge>
-            <Badge
-              variant="outline"
-              className="bg-gray-100 dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-white flex items-center gap-1 text-xs"
-            >
-              <MapPin className="h-3 w-3" />
-              {cityState}
-            </Badge>
-            <Badge
-              variant="outline"
-              className="bg-gray-100 dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-white flex items-center gap-1 text-xs"
-            >
-              <Briefcase className="h-3 w-3" />
-              {job.job_type}
-            </Badge>
-            <Badge
-              variant="outline"
-              className="bg-gray-100 dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-white flex items-center gap-1 text-xs"
-            >
-              <GraduationCap className="h-3 w-3" />
-              {job.experience_level}
-            </Badge>
+      {/* Job Content */}
+      <div className="flex-1 min-w-0">
+        {/* Header with title, company, and badges */}
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div className="flex-1 min-w-0">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+              {job.job_title}
+            </h3>
+            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-3">
+              <Building className="h-4 w-4" />
+              <span className="font-medium">{job.company_name}</span>
+            </div>
           </div>
+          
+          {/* Bookmark and badges */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleBookmarkClick}
+              className="p-1 h-auto"
+            >
+              {job.is_bookmarked ? (
+                <BookmarkCheck className="h-5 w-5 text-violet-600" />
+              ) : (
+                <Bookmark className="h-5 w-5 text-gray-400 hover:text-violet-600" />
+              )}
+            </Button>
+            
+            {job.is_featured && (
+              <Badge className="bg-violet-600 text-white px-2 py-1 text-xs">
+                Featured
+              </Badge>
+            )}
+            
+            {job.is_new && (
+              <Badge className="bg-green-600 text-white px-2 py-1 text-xs">
+                New
+              </Badge>
+            )}
+          </div>
+        </div>
+
+        {/* Job Details Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+          <div className="flex items-center gap-2">
+            <MapPin className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+            <span className="text-sm text-gray-700 dark:text-gray-300">{cityState}</span>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Briefcase className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+            <span className="text-sm text-gray-700 dark:text-gray-300">{job.job_type}</span>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <GraduationCap className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+            <span className="text-sm text-gray-700 dark:text-gray-300">{job.experience_level}</span>
+          </div>
+          
           {job.salary_range && (
-            <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400 mb-3">
-              <DollarSign className="h-4 w-4" />
-              {job.salary_range}
+            <div className="flex items-center gap-2">
+              <DollarSign className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <span className="text-sm text-gray-700 dark:text-gray-300">{job.salary_range}</span>
             </div>
           )}
+          
+          {job.work_setting && (
+            <div className="flex items-center gap-2">
+              <Building className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+              <span className="text-sm text-gray-700 dark:text-gray-300">{job.work_setting}</span>
+            </div>
+          )}
+          
+          <div className="flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+            <span className="text-sm text-gray-700 dark:text-gray-300">{postedDate}</span>
+          </div>
         </div>
 
-        {/* Desktop: Original layout */}
-        <div className="hidden md:block">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{job.job_title}</h3>
-            <div className="flex items-center gap-2">
-              {job.posted_ago === "new" && (
-                <Badge className="bg-violet-600 text-white px-2 py-1 rounded-md text-xs font-medium">New</Badge>
-              )}
-              {job.posted_ago && job.posted_ago !== "new" && (
-                <span className="text-sm text-gray-500 dark:text-gray-400">{job.posted_ago}</span>
-              )}
-            </div>
-          </div>
-          <p className="text-gray-700 dark:text-white text-sm mb-2">{job.company_name}</p>
-          <div className="flex flex-wrap gap-2">
-            <Badge
-              variant="outline"
-              className="bg-violet-50 dark:bg-violet-900/20 border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-300 flex items-center gap-1"
-            >
-              {getOccupationName(job.job_categories)}
-            </Badge>
-            <Badge
-              variant="outline"
-              className="bg-gray-100 dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-white flex items-center gap-1"
-            >
-              <MapPin className="h-3 w-3" />
-              {cityState}
-            </Badge>
-            <Badge
-              variant="outline"
-              className="bg-gray-100 dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-white flex items-center gap-1"
-            >
-              <Briefcase className="h-3 w-3" />
-              {job.job_type}
-            </Badge>
-            <Badge
-              variant="outline"
-              className="bg-gray-100 dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-white flex items-center gap-1"
-            >
-              <GraduationCap className="h-3 w-3" />
-              {job.experience_level}
-            </Badge>
-          </div>
+        {/* Job Categories */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          <Badge
+            variant="outline"
+            className="bg-violet-50 dark:bg-violet-900/20 border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-300"
+          >
+            {getOccupationName(job.job_categories)}
+          </Badge>
         </div>
-        {/* Remove job details from minimized preview */}
+
+        {/* Job Preview */}
+        {job.job_details && (
+          <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+            {job.job_details.length > 150 
+              ? `${job.job_details.substring(0, 150)}...` 
+              : job.job_details
+            }
+          </div>
+        )}
       </div>
     </Card>
   )

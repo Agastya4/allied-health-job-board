@@ -18,7 +18,7 @@ interface JobListProps {
 export function JobList({ jobs, loading, onSelectJob, selectedJobId, onPostJob, shiftDown, title, prompt }: JobListProps) {
   if (loading) {
     return (
-      <div className="h-screen flex flex-col bg-white dark:bg-zinc-950">
+      <div className="h-full flex flex-col bg-white dark:bg-zinc-950">
         <div className="flex-1 flex items-center justify-center">
           <div className="text-gray-600 dark:text-gray-400">Loading jobs...</div>
         </div>
@@ -27,7 +27,7 @@ export function JobList({ jobs, loading, onSelectJob, selectedJobId, onPostJob, 
   }
   if (!loading && jobs.length === 0) {
     return (
-      <div className="h-screen flex flex-col bg-white dark:bg-zinc-950">
+      <div className="h-full flex flex-col bg-white dark:bg-zinc-950">
         <div className="flex-1 flex items-center justify-center">
           <div className="text-gray-600 dark:text-gray-400 text-center">
             <p>No jobs found matching your criteria.</p>
@@ -42,18 +42,18 @@ export function JobList({ jobs, loading, onSelectJob, selectedJobId, onPostJob, 
     <div className="h-full flex flex-col bg-white dark:bg-zinc-950">
       {/* Render the title and prompt at the top of the job list panel if provided */}
       {title && (
-        <div className="px-4 md:px-4 pt-4 pb-2">
+        <div className="px-4 md:px-6 pt-4 pb-2 flex-shrink-0">
           <h1 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h1>
           {prompt && <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">{prompt}</div>}
         </div>
       )}
-      <div className="flex-1 overflow-y-auto scrollbar-thin">
+      <div className="flex-1 overflow-y-auto scrollbar-thin min-h-0">
         {jobs.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-600 dark:text-gray-400">No jobs found matching your criteria.</p>
           </div>
         ) : (
-          <div className="grid gap-3 md:gap-4 px-4 md:px-4">
+          <div className="grid gap-3 md:gap-4 px-4 md:px-6 py-2">
             {jobs.map((job) => (
               <JobCard
                 key={job.id}

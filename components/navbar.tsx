@@ -30,7 +30,7 @@ export function Navbar() {
       <Link href="/" className="flex items-center gap-2">
         <span className="sr-only">AlliedHealthJobs.au</span>
         <Image
-          src={theme === "dark" ? "/Logo-dark.png.png" : "/Logo-light.png.png"}
+          src={theme === "dark" ? "/Logo-dark.png" : "/Logo-light.png"}
           alt="AlliedHealthJobs.au Logo"
           width={240}
           height={240}

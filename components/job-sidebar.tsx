@@ -157,14 +157,14 @@ export function JobSidebar({ user, onFiltersChange, onPostJob, initialFilters }:
   }
 
   return (
-    <div className="w-full md:w-60 bg-gray-50 dark:bg-zinc-900 flex flex-col border-r border-gray-200 dark:border-zinc-800 h-full md:h-screen">
-      <div className="p-3 border-b border-gray-200 dark:border-zinc-800">
+    <div className="w-full md:w-40 lg:w-48 bg-gray-50 dark:bg-zinc-900 flex flex-col border-r border-gray-200 dark:border-zinc-800 h-full md:h-screen">
+      <div className="p-4 border-b border-gray-200 dark:border-zinc-800">
         {/* Logo removed as per request */}
       </div>
-      <div className="flex-1 flex flex-col p-3 md:p-3">
-        <div className="space-y-4 md:space-y-3 flex-1">
+      <div className="flex-1 flex flex-col p-4 md:p-4 overflow-y-auto">
+        <div className="space-y-6 md:space-y-5 flex-1">
           <div>
-            <label htmlFor="job-title" className="text-sm font-medium text-gray-900 dark:text-white mb-2 block">
+            <label htmlFor="job-title" className="text-sm font-medium text-gray-900 dark:text-white mb-3 block">
               Job Title
             </label>
             <Input
@@ -172,11 +172,11 @@ export function JobSidebar({ user, onFiltersChange, onPostJob, initialFilters }:
               placeholder="Search job titles..."
               value={filters.jobTitle || ""}
               onChange={(e) => handleFilterChange("jobTitle", e.target.value)}
-              className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 h-12 md:h-10 text-base md:text-sm"
+              className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 h-12 text-base"
             />
           </div>
           <div>
-            <label htmlFor="occupation" className="text-sm font-medium text-gray-900 dark:text-white mb-2 block">
+            <label htmlFor="occupation" className="text-sm font-medium text-gray-900 dark:text-white mb-3 block">
               Occupation
             </label>
             <Select
@@ -186,7 +186,7 @@ export function JobSidebar({ user, onFiltersChange, onPostJob, initialFilters }:
             >
               <SelectTrigger
                 id="occupation"
-                className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white h-12 md:h-10 text-base md:text-sm"
+                className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white h-12 text-base"
               >
                 <SelectValue placeholder="Any" />
               </SelectTrigger>
@@ -208,7 +208,7 @@ export function JobSidebar({ user, onFiltersChange, onPostJob, initialFilters }:
             </Select>
           </div>
           <div>
-            <label htmlFor="state" className="text-sm font-medium text-gray-900 dark:text-white mb-2 block">
+            <label htmlFor="state" className="text-sm font-medium text-gray-900 dark:text-white mb-3 block">
               State
             </label>
             <Select
@@ -218,7 +218,7 @@ export function JobSidebar({ user, onFiltersChange, onPostJob, initialFilters }:
             >
               <SelectTrigger
                 id="state"
-                className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white h-12 md:h-10 text-base md:text-sm"
+                className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white h-12 text-base"
               >
                 <SelectValue placeholder="Any" />
               </SelectTrigger>
@@ -233,18 +233,18 @@ export function JobSidebar({ user, onFiltersChange, onPostJob, initialFilters }:
             </Select>
           </div>
           <div>
-            <label htmlFor="city" className="text-sm font-medium text-gray-900 dark:text-white mb-2 block">
+            <label htmlFor="city" className="text-sm font-medium text-gray-900 dark:text-white mb-3 block">
               City
             </label>
             <LocationAutocomplete
               placeholder="Any"
               value={filters.city || ""}
               onChange={(value) => handleFilterChange("city", value)}
-              className="h-12 md:h-10 text-base md:text-sm"
+              className="h-12 text-base"
             />
           </div>
           <div>
-            <label htmlFor="job-type" className="text-sm font-medium text-gray-900 dark:text-white mb-2 block">
+            <label htmlFor="job-type" className="text-sm font-medium text-gray-900 dark:text-white mb-3 block">
               Job Type
             </label>
             <Select
@@ -253,7 +253,7 @@ export function JobSidebar({ user, onFiltersChange, onPostJob, initialFilters }:
             >
               <SelectTrigger
                 id="job-type"
-                className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white h-12 md:h-10 text-base md:text-sm"
+                className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white h-12 text-base"
               >
                 <SelectValue placeholder="Any" />
               </SelectTrigger>
@@ -267,7 +267,7 @@ export function JobSidebar({ user, onFiltersChange, onPostJob, initialFilters }:
             </Select>
           </div>
           <div>
-            <label htmlFor="experience-level" className="text-sm font-medium text-gray-900 dark:text-white mb-2 block">
+            <label htmlFor="experience-level" className="text-sm font-medium text-gray-900 dark:text-white mb-3 block">
               Experience Level
             </label>
             <Select
@@ -276,7 +276,7 @@ export function JobSidebar({ user, onFiltersChange, onPostJob, initialFilters }:
             >
               <SelectTrigger
                 id="experience-level"
-                className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white h-12 md:h-10 text-base md:text-sm"
+                className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white h-12 text-base"
               >
                 <SelectValue placeholder="Any" />
               </SelectTrigger>
@@ -290,7 +290,7 @@ export function JobSidebar({ user, onFiltersChange, onPostJob, initialFilters }:
             </Select>
           </div>
           <div>
-            <label htmlFor="location-requirement" className="text-sm font-medium text-gray-900 dark:text-white mb-2 block">
+            <label htmlFor="location-requirement" className="text-sm font-medium text-gray-900 dark:text-white mb-3 block">
               Work Setting
             </label>
             <Select
@@ -299,7 +299,7 @@ export function JobSidebar({ user, onFiltersChange, onPostJob, initialFilters }:
             >
               <SelectTrigger
                 id="location-requirement"
-                className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white h-12 md:h-10 text-base md:text-sm"
+                className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white h-12 text-base"
               >
                 <SelectValue placeholder="Any" />
               </SelectTrigger>
@@ -315,14 +315,14 @@ export function JobSidebar({ user, onFiltersChange, onPostJob, initialFilters }:
         </div>
         
         {/* Clear Filters Button - Mobile Friendly */}
-        <div className="pt-4">
+        <div className="pt-6">
           <Button
             variant="outline"
             onClick={() => {
               setFilters({})
               onFiltersChange({})
             }}
-            className="w-full h-12 md:h-10 text-base md:text-sm"
+            className="w-full h-12 text-base"
           >
             Clear All Filters
           </Button>

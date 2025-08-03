@@ -25,7 +25,7 @@ export function PaymentForm({
   onPaymentError, 
   onCancel 
 }: PaymentFormProps) {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [processing, setProcessing] = useState(false)
   const [paymentSuccess, setPaymentSuccess] = useState(false)
   const { toast } = useToast()
@@ -36,12 +36,9 @@ export function PaymentForm({
     currency: currency.toUpperCase(),
   }).format(amount / 100)
 
-  useEffect(() => {
-    checkPaymentStatus()
-  }, [])
-
-  const checkPaymentStatus = async () => {
+  const handlePayment = async () => {
     try {
+      setProcessing(true)
       console.log("Creating checkout session for job:", { jobId, jobTitle, amount, currency })
       
       const response = await fetch("/api/payments/create-checkout-session", {
@@ -90,21 +87,8 @@ export function PaymentForm({
       console.error("Error creating checkout session:", error)
       onPaymentError(error instanceof Error ? error.message : "Payment setup failed")
     } finally {
-      setLoading(false)
+      setProcessing(false)
     }
-  }
-
-  if (loading) {
-    return (
-      <Card className="w-full max-w-md mx-auto">
-        <CardContent className="p-6">
-          <div className="text-center">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-violet-600" />
-            <p className="text-gray-600 dark:text-gray-400">Setting up payment...</p>
-          </div>
-        </CardContent>
-      </Card>
-    )
   }
 
   if (paymentSuccess) {
@@ -150,7 +134,7 @@ export function PaymentForm({
 
         <div className="space-y-3">
           <Button 
-            onClick={checkPaymentStatus}
+            onClick={handlePayment}
             disabled={processing}
             className="w-full"
             size="lg"

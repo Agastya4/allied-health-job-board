@@ -18,7 +18,6 @@ import { Upload } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { useAuth } from "@/hooks/use-auth"
 import { useRouter } from "next/navigation"
-import { PaymentForm } from "@/components/payment-form"
 import { parseLocation } from "@/lib/location-matcher"
 import { AustralianAddressAutocomplete } from "@/components/australian-address-autocomplete"
 
@@ -129,8 +128,6 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const [logoUrl, setLogoUrl] = useState<string>("")
   const [logoPreview, setLogoPreview] = useState<string>("")
-  const [showPayment, setShowPayment] = useState(false)
-  const [createdJobId, setCreatedJobId] = useState<number | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const locationInputRef = useRef<HTMLInputElement>(null)
 
@@ -212,12 +209,31 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
     // Parse the location input
     const locationMatch = parseLocation(value)
     
+    // Extract city and state from the value if parser didn't find them
+    let city = locationMatch.normalizedCity;
+    let state = locationMatch.normalizedState;
+    
+    // If parser didn't extract city/state, try to extract from the value
+    if (!city || !state) {
+      if (value.includes(',')) {
+        const parts = value.split(',').map(part => part.trim());
+        if (parts.length >= 2) {
+          city = city || parts[0].toLowerCase().replace(/\s+/g, '-');
+          state = state || parts[1].toLowerCase().replace(/\s+/g, '-');
+        } else {
+          city = city || value.toLowerCase().replace(/\s+/g, '-');
+        }
+      } else {
+        city = city || value.toLowerCase().replace(/\s+/g, '-');
+      }
+    }
+    
     setFormData((prev) => ({
       ...prev,
       practiceLocation: value,
       locationDisplay: value,
-      city: locationMatch.normalizedCity,
-      state: locationMatch.normalizedState,
+      city: city,
+      state: state,
       locationLat: addressDetails?.latitude || 0,
       locationLng: addressDetails?.longitude || 0,
     }))
@@ -312,46 +328,72 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
     
     const newErrors: Record<string, string> = {}
     
+    // Email validation
     if (!formData.practiceEmail) {
       newErrors.practiceEmail = "Practice email is required"
       console.log("❌ Missing: practiceEmail")
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.practiceEmail)) {
+      newErrors.practiceEmail = "Please enter a valid email address"
+      console.log("❌ Invalid: practiceEmail format")
     }
+    
     if (!formData.jobTitle) {
       newErrors.jobTitle = "Job title is required"
       console.log("❌ Missing: jobTitle")
+    } else if (formData.jobTitle.trim().length < 3) {
+      newErrors.jobTitle = "Job title must be at least 3 characters"
+      console.log("❌ Invalid: jobTitle too short")
     }
+    
     if (!formData.practiceLocation) {
       newErrors.practiceLocation = "Practice location is required"
       console.log("❌ Missing: practiceLocation")
     }
+    
     if (!formData.jobType) {
       newErrors.jobType = "Job type is required"
       console.log("❌ Missing: jobType")
     }
+    
     if (formData.jobCategories.length === 0) {
       newErrors.jobCategories = "At least one job category is required"
       console.log("❌ Missing: jobCategories")
     }
+    
     if (!formData.experienceLevel) {
       newErrors.experienceLevel = "Experience level is required"
       console.log("❌ Missing: experienceLevel")
     }
+    
     if (!formData.jobDetails) {
       newErrors.jobDetails = "Job details are required"
       console.log("❌ Missing: jobDetails")
+    } else if (formData.jobDetails.trim().length < 50) {
+      newErrors.jobDetails = "Job details must be at least 50 characters"
+      console.log("❌ Invalid: jobDetails too short")
     }
+    
     if (!formData.companyName) {
       newErrors.companyName = "Company name is required"
       console.log("❌ Missing: companyName")
     }
+    
     if (!formData.contactPhone) {
       newErrors.contactPhone = "Contact phone is required"
       console.log("❌ Missing: contactPhone")
+    } else if (!/^[\d\s\-\+\(\)]+$/.test(formData.contactPhone)) {
+      newErrors.contactPhone = "Please enter a valid phone number"
+      console.log("❌ Invalid: contactPhone format")
     }
+    
     if (!formData.contactEmail) {
       newErrors.contactEmail = "Contact email is required"
       console.log("❌ Missing: contactEmail")
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactEmail)) {
+      newErrors.contactEmail = "Please enter a valid email address"
+      console.log("❌ Invalid: contactEmail format")
     }
+    
     if (!formData.acceptTerms) {
       newErrors.acceptTerms = "You must accept the terms and conditions"
       console.log("❌ Missing: acceptTerms")
@@ -385,8 +427,8 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
     setIsSubmitting(true)
     
     try {
-      const normalizedCity = normalizeString(formData.city)
-      const normalizedState = normalizeString(formData.state)
+      const normalizedCity = normalizeString(formData.city || '')
+      const normalizedState = normalizeString(formData.state || '')
       const normalizedCategories = normalizeCategories(formData.jobCategories)
       
       console.log("Normalized data:", { normalizedCity, normalizedState, normalizedCategories })
@@ -419,8 +461,10 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
       
       const job = await createJob(jobData)
       console.log("Job created successfully:", job)
-      setCreatedJobId(job.id)
-      setShowPayment(true)
+      // setCreatedJobId(job.id) // This state variable is no longer needed
+      
+      // Go directly to Stripe Checkout instead of showing payment form
+      await redirectToStripeCheckout(job.id, formData.jobTitle)
       
     } catch (error) {
       console.error("Failed to create job:", error)
@@ -435,9 +479,42 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
     }
   }
 
-  const handlePaymentSuccess = async (paymentIntentId: string) => {
+  const redirectToStripeCheckout = async (jobId: number, jobTitle: string) => {
     try {
-      if (paymentIntentId === "free") {
+      console.log("Creating checkout session for job:", { jobId, jobTitle })
+      
+      const response = await fetch("/api/payments/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ 
+          jobId: jobId.toString(),
+          jobTitle,
+          amount: 100, // This amount is hardcoded for now, will be dynamic later
+          currency: 'aud'
+        }),
+      })
+
+      const data = await response.json()
+      console.log("Checkout session response:", { status: response.status, data })
+
+      if (!response.ok) {
+        if (data.requiresPayment === false) {
+          // No payment required, job is already created
+          toast({
+            title: "Job posted successfully!",
+            description: "Your job listing is now live.",
+            duration: 4000,
+          })
+          onClose()
+          return
+        }
+        throw new Error(data.error || "Failed to create checkout session")
+      }
+
+      if (data.requiresPayment === false) {
         // No payment required, job is already created
         toast({
           title: "Job posted successfully!",
@@ -448,34 +525,19 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
         return
       }
 
-      // Confirm payment with backend
-      const response = await fetch("/api/payments/confirm", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          paymentIntentId,
-          jobId: createdJobId,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error("Failed to confirm payment")
+      // Redirect to Stripe Checkout
+      if (data.checkoutUrl) {
+        console.log("Redirecting to Stripe Checkout:", data.checkoutUrl)
+        window.location.href = data.checkoutUrl
+      } else {
+        throw new Error("No checkout URL received")
       }
 
-      toast({
-        title: "Payment successful!",
-        description: "Your job listing is now live.",
-        duration: 4000,
-      })
-      onClose()
     } catch (error) {
-      console.error("Payment confirmation error:", error)
+      console.error("Error creating checkout session:", error)
       toast({
-        title: "Payment confirmation failed.",
-        description: "Please contact support.",
+        title: "Payment setup failed.",
+        description: error instanceof Error ? error.message : "Please try again.",
         variant: "destructive",
         duration: 4000,
       })
@@ -492,8 +554,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
   }
 
   const handlePaymentCancel = () => {
-    setShowPayment(false)
-    setCreatedJobId(null)
+    // Payment form popup is no longer used
   }
 
   // Defensive: ensure select values are valid
@@ -506,23 +567,6 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
   const experienceLevelValue = experienceLevelOptions.includes(formData.experienceLevel) ? formData.experienceLevel : "";
   const workSettingValue = workSettingOptions.includes(formData.workSetting) ? formData.workSetting : "";
   const salaryRangeValue = salaryRangeOptions.includes(formData.salaryRange) ? formData.salaryRange : "";
-
-  // Show payment form if payment is required
-  if (showPayment) {
-    return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true">
-        <PaymentForm
-          amount={100} // $1.00 in cents
-          currency="aud"
-          jobTitle={formData.jobTitle}
-          jobId={createdJobId?.toString() || ''}
-          onPaymentSuccess={handlePaymentSuccess}
-          onPaymentError={handlePaymentError}
-          onCancel={handlePaymentCancel}
-        />
-      </div>
-    )
-  }
 
   // Show loading state while checking authentication and loading practice details
   if (loading) {
@@ -885,7 +929,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                 className="flex-1 bg-violet-600 hover:bg-violet-700 text-white"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Posting Job..." : "Post Job"}
+                {isSubmitting ? "Processing..." : "Post Job & Pay"}
               </Button>
             </div>
           </form>
