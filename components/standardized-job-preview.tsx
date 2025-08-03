@@ -10,7 +10,6 @@ import { useAuth } from "@/hooks/use-auth"
 import { useJobs, type JobFilters, type Job } from "@/hooks/use-jobs"
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Filter, List, PlusCircle, Search, ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { getOccupationName, getOccupationSlug } from "@/lib/utils"
@@ -93,6 +92,15 @@ export function StandardizedJobPreview({
       )
     })
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .map(job => ({
+      ...job,
+      is_new: false,
+      is_featured: job.is_featured || false,
+      is_bookmarked: job.is_bookmarked || false,
+      posted_ago: job.posted_ago || null,
+      company_logo_url: job.company_logo_url || "",
+      salary_range: job.salary_range || null,
+    }))
 
   const handleJobSelect = (job: Job) => {
     // On mobile, navigate to the full job page instead of showing details
@@ -146,12 +154,12 @@ export function StandardizedJobPreview({
             )}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <Input
+              <input
                 type="text"
                 placeholder={searchPlaceholder}
                 value={masterSearch}
                 onChange={(e) => setMasterSearch(e.target.value)}
-                className="pl-10 bg-white dark:bg-zinc-900 border-gray-300 dark:border-zinc-700"
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-violet-400"
               />
             </div>
           </div>
@@ -161,10 +169,9 @@ export function StandardizedJobPreview({
               <JobList
                 jobs={filteredJobs}
                 loading={jobsLoading}
-                onSelectJob={handleJobSelect}
+                onJobSelect={handleJobSelect}
                 selectedJobId={selectedJob ? selectedJob.id : null}
-                onPostJob={() => setShowAuthModal(true)}
-                shiftDown={shiftDown}
+                onBookmarkToggle={() => {}}
                 title={title}
                 prompt={prompt}
               />
@@ -172,11 +179,20 @@ export function StandardizedJobPreview({
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize={60} minSize={35} maxSize={75} className="h-full min-h-0">
               <div className="h-full min-h-0">
-                <JobDetail
-                  job={selectedJob}
-                  onClose={() => setSelectedJob(null)}
-                  onApply={handleApplyJob}
-                />
+                {selectedJob ? (
+                  <JobDetail
+                    job={selectedJob}
+                    onClose={() => setSelectedJob(null)}
+                    onApply={handleApplyJob}
+                  />
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full text-gray-600 dark:text-gray-400">
+                    <div className="text-center">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Select a Job</h3>
+                      <p className="text-gray-600 dark:text-gray-400">Choose a job from the list to view details</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </ResizablePanel>
           </ResizablePanelGroup>
@@ -208,12 +224,12 @@ export function StandardizedJobPreview({
           )}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
+            <input
               type="text"
               placeholder="Search jobs..."
               value={masterSearch}
               onChange={(e) => setMasterSearch(e.target.value)}
-              className="pl-10 bg-white dark:bg-zinc-900 border-gray-300 dark:border-zinc-700"
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-violet-400"
             />
           </div>
         </div>
@@ -225,10 +241,9 @@ export function StandardizedJobPreview({
               <JobList
                 jobs={filteredJobs}
                 loading={jobsLoading}
-                onSelectJob={handleJobSelect}
+                onJobSelect={handleJobSelect}
                 selectedJobId={null}
-                onPostJob={() => setShowAuthModal(true)}
-                shiftDown={shiftDown}
+                onBookmarkToggle={() => {}}
                 title={title}
                 prompt={prompt}
               />

@@ -25,8 +25,8 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <nav className="w-full bg-white dark:bg-zinc-950 border-b border-gray-200 dark:border-zinc-800 px-4 md:px-8 py-1 flex items-center justify-between shadow-sm">
-      {/* Logo - Mobile and Desktop */}
+    <nav className="w-full bg-white dark:bg-zinc-950 border-b border-gray-200 dark:border-zinc-800 px-4 md:px-8 py-3 flex items-center justify-between shadow-sm">
+      {/* Logo */}
       <Link href="/" className="flex items-center gap-2">
         <span className="sr-only">AlliedHealthJobs.au</span>
         <Image
@@ -34,12 +34,12 @@ export function Navbar() {
           alt="AlliedHealthJobs.au Logo"
           width={240}
           height={240}
-          className="h-10 w-auto md:h-56 md:w-56 object-contain md:-my-16"
+          className="h-8 w-auto object-contain"
           priority
         />
       </Link>
 
-      {/* Desktop Navigation - Hidden on Mobile */}
+      {/* Desktop Navigation - Centered */}
       <div className="hidden md:flex items-center gap-8">
         {navLinks.map(link => (
           <Link
@@ -54,7 +54,7 @@ export function Navbar() {
         ))}
       </div>
 
-      {/* Desktop Right Side - Hidden on Mobile */}
+      {/* Desktop Right Side */}
       <div className="hidden md:flex items-center gap-4">
         {user && (
           <Link href="/post-job">

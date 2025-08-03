@@ -1,37 +1,72 @@
 "use client"
-import { PlusCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
+
 import { JobCard } from "@/components/job-card"
-import type { Job } from "@/hooks/use-jobs"
+import { useAuth } from "@/hooks/use-auth"
+import { Bookmark, BookmarkCheck } from "lucide-react"
+import { Button } from "@/components/ui/button"
+
+interface Job {
+  id: number
+  job_title: string
+  company_name: string
+  company_logo_url: string
+  is_new: boolean
+  is_featured: boolean
+  location_display: string
+  job_type: string
+  experience_level: string
+  salary_range: string | null
+  posted_ago: string | null
+  is_bookmarked: boolean
+  job_details?: string
+  job_categories?: string[]
+  work_setting?: string
+  created_at?: string
+}
 
 interface JobListProps {
   jobs: Job[]
   loading: boolean
-  onSelectJob: (job: Job) => void
-  selectedJobId: number | null
-  onPostJob: () => void
-  shiftDown?: boolean // Add this prop
-  title?: string // Add this prop
-  prompt?: string // Add this prop
+  title?: string
+  prompt?: string
+  selectedJobId?: number | null
+  onJobSelect: (job: Job) => void
+  onBookmarkToggle: (jobId: number) => void
 }
 
-export function JobList({ jobs, loading, onSelectJob, selectedJobId, onPostJob, shiftDown, title, prompt }: JobListProps) {
+export function JobList({ 
+  jobs, 
+  loading, 
+  title, 
+  prompt, 
+  selectedJobId, 
+  onJobSelect, 
+  onBookmarkToggle 
+}: JobListProps) {
+  const { user } = useAuth()
+
   if (loading) {
     return (
-      <div className="h-full flex flex-col bg-white dark:bg-zinc-950">
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-gray-600 dark:text-gray-400">Loading jobs...</div>
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-4">
+          <div className="space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="h-20 bg-gray-200 dark:bg-zinc-700 rounded-lg"></div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     )
   }
-  if (!loading && jobs.length === 0) {
+
+  if (jobs.length === 0) {
     return (
-      <div className="h-full flex flex-col bg-white dark:bg-zinc-950">
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-gray-600 dark:text-gray-400 text-center">
-            <p>No jobs found matching your criteria.</p>
-            <p className="mt-2 text-sm">Try adjusting your filters or check back later.</p>
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-4">
+          <div className="text-center py-8">
+            <p className="text-gray-600 dark:text-gray-400">No jobs found matching your criteria.</p>
           </div>
         </div>
       </div>
@@ -39,11 +74,11 @@ export function JobList({ jobs, loading, onSelectJob, selectedJobId, onPostJob, 
   }
 
   return (
-    <div className="h-full flex flex-col bg-white dark:bg-zinc-950">
+    <div className="flex-1 overflow-y-auto">
       {/* Render the title and prompt at the top of the job list panel if provided */}
       {title && (
-        <div className="px-4 md:px-6 pt-4 pb-2 flex-shrink-0">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h1>
+        <div className="px-3 md:px-4 pt-3 pb-2 flex-shrink-0">
+          <h1 className="text-lg font-bold text-gray-900 dark:text-white">{title}</h1>
           {prompt && <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">{prompt}</div>}
         </div>
       )}
@@ -53,22 +88,15 @@ export function JobList({ jobs, loading, onSelectJob, selectedJobId, onPostJob, 
             <p className="text-gray-600 dark:text-gray-400">No jobs found matching your criteria.</p>
           </div>
         ) : (
-          <div className="grid gap-3 md:gap-4 px-4 md:px-6 py-2">
+          <div className="space-y-1.5 px-3 md:px-4 py-2">
             {jobs.map((job) => (
               <JobCard
                 key={job.id}
-                job={{
-                  ...job,
-                  is_new: false,
-                  company_logo_url: job.company_logo_url || "",
-                  salary_range: job.salary_range ?? null,
-                  posted_ago: job.posted_ago ?? null,
-                  is_bookmarked: job.is_bookmarked ?? false,
-                }}
-                onClick={() => onSelectJob(job)}
-                isSelected={job.id === selectedJobId}
-                onBookmarkToggle={() => {}}
-                shiftDown={shiftDown}
+                job={job}
+                onClick={() => onJobSelect(job)}
+                isSelected={selectedJobId === job.id}
+                onBookmarkToggle={onBookmarkToggle}
+                shiftDown={false}
               />
             ))}
           </div>

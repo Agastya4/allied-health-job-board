@@ -53,7 +53,7 @@ export default function LandingPage() {
       />
       <div className="min-h-screen w-full relative">
         {/* Main Content Section */}
-        <div className="flex items-center justify-center px-4 py-12 md:py-20 relative z-10">
+        <div className="flex items-center justify-center px-4 py-12 md:py-20">
           <div className="w-full flex flex-col items-center justify-center max-w-4xl mx-auto">
             <div className="mb-6 md:mb-8 w-full flex justify-center">
               <Link href="/resources">
@@ -114,7 +114,7 @@ export default function LandingPage() {
                 {debouncedSearch ? `No jobs found matching "${debouncedSearch}"` : "No jobs found."}
               </div>
             ) : (
-              <div className="grid gap-3 md:gap-4">
+              <div className="grid gap-2 md:gap-3">
                 {latestJobs.map(job => (
                   <div key={job.id} onClick={() => router.push(`/jobs/${job.id}-${(job.job_title + '-' + (job.location_display || '')).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`)} className="cursor-pointer">
                     <JobCardWrapper

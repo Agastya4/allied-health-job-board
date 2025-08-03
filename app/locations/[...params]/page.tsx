@@ -92,7 +92,7 @@ export default async function LocationPage({ params }: LocationPageProps) {
             </p>
           </div>
         ) : (
-          <div className="grid gap-4">
+          <div className="grid gap-3">
             {filteredJobs.map(job => (
               <JobCardWrapper
                 key={job.id}

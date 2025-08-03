@@ -30,8 +30,10 @@ export function JobCardWrapper({ job }: JobCardWrapperProps) {
   const [isBookmarked, setIsBookmarked] = useState(job.is_bookmarked)
 
   const handleClick = () => {
-    // Navigate to job detail page
-    router.push(`/jobs/${job.id}`)
+    // Create slug from job ID and title
+    const slug = `${job.id}-${job.job_title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`
+    // Navigate to job detail page with proper slug format
+    router.push(`/jobs/${slug}`)
   }
 
   const handleBookmarkToggle = (jobId: number) => {

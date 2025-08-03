@@ -6,6 +6,26 @@
   html {
     font-size: 80%;
   }
+  
+  /* Mobile-first responsive font sizing */
+  @media (max-width: 640px) {
+    html {
+      font-size: 75%;
+    }
+  }
+  
+  @media (min-width: 641px) and (max-width: 768px) {
+    html {
+      font-size: 78%;
+    }
+  }
+  
+  @media (min-width: 769px) {
+    html {
+      font-size: 80%;
+    }
+  }
+  
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
@@ -68,6 +88,21 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Improve touch scrolling on mobile */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  
+  /* Better touch targets for mobile only */
+  @media (max-width: 767px) {
+    button, [role="button"], input, select, textarea {
+      min-height: 44px;
+    }
+  }
+  
+  /* Improve text selection */
+  ::selection {
+    @apply bg-violet-200 dark:bg-violet-800 text-violet-900 dark:text-violet-100;
   }
 }
 

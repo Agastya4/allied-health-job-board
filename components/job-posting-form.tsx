@@ -572,8 +572,8 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
   if (loading) {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true">
-        <Card className="w-full max-w-md bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800">
-          <CardContent className="p-6">
+        <Card className="mobile-modal bg-white dark:bg-zinc-900 mobile-border">
+          <CardContent className="mobile-card">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600 mx-auto mb-4"></div>
               <p className="text-gray-600 dark:text-gray-400">Loading...</p>
@@ -586,30 +586,30 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true">
-      <Card className="w-full max-w-4xl max-h-[90vh] overflow-hidden bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800">
-        <CardHeader className="border-b border-gray-200 dark:border-zinc-800">
+      <Card className="mobile-modal-lg max-h-[90vh] overflow-hidden bg-white dark:bg-zinc-950 mobile-border">
+        <CardHeader className="mobile-border mobile-card">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-2xl text-gray-900 dark:text-white">Post a New Job</CardTitle>
+              <CardTitle className="mobile-text-2xl text-gray-900 dark:text-white">Post a New Job</CardTitle>
               <CardDescription className="text-gray-600 dark:text-gray-400">
                 Fill out the details below to create your job listing
               </CardDescription>
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose}>
+            <Button variant="ghost" size="icon" onClick={onClose} className="mobile-touch-target">
               <X className="h-5 w-5" />
             </Button>
           </div>
         </CardHeader>
 
         <CardContent className="overflow-y-auto scrollbar-thin max-h-[calc(90vh-120px)]">
-          <form onSubmit={handleSubmit} className="space-y-6 p-6">
+          <form onSubmit={handleSubmit} className="mobile-space-y mobile-card">
             {/* Practice Information */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Practice Information</h3>
+            <div className="mobile-space-y">
+              <h3 className="mobile-text-lg font-semibold text-gray-900 dark:text-white">Practice Information</h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="mobile-grid-2 mobile-gap">
                 <div>
-                  <Label htmlFor="practiceEmail" className="text-gray-900 dark:text-white">
+                  <Label htmlFor="practiceEmail" className="mobile-form-label text-gray-900 dark:text-white">
                     Practice Email *
                   </Label>
                   <Input
@@ -618,14 +618,14 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                     type="email"
                     value={formData.practiceEmail}
                     onChange={(e) => handleInputChange("practiceEmail", e.target.value)}
-                    className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.practiceEmail ? 'border-red-500 focus:border-red-500' : ''}`}
+                    className={`mobile-form-input bg-white dark:bg-zinc-800 mobile-border ${errors.practiceEmail ? 'mobile-error' : ''}`}
                     placeholder="practice@example.com"
                   />
                   {errors.practiceEmail && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.practiceEmail}</p>}
                 </div>
 
                 <div>
-                  <Label htmlFor="companyName" className="text-gray-900 dark:text-white">
+                  <Label htmlFor="companyName" className="mobile-form-label text-gray-900 dark:text-white">
                     Company Name *
                   </Label>
                   <Input
@@ -633,7 +633,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                     id="companyName"
                     value={formData.companyName}
                     onChange={(e) => handleInputChange("companyName", e.target.value)}
-                    className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.companyName ? 'border-red-500 focus:border-red-500' : ''}`}
+                    className={`mobile-form-input bg-white dark:bg-zinc-800 mobile-border ${errors.companyName ? 'mobile-error' : ''}`}
                     placeholder="Your Practice Name"
                   />
                   {errors.companyName && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.companyName}</p>}
@@ -641,15 +641,15 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
               </div>
 
               <div>
-                <Label htmlFor="practiceLocation" className="text-gray-900 dark:text-white">
+                <Label htmlFor="practiceLocation" className="mobile-form-label text-gray-900 dark:text-white">
                   Practice Location *
                 </Label>
-                <div className={errors.practiceLocation ? 'border border-red-500 rounded-md' : ''}>
+                <div className={errors.practiceLocation ? 'mobile-error mobile-rounded' : ''}>
                   <AustralianAddressAutocomplete
                     value={formData.practiceLocation}
                     onChange={handleLocationChange}
                     placeholder="Enter Australian address (e.g., 123 George Street, Sydney NSW 2000)"
-                    className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.practiceLocation ? 'border-red-500 focus:border-red-500' : ''}`}
+                    className={`mobile-form-input bg-white dark:bg-zinc-800 mobile-border ${errors.practiceLocation ? 'mobile-error' : ''}`}
                   />
                 </div>
                 {errors.practiceLocation && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.practiceLocation}</p>}
@@ -660,11 +660,11 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
             </div>
 
             {/* Job Details */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Job Details</h3>
+            <div className="mobile-space-y">
+              <h3 className="mobile-text-lg font-semibold text-gray-900 dark:text-white">Job Details</h3>
 
               <div>
-                <Label htmlFor="jobTitle" className="text-gray-900 dark:text-white">
+                <Label htmlFor="jobTitle" className="mobile-form-label text-gray-900 dark:text-white">
                   Job Title *
                 </Label>
                 <Input
@@ -672,14 +672,14 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                   id="jobTitle"
                   value={formData.jobTitle}
                   onChange={(e) => handleInputChange("jobTitle", e.target.value)}
-                  className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.jobTitle ? 'border-red-500 focus:border-red-500' : ''}`}
+                  className={`mobile-form-input bg-white dark:bg-zinc-800 mobile-border ${errors.jobTitle ? 'mobile-error' : ''}`}
                   placeholder="e.g., Senior Physiotherapist"
                 />
                 {errors.jobTitle && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.jobTitle}</p>}
               </div>
 
               <div>
-                <Label htmlFor="jobDetails" className="text-gray-900 dark:text-white">
+                <Label htmlFor="jobDetails" className="mobile-form-label text-gray-900 dark:text-white">
                   Job Details *
                 </Label>
                 <Textarea
@@ -687,21 +687,21 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                   id="jobDetails"
                   value={formData.jobDetails}
                   onChange={(e) => handleInputChange("jobDetails", e.target.value)}
-                  className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 min-h-[120px] ${errors.jobDetails ? 'border-red-500 focus:border-red-500' : ''}`}
+                  className={`mobile-form-input bg-white dark:bg-zinc-800 mobile-border min-h-[120px] ${errors.jobDetails ? 'mobile-error' : ''}`}
                   placeholder="Describe the role, responsibilities, and benefits..."
                 />
                 {errors.jobDetails && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.jobDetails}</p>}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="mobile-grid-2 mobile-gap">
                 <div>
-                  <Label htmlFor="jobType" className="text-gray-900 dark:text-white">
+                  <Label htmlFor="jobType" className="mobile-form-label text-gray-900 dark:text-white">
                     Job Type *
                   </Label>
                   <Select value={jobTypeValue} onValueChange={(value) => handleInputChange("jobType", value)}>
                     <SelectTrigger 
                       ref={jobTypeRef}
-                      className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.jobType ? 'border-red-500 focus:border-red-500' : ''}`}
+                      className={`mobile-form-input bg-white dark:bg-zinc-800 mobile-border ${errors.jobType ? 'mobile-error' : ''}`}
                     >
                       <SelectValue placeholder="Select job type" />
                     </SelectTrigger>
@@ -717,7 +717,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                 </div>
 
                 <div>
-                  <Label htmlFor="experienceLevel" className="text-gray-900 dark:text-white">
+                  <Label htmlFor="experienceLevel" className="mobile-form-label text-gray-900 dark:text-white">
                     Experience Level *
                   </Label>
                   <Select
@@ -726,7 +726,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                   >
                     <SelectTrigger 
                       ref={experienceLevelRef}
-                      className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.experienceLevel ? 'border-red-500 focus:border-red-500' : ''}`}
+                      className={`mobile-form-input bg-white dark:bg-zinc-800 mobile-border ${errors.experienceLevel ? 'mobile-error' : ''}`}
                     >
                       <SelectValue placeholder="Select experience level" />
                     </SelectTrigger>
@@ -743,8 +743,8 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
               </div>
 
               <div>
-                <Label className="text-gray-900 dark:text-white">Job Categories *</Label>
-                <div ref={jobCategoriesRef} className={errors.jobCategories ? 'border border-red-500 rounded-md p-1' : ''}>
+                <Label className="mobile-form-label text-gray-900 dark:text-white">Job Categories *</Label>
+                <div ref={jobCategoriesRef} className={errors.jobCategories ? 'mobile-error mobile-rounded p-1' : ''}>
                   <MultiSelect
                     options={jobCategories}
                     value={formData.jobCategories}
@@ -755,16 +755,16 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                 {errors.jobCategories && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.jobCategories}</p>}
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="mobile-grid-2 mobile-gap">
                 <div>
-                  <Label htmlFor="workSetting" className="text-gray-900 dark:text-white">
+                  <Label htmlFor="workSetting" className="mobile-form-label text-gray-900 dark:text-white">
                     Work Setting
                   </Label>
                   <Select
                     value={workSettingValue}
                     onValueChange={(value) => handleInputChange("workSetting", value)}
                   >
-                    <SelectTrigger className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700">
+                    <SelectTrigger className="mobile-form-input bg-white dark:bg-zinc-800 mobile-border">
                       <SelectValue placeholder="Select work setting" />
                     </SelectTrigger>
                     <SelectContent>
@@ -778,14 +778,14 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                 </div>
 
                 <div>
-                  <Label htmlFor="salaryRange" className="text-gray-900 dark:text-white">
+                  <Label htmlFor="salaryRange" className="mobile-form-label text-gray-900 dark:text-white">
                     Salary Range
                   </Label>
                   <Select
                     value={salaryRangeValue}
                     onValueChange={(value) => handleInputChange("salaryRange", value)}
                   >
-                    <SelectTrigger className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700">
+                    <SelectTrigger className="mobile-form-input bg-white dark:bg-zinc-800 mobile-border">
                       <SelectValue placeholder="Select salary range" />
                     </SelectTrigger>
                     <SelectContent>
@@ -801,12 +801,12 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
             </div>
 
             {/* Contact Information */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Contact Information</h3>
+            <div className="mobile-space-y">
+              <h3 className="mobile-text-lg font-semibold text-gray-900 dark:text-white">Contact Information</h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="mobile-grid-2 mobile-gap">
                 <div>
-                  <Label htmlFor="contactPhone" className="text-gray-900 dark:text-white">
+                  <Label htmlFor="contactPhone" className="mobile-form-label text-gray-900 dark:text-white">
                     Contact Phone *
                   </Label>
                   <Input
@@ -815,14 +815,14 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                     type="tel"
                     value={formData.contactPhone}
                     onChange={(e) => handleInputChange("contactPhone", e.target.value)}
-                    className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.contactPhone ? 'border-red-500 focus:border-red-500' : ''}`}
+                    className={`mobile-form-input bg-white dark:bg-zinc-800 mobile-border ${errors.contactPhone ? 'mobile-error' : ''}`}
                     placeholder="0412 345 678"
                   />
                   {errors.contactPhone && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.contactPhone}</p>}
                 </div>
 
                 <div>
-                  <Label htmlFor="contactEmail" className="text-gray-900 dark:text-white">
+                  <Label htmlFor="contactEmail" className="mobile-form-label text-gray-900 dark:text-white">
                     Contact Email *
                   </Label>
                   <Input
@@ -831,7 +831,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                     type="email"
                     value={formData.contactEmail}
                     onChange={(e) => handleInputChange("contactEmail", e.target.value)}
-                    className={`bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 ${errors.contactEmail ? 'border-red-500 focus:border-red-500' : ''}`}
+                    className={`mobile-form-input bg-white dark:bg-zinc-800 mobile-border ${errors.contactEmail ? 'mobile-error' : ''}`}
                     placeholder="contact@example.com"
                   />
                   {errors.contactEmail && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.contactEmail}</p>}
@@ -839,7 +839,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
               </div>
 
               <div>
-                <Label htmlFor="companyWebsite" className="text-gray-900 dark:text-white">
+                <Label htmlFor="companyWebsite" className="mobile-form-label text-gray-900 dark:text-white">
                   Company Website
                 </Label>
                 <Input
@@ -847,40 +847,40 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                   type="url"
                   value={formData.companyWebsite}
                   onChange={(e) => handleInputChange("companyWebsite", e.target.value)}
-                  className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700"
+                  className="mobile-form-input bg-white dark:bg-zinc-800 mobile-border"
                   placeholder="https://www.yourpractice.com.au"
                 />
               </div>
             </div>
 
             {/* Company Logo */}
-            <div className="space-y-4">
+            <div className="mobile-space-y">
               <div>
-                <label htmlFor="logo-upload" className="text-sm font-medium text-gray-900 dark:text-white mb-2 block">
+                <label htmlFor="logo-upload" className="mobile-form-label text-gray-900 dark:text-white mb-2 block">
                   Company Logo (optional)
                 </label>
                 <div className="flex items-center gap-4">
-                  <div className="w-24 h-24 bg-gray-100 dark:bg-zinc-800 rounded-lg flex items-center justify-center border border-gray-300 dark:border-zinc-700">
+                  <div className="w-24 h-24 bg-gray-100 dark:bg-zinc-800 mobile-rounded flex items-center justify-center mobile-border">
                     {logoPreview ? (
                       <img
                         src={logoPreview}
                         alt="Logo preview"
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-cover mobile-rounded"
                       />
                     ) : (logoUrl ? (
                       <img
                         src={logoUrl || "/placeholder.svg"}
                         alt="Logo preview"
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-cover mobile-rounded"
                       />
                     ) : (
-                      <div className="w-16 h-16 bg-gray-200 dark:bg-zinc-700 rounded"></div>
+                      <div className="w-16 h-16 bg-gray-200 dark:bg-zinc-700 mobile-rounded"></div>
                     ))}
                   </div>
                   <Button
                     type="button"
                     variant="outline"
-                    className="bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-700 flex items-center gap-2"
+                    className="mobile-button bg-white dark:bg-zinc-800 mobile-border text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-700 flex items-center gap-2"
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <Upload className="h-4 w-4" />
@@ -902,14 +902,14 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
             </div>
 
             {/* Terms and Conditions */}
-            <div className="space-y-4">
+            <div className="mobile-space-y">
               <div className="flex items-start space-x-2">
                 <Checkbox
                   ref={acceptTermsRef}
                   id="acceptTerms"
                   checked={formData.acceptTerms}
                   onCheckedChange={(checked) => handleInputChange("acceptTerms", checked)}
-                  className={errors.acceptTerms ? 'border-red-500' : ''}
+                  className={errors.acceptTerms ? 'mobile-error' : ''}
                 />
                 <Label htmlFor="acceptTerms" className="text-sm text-gray-900 dark:text-white leading-relaxed">
                   I accept the terms and conditions and privacy policy. I understand that job postings are subject to
@@ -920,13 +920,13 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
             </div>
 
             {/* Submit Buttons */}
-            <div className="flex gap-4 pt-6 border-t border-gray-200 dark:border-zinc-800">
-              <Button type="button" variant="outline" onClick={onClose} className="flex-1 bg-transparent">
+            <div className="flex gap-4 pt-6 mobile-border-t">
+              <Button type="button" variant="outline" onClick={onClose} className="flex-1 bg-transparent mobile-button">
                 Cancel
               </Button>
               <Button
                 type="submit"
-                className="flex-1 bg-violet-600 hover:bg-violet-700 text-white"
+                className="flex-1 bg-violet-600 hover:bg-violet-700 text-white mobile-button"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Processing..." : "Post Job & Pay"}
