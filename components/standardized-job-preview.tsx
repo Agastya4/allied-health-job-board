@@ -102,7 +102,7 @@ export function StandardizedJobPreview({
       salary_range: job.salary_range || null,
     }))
 
-  const handleJobSelect = (job: Job) => {
+  const handleJobSelect = (job: any) => {
     // On mobile, navigate to the full job page instead of showing details
     if (window.innerWidth < 768) {
       // Create a proper job slug that matches the expected format
@@ -113,8 +113,7 @@ export function StandardizedJobPreview({
     }
   }
 
-  const handleApplyJob = (job: Job) => {
-    setSelectedJob(job)
+  const handleApplyJob = () => {
     setShowApplyModal(true)
   }
 
@@ -181,9 +180,15 @@ export function StandardizedJobPreview({
               <div className="h-full min-h-0">
                 {selectedJob ? (
                   <JobDetail
-                    job={selectedJob}
+                    job={{
+                      ...selectedJob,
+                      company_logo_url: selectedJob.company_logo_url || "",
+                      job_details: selectedJob.job_details || "",
+                      job_categories: selectedJob.job_categories || [],
+                      salary_range: selectedJob.salary_range || null,
+                    }}
                     onClose={() => setSelectedJob(null)}
-                    onApply={handleApplyJob}
+                    onApply={() => setShowApplyModal(true)}
                   />
                 ) : (
                   <div className="flex flex-col items-center justify-center h-full text-gray-600 dark:text-gray-400">
