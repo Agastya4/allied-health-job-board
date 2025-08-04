@@ -4,11 +4,103 @@ import { getJobsForLocationPage } from "@/lib/job-sorter"
 import { STATES, CITIES, JOB_CATEGORIES } from "../seo-links"
 import { getJobs } from "@/lib/database"
 import { JobCardWrapper } from "@/components/job-card-wrapper"
+import { Metadata } from "next"
 
 interface LocationPageProps {
   params: Promise<{
     params: string[]
   }>
+}
+
+export async function generateMetadata({ params }: LocationPageProps): Promise<Metadata> {
+  const resolvedParams = await params
+  const segments = resolvedParams.params
+  const state = segments[0] || ""
+  const city = segments[1] || ""
+  const category = segments[2] || ""
+  
+  // Get all jobs from database
+  const jobs = await getJobs({})
+  
+  // Filter jobs for this location/category
+  let filteredJobs: any[] = []
+  
+  if (category) {
+    // Category-specific location page
+    filteredJobs = getJobsForLocationPage(jobs, state, city, category)
+  } else if (city) {
+    // City-specific page
+    filteredJobs = getJobsForLocationPage(jobs, state, city)
+  } else {
+    // State-specific page
+    filteredJobs = getJobsForLocationPage(jobs, state)
+  }
+  
+  // Generate page title and description
+  const stateInfo = STATES.find(s => s.abbr.toLowerCase() === state)
+  const cityInfo = city ? CITIES[stateInfo?.abbr as keyof typeof CITIES]?.find(c => 
+    c.toLowerCase().replace(/\s+/g, '-') === city
+  ) : null
+  const categoryInfo = category ? JOB_CATEGORIES.find(c => c.value === category) : null
+  
+  let title = ""
+  let description = ""
+  
+  if (category && city) {
+    title = `${categoryInfo?.label} Jobs in ${cityInfo}, ${stateInfo?.abbr}`
+    description = `Find ${categoryInfo?.label.toLowerCase()} Jobs in ${cityInfo}, ${stateInfo?.name}. Browse the Latest Opportunities and Apply Today.`
+  } else if (category) {
+    title = `${categoryInfo?.label} Jobs in ${stateInfo?.name}`
+    description = `Find ${categoryInfo?.label.toLowerCase()} Jobs in ${stateInfo?.name}. Browse the Latest Opportunities and Apply Today.`
+  } else if (city) {
+    title = `Allied Health Jobs in ${cityInfo}, ${stateInfo?.abbr}`
+    description = `Find Allied Health Jobs in ${cityInfo}, ${stateInfo?.name}. Browse Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Positions.`
+  } else {
+    title = `Allied Health Jobs in ${stateInfo?.name}`
+    description = `Find Allied Health Jobs in ${stateInfo?.name}. Browse Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Positions.`
+  }
+
+  return {
+    title,
+    description,
+    keywords: [
+      'Allied Health Jobs',
+      'Healthcare Jobs',
+      'Physiotherapy Jobs',
+      'Occupational Therapy Jobs',
+      'Speech Pathology Jobs',
+      'Healthcare Careers',
+      state,
+      city || '',
+      category || ''
+    ].filter(Boolean),
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      url: `https://alliedhealthjobs.au/locations/${state}${city ? `/${city}` : ''}${category ? `/${category}` : ''}`,
+      siteName: 'AlliedHealthJobs.au',
+      images: [
+        {
+          url: '/Logo.png',
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      locale: 'en_AU',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ['/Logo.png'],
+      creator: '@alliedhealthjobs',
+    },
+    alternates: {
+      canonical: `https://alliedhealthjobs.au/locations/${state}${city ? `/${city}` : ''}${category ? `/${category}` : ''}`,
+    },
+  }
 }
 
 export default async function LocationPage({ params }: LocationPageProps) {
@@ -48,16 +140,16 @@ export default async function LocationPage({ params }: LocationPageProps) {
   
   if (category && city) {
     title = `${categoryInfo?.label} Jobs in ${cityInfo}, ${stateInfo?.abbr}`
-    description = `Find ${categoryInfo?.label.toLowerCase()} jobs in ${cityInfo}, ${stateInfo?.name}. Browse the latest opportunities and apply today.`
+    description = `Find ${categoryInfo?.label.toLowerCase()} Jobs in ${cityInfo}, ${stateInfo?.name}. Browse the Latest Opportunities and Apply Today.`
   } else if (category) {
     title = `${categoryInfo?.label} Jobs in ${stateInfo?.name}`
-    description = `Find ${categoryInfo?.label.toLowerCase()} jobs in ${stateInfo?.name}. Browse the latest opportunities and apply today.`
+    description = `Find ${categoryInfo?.label.toLowerCase()} Jobs in ${stateInfo?.name}. Browse the Latest Opportunities and Apply Today.`
   } else if (city) {
     title = `Allied Health Jobs in ${cityInfo}, ${stateInfo?.abbr}`
-    description = `Find allied health jobs in ${cityInfo}, ${stateInfo?.name}. Browse physiotherapy, occupational therapy, speech pathology, and other healthcare positions.`
+    description = `Find Allied Health Jobs in ${cityInfo}, ${stateInfo?.name}. Browse Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Positions.`
   } else {
     title = `Allied Health Jobs in ${stateInfo?.name}`
-    description = `Find allied health jobs in ${stateInfo?.name}. Browse physiotherapy, occupational therapy, speech pathology, and other healthcare positions.`
+    description = `Find Allied Health Jobs in ${stateInfo?.name}. Browse Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Positions.`
   }
   
   return (
@@ -66,12 +158,12 @@ export default async function LocationPage({ params }: LocationPageProps) {
         title={title}
         description={description}
         keywords={[
-          'allied health jobs',
-          'healthcare jobs',
-          'physiotherapy jobs',
-          'occupational therapy jobs',
-          'speech pathology jobs',
-          'healthcare careers',
+          'Allied Health Jobs',
+          'Healthcare Jobs',
+          'Physiotherapy Jobs',
+          'Occupational Therapy Jobs',
+          'Speech Pathology Jobs',
+          'Healthcare Careers',
           state,
           city || '',
           category || ''

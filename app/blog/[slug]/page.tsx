@@ -10,11 +10,60 @@ import { SEO } from "@/components/seo";
 import { BlogContent } from "@/components/blog-content";
 import { BlogCard } from "@/components/blog-card";
 import { getBlogPostBySlug, getRelatedPosts } from "@/lib/blog-data";
+import { Metadata } from "next";
 
 interface BlogPostPageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getBlogPostBySlug(slug);
+  
+  if (!post) {
+    return {
+      title: "Blog Post Not Found - AlliedHealthJobs.au",
+      description: "The requested blog post could not be found.",
+    }
+  }
+
+  const title = post.seoTitle || post.title
+  const description = post.seoDescription || post.excerpt
+  const keywords = post.seoKeywords || post.tags
+
+  return {
+    title,
+    description,
+    keywords,
+    openGraph: {
+      title,
+      description,
+      type: 'article',
+      url: `https://alliedhealthjobs.au/blog/${post.slug}`,
+      siteName: 'AlliedHealthJobs.au',
+      images: [
+        {
+          url: '/Logo.png',
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      locale: 'en_AU',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ['/Logo.png'],
+      creator: '@alliedhealthjobs',
+    },
+    alternates: {
+      canonical: `https://alliedhealthjobs.au/blog/${post.slug}`,
+    },
+  }
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {

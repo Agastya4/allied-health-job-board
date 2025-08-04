@@ -11,6 +11,48 @@ import { InternalLinks } from "@/components/internal-links"
 import { GradientTextAnimation } from "@/components/gradient-text-animation"
 import Link from "next/link"
 import { useJobs } from "@/hooks/use-jobs"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "AlliedHealthJobs.au - Find Allied Health Jobs in Australia",
+  description: "Find the Best Allied Health Jobs in Australia. Browse Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Positions. Post Jobs and Connect with Qualified Professionals.",
+  keywords: [
+    'Allied Health Jobs Australia',
+    'Physiotherapy Jobs Australia',
+    'Occupational Therapy Jobs Australia',
+    'Speech Pathology Jobs Australia',
+    'Healthcare Jobs Australia',
+    'Allied Health Careers',
+    'Healthcare Recruitment',
+    'Medical Jobs Australia'
+  ],
+  openGraph: {
+    title: "AlliedHealthJobs.au - Find Allied Health Jobs in Australia",
+    description: "Find the Best Allied Health Jobs in Australia. Browse Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Positions.",
+    url: "https://alliedhealthjobs.au",
+    siteName: "AlliedHealthJobs.au",
+    images: [
+      {
+        url: "/Logo.png",
+        width: 1200,
+        height: 630,
+        alt: "AlliedHealthJobs.au - Allied Health Job Board",
+      },
+    ],
+    locale: "en_AU",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AlliedHealthJobs.au - Find Allied Health Jobs in Australia",
+    description: "Find the Best Allied Health Jobs in Australia. Browse Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Positions.",
+    images: ["/Logo.png"],
+    creator: "@alliedhealthjobs",
+  },
+  alternates: {
+    canonical: "https://alliedhealthjobs.au",
+  },
+}
 
 export default function LandingPage() {
   const router = useRouter()
@@ -38,16 +80,16 @@ export default function LandingPage() {
     <>
       <SEO
         title="AlliedHealthJobs.au - Find Allied Health Jobs in Australia"
-        description="Find the best allied health jobs in Australia. Browse physiotherapy, occupational therapy, speech pathology, and other healthcare positions. Post jobs and connect with qualified professionals."
+        description="Find the Best Allied Health Jobs in Australia. Browse Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Positions. Post Jobs and Connect with Qualified Professionals."
         keywords={[
-          'allied health jobs Australia',
-          'physiotherapy jobs Australia',
-          'occupational therapy jobs Australia',
-          'speech pathology jobs Australia',
-          'healthcare jobs Australia',
-          'allied health careers',
-          'healthcare recruitment',
-          'medical jobs Australia'
+          'Allied Health Jobs Australia',
+          'Physiotherapy Jobs Australia',
+          'Occupational Therapy Jobs Australia',
+          'Speech Pathology Jobs Australia',
+          'Healthcare Jobs Australia',
+          'Allied Health Careers',
+          'Healthcare Recruitment',
+          'Medical Jobs Australia'
         ]}
         url="/"
         type="website"

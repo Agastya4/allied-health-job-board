@@ -3,6 +3,47 @@ import Link from "next/link"
 import { useState } from "react"
 import { STATES, CITIES, JOB_CATEGORIES } from "./seo-links"
 import { SEO } from "@/components/seo"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Browse Jobs by Location - AlliedHealthJobs.au",
+  description: "Find Allied Health Jobs by Location Across Australia. Browse Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Positions by State and City.",
+  keywords: [
+    'Allied Health Jobs by Location',
+    'Healthcare Jobs by City',
+    'Physiotherapy Jobs by Location',
+    'Occupational Therapy Jobs by Location',
+    'Speech Pathology Jobs by Location',
+    'Healthcare Jobs Australia',
+    'Allied Health Jobs by State'
+  ],
+  openGraph: {
+    title: "Browse Jobs by Location - AlliedHealthJobs.au",
+    description: "Find Allied Health Jobs by Location Across Australia. Browse Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Positions by State and City.",
+    url: "https://alliedhealthjobs.au/locations",
+    siteName: "AlliedHealthJobs.au",
+    images: [
+      {
+        url: "/Logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Browse Jobs by Location",
+      },
+    ],
+    locale: "en_AU",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Browse Jobs by Location - AlliedHealthJobs.au",
+    description: "Find Allied Health Jobs by Location Across Australia. Browse Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Positions by State and City.",
+    images: ["/Logo.png"],
+    creator: "@alliedhealthjobs",
+  },
+  alternates: {
+    canonical: "https://alliedhealthjobs.au/locations",
+  },
+}
 
 function slugify(text: string): string {
   return text
@@ -43,15 +84,15 @@ export default function LocationsPage() {
     <>
       <SEO 
         title="Browse Jobs by Location - AlliedHealthJobs.au"
-        description="Find allied health jobs by location across Australia. Browse physiotherapy, occupational therapy, speech pathology, and other healthcare positions by state and city."
+        description="Find Allied Health Jobs by Location Across Australia. Browse Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Positions by State and City."
         keywords={[
-          'allied health jobs by location',
-          'healthcare jobs by city',
-          'physiotherapy jobs by location',
-          'occupational therapy jobs by location',
-          'speech pathology jobs by location',
-          'healthcare jobs Australia',
-          'allied health jobs by state'
+          'Allied Health Jobs by Location',
+          'Healthcare Jobs by City',
+          'Physiotherapy Jobs by Location',
+          'Occupational Therapy Jobs by Location',
+          'Speech Pathology Jobs by Location',
+          'Healthcare Jobs Australia',
+          'Allied Health Jobs by State'
         ]}
         url="/locations"
         type="website"

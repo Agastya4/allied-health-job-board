@@ -4,63 +4,63 @@ import { Metadata } from "next"
 const occupationData = {
   "physiotherapy": {
     name: "Physiotherapy",
-    description: "Find physiotherapy jobs across Australia. Browse physiotherapist positions in hospitals, clinics, and private practices.",
-    keywords: ["physiotherapy jobs", "physiotherapist jobs", "physical therapy jobs", "rehabilitation jobs", "allied health physiotherapy"]
+    description: "Find Physiotherapy Jobs Across Australia. Browse Physiotherapist Positions in Hospitals, Clinics, and Private Practices.",
+    keywords: ["Physiotherapy Jobs", "Physiotherapist Jobs", "Physical Therapy Jobs", "Rehabilitation Jobs", "Allied Health Physiotherapy"]
   },
   "occupational-therapy": {
     name: "Occupational Therapy", 
-    description: "Discover occupational therapy jobs in Australia. Find OT positions helping patients with daily living skills and independence.",
-    keywords: ["occupational therapy jobs", "OT jobs", "occupational therapist jobs", "rehabilitation jobs", "allied health OT"]
+    description: "Discover Occupational Therapy Jobs in Australia. Find OT Positions Helping Patients with Daily Living Skills and Independence.",
+    keywords: ["Occupational Therapy Jobs", "OT Jobs", "Occupational Therapist Jobs", "Rehabilitation Jobs", "Allied Health OT"]
   },
   "speech-pathology": {
     name: "Speech Pathology",
-    description: "Browse speech pathology jobs across Australia. Find speech therapist positions in healthcare and education settings.",
-    keywords: ["speech pathology jobs", "speech therapy jobs", "speech therapist jobs", "communication disorders", "allied health speech"]
+    description: "Browse Speech Pathology Jobs Across Australia. Find Speech Therapist Positions in Healthcare and Education Settings.",
+    keywords: ["Speech Pathology Jobs", "Speech Therapy Jobs", "Speech Therapist Jobs", "Communication Disorders", "Allied Health Speech"]
   },
   "psychology": {
     name: "Psychology",
-    description: "Find psychology jobs in Australia. Browse psychologist positions in mental health, clinical, and research settings.",
-    keywords: ["psychology jobs", "psychologist jobs", "mental health jobs", "clinical psychology", "allied health psychology"]
+    description: "Find Psychology Jobs in Australia. Browse Psychologist Positions in Mental Health, Clinical, and Research Settings.",
+    keywords: ["Psychology Jobs", "Psychologist Jobs", "Mental Health Jobs", "Clinical Psychology", "Allied Health Psychology"]
   },
   "dietetics-nutrition": {
     name: "Dietetics & Nutrition",
-    description: "Discover dietetics and nutrition jobs across Australia. Find dietitian positions in healthcare and wellness.",
-    keywords: ["dietetics jobs", "nutrition jobs", "dietitian jobs", "nutritionist jobs", "allied health nutrition"]
+    description: "Discover Dietetics and Nutrition Jobs Across Australia. Find Dietitian Positions in Healthcare and Wellness.",
+    keywords: ["Dietetics Jobs", "Nutrition Jobs", "Dietitian Jobs", "Nutritionist Jobs", "Allied Health Nutrition"]
   },
   "social-work": {
     name: "Social Work",
-    description: "Browse social work jobs in Australia. Find social worker positions in community services and healthcare.",
-    keywords: ["social work jobs", "social worker jobs", "community services", "welfare jobs", "allied health social work"]
+    description: "Browse Social Work Jobs in Australia. Find Social Worker Positions in Community Services and Healthcare.",
+    keywords: ["Social Work Jobs", "Social Worker Jobs", "Community Services", "Welfare Jobs", "Allied Health Social Work"]
   },
   "podiatry": {
     name: "Podiatry",
-    description: "Find podiatry jobs across Australia. Browse podiatrist positions specializing in foot and lower limb health.",
-    keywords: ["podiatry jobs", "podiatrist jobs", "foot health jobs", "lower limb specialist", "allied health podiatry"]
+    description: "Find Podiatry Jobs Across Australia. Browse Podiatrist Positions Specializing in Foot and Lower Limb Health.",
+    keywords: ["Podiatry Jobs", "Podiatrist Jobs", "Foot Health Jobs", "Lower Limb Specialist", "Allied Health Podiatry"]
   },
   "audiology": {
     name: "Audiology",
-    description: "Discover audiology jobs in Australia. Find audiologist positions in hearing and balance disorders.",
-    keywords: ["audiology jobs", "audiologist jobs", "hearing specialist jobs", "balance disorders", "allied health audiology"]
+    description: "Discover Audiology Jobs in Australia. Find Audiologist Positions in Hearing and Balance Disorders.",
+    keywords: ["Audiology Jobs", "Audiologist Jobs", "Hearing Specialist Jobs", "Balance Disorders", "Allied Health Audiology"]
   },
   "exercise-physiology": {
     name: "Exercise Physiology",
-    description: "Browse exercise physiology jobs across Australia. Find exercise physiologist positions in fitness and rehabilitation.",
-    keywords: ["exercise physiology jobs", "exercise physiologist jobs", "fitness jobs", "rehabilitation jobs", "allied health exercise"]
+    description: "Browse Exercise Physiology Jobs Across Australia. Find Exercise Physiologist Positions in Fitness and Rehabilitation.",
+    keywords: ["Exercise Physiology Jobs", "Exercise Physiologist Jobs", "Fitness Jobs", "Rehabilitation Jobs", "Allied Health Exercise"]
   },
   "optometry": {
     name: "Optometry",
-    description: "Find optometry jobs in Australia. Browse optometrist positions in eye care and vision health.",
-    keywords: ["optometry jobs", "optometrist jobs", "eye care jobs", "vision health", "allied health optometry"]
+    description: "Find Optometry Jobs in Australia. Browse Optometrist Positions in Eye Care and Vision Health.",
+    keywords: ["Optometry Jobs", "Optometrist Jobs", "Eye Care Jobs", "Vision Health", "Allied Health Optometry"]
   },
   "pharmacy": {
     name: "Pharmacy",
-    description: "Discover pharmacy jobs across Australia. Find pharmacist positions in medication and pharmaceutical care.",
-    keywords: ["pharmacy jobs", "pharmacist jobs", "medication jobs", "pharmaceutical care", "allied health pharmacy"]
+    description: "Discover Pharmacy Jobs Across Australia. Find Pharmacist Positions in Medication and Pharmaceutical Care.",
+    keywords: ["Pharmacy Jobs", "Pharmacist Jobs", "Medication Jobs", "Pharmaceutical Care", "Allied Health Pharmacy"]
   },
   "radiography": {
     name: "Radiography",
-    description: "Browse radiography jobs in Australia. Find radiographer positions in medical imaging and diagnostics.",
-    keywords: ["radiography jobs", "radiographer jobs", "medical imaging jobs", "diagnostic imaging", "allied health radiography"]
+    description: "Browse Radiography Jobs in Australia. Find Radiographer Positions in Medical Imaging and Diagnostics.",
+    keywords: ["Radiography Jobs", "Radiographer Jobs", "Medical Imaging Jobs", "Diagnostic Imaging", "Allied Health Radiography"]
   }
 }
 
@@ -70,8 +70,8 @@ export async function generateMetadata({ params }: { params: Promise<{ occupatio
   
   if (!data) {
     return {
-      title: `${occupation} Jobs - AlliedHealthJobs.au`,
-      description: `Find ${occupation} jobs across Australia. Browse allied health positions in this specialized field.`,
+      title: `${occupation.charAt(0).toUpperCase() + occupation.slice(1)} Jobs - AlliedHealthJobs.au`,
+      description: `Find ${occupation.charAt(0).toUpperCase() + occupation.slice(1)} Jobs Across Australia. Browse Allied Health Positions in This Specialized Field.`,
     }
   }
 
@@ -97,12 +97,14 @@ export async function generateMetadata({ params }: { params: Promise<{ occupatio
           alt: `${data.name} Jobs`,
         },
       ],
+      locale: 'en_AU',
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
       images: ['/Logo.png'],
+      creator: '@alliedhealthjobs',
     },
     alternates: {
       canonical: `https://alliedhealthjobs.au/jobs/occupation/${occupation}`,

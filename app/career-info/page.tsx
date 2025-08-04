@@ -5,6 +5,47 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Search } from "lucide-react"
 import { SEO } from "@/components/seo"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Allied Health Careers - AlliedHealthJobs.au",
+  description: "Explore Rewarding Allied Health Careers in Australia. Learn About Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Professions.",
+  keywords: [
+    'Allied Health Careers',
+    'Healthcare Careers Australia',
+    'Physiotherapy Careers',
+    'Occupational Therapy Careers',
+    'Speech Pathology Careers',
+    'Healthcare Professions',
+    'Allied Health Jobs'
+  ],
+  openGraph: {
+    title: "Allied Health Careers - AlliedHealthJobs.au",
+    description: "Explore Rewarding Allied Health Careers in Australia. Learn About Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Professions.",
+    url: "https://alliedhealthjobs.au/career-info",
+    siteName: "AlliedHealthJobs.au",
+    images: [
+      {
+        url: "/Logo.png",
+        width: 1200,
+        height: 630,
+        alt: "Allied Health Careers",
+      },
+    ],
+    locale: "en_AU",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Allied Health Careers - AlliedHealthJobs.au",
+    description: "Explore Rewarding Allied Health Careers in Australia. Learn About Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Professions.",
+    images: ["/Logo.png"],
+    creator: "@alliedhealthjobs",
+  },
+  alternates: {
+    canonical: "https://alliedhealthjobs.au/career-info",
+  },
+}
 
 const alliedHealthProfessions = [
   { name: "Audiology", slug: "audiology", description: "Hearing and balance disorders" },
@@ -26,15 +67,15 @@ export default function CareerInfoPage() {
     <>
       <SEO 
         title="Allied Health Careers - AlliedHealthJobs.au"
-        description="Explore rewarding allied health careers in Australia. Learn about physiotherapy, occupational therapy, speech pathology, and other healthcare professions."
+        description="Explore Rewarding Allied Health Careers in Australia. Learn About Physiotherapy, Occupational Therapy, Speech Pathology, and Other Healthcare Professions."
         keywords={[
-          'allied health careers',
-          'healthcare careers Australia',
-          'physiotherapy careers',
-          'occupational therapy careers',
-          'speech pathology careers',
-          'healthcare professions',
-          'allied health jobs'
+          'Allied Health Careers',
+          'Healthcare Careers Australia',
+          'Physiotherapy Careers',
+          'Occupational Therapy Careers',
+          'Speech Pathology Careers',
+          'Healthcare Professions',
+          'Allied Health Jobs'
         ]}
         url="/career-info"
         type="website"

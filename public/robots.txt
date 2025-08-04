@@ -13,13 +13,20 @@ Disallow: /verify-email/
 Disallow: /payment-success/
 Disallow: /payment-cancel/
 Disallow: /test-locations/
+Disallow: /test-job-filtering/
+Disallow: /test-location-page/
+Disallow: /test-payment/
 
 # Allow important pages
 Allow: /jobs/
+Allow: /jobs/occupation/
 Allow: /resources/
 Allow: /career-info/
+Allow: /career-info/*/
 Allow: /locations/
+Allow: /locations/*/
 Allow: /blog/
+Allow: /blog/*/
 Allow: /employer/
 Allow: /post-job/
 
