@@ -8,6 +8,7 @@ import { JobCardWrapper } from "@/components/job-card-wrapper"
 import { SEO } from "@/components/seo"
 import { Typewriter } from "@/components/typewriter"
 import { InternalLinks } from "@/components/internal-links"
+import { GradientTextAnimation } from "@/components/gradient-text-animation"
 import Link from "next/link"
 import { useJobs } from "@/hooks/use-jobs"
 
@@ -65,7 +66,9 @@ export default function LandingPage() {
             
             <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold text-center mb-4 md:mb-6 tracking-tight w-full">
               Find Your Perfect<br />
-              <span className="text-violet-600 dark:text-violet-400">Healthcare Match</span>
+              <GradientTextAnimation>
+                Healthcare Match
+              </GradientTextAnimation>
             </h1>
             
             <p className="text-base md:text-lg lg:text-xl text-center text-gray-600 dark:text-gray-300 mb-8 md:mb-12 max-w-3xl leading-relaxed w-full px-4 min-h-[1.5em]">
