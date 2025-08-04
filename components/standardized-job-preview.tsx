@@ -185,7 +185,7 @@ export function StandardizedJobPreview({
                       company_logo_url: selectedJob.company_logo_url || "",
                       job_details: selectedJob.job_details || "",
                       job_categories: selectedJob.job_categories || [],
-                      salary_range: selectedJob.salary_range || null,
+                      salary_range: selectedJob.salary_range || undefined,
                     }}
                     onClose={() => setSelectedJob(null)}
                     onApply={() => setShowApplyModal(true)}
