@@ -9,7 +9,7 @@ export default function ApplyJobModalClient({ job, fullWidth }: { job: Job, full
   return (
     <>
       <Button
-        className={fullWidth ? "w-full block bg-violet-600 hover:bg-violet-700 text-white" : "bg-violet-600 hover:bg-violet-700 text-white"}
+        className={fullWidth ? "w-full block bg-green-600 hover:bg-green-700 text-white" : "bg-green-600 hover:bg-green-700 text-white"}
         onClick={() => setOpen(true)}
       >
         Apply Now

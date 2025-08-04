@@ -16,6 +16,7 @@ Disallow: /test-locations/
 Disallow: /test-job-filtering/
 Disallow: /test-location-page/
 Disallow: /test-payment/
+Disallow: /employer-dashboard/
 
 # Allow important pages
 Allow: /jobs/

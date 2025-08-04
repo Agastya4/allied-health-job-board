@@ -78,7 +78,7 @@ export function AuthForm({ mode: initialMode, onClose, redirectTo }: AuthFormPro
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center gap-4">
-          <Button className="bg-violet-600 hover:bg-violet-700 text-white" onClick={() => router.push("/sign-in")}>Go to Sign In</Button>
+          <Button className="bg-green-600 hover:bg-green-700 text-white" onClick={() => router.push("/sign-in")}>Go to Sign In</Button>
         </CardContent>
       </Card>
     )
@@ -160,7 +160,7 @@ export function AuthForm({ mode: initialMode, onClose, redirectTo }: AuthFormPro
             />
           </div>
 
-          <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700 text-white" disabled={loading}>
+          <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white" disabled={loading}>
             {loading ? "Please wait..." : mode === "signin" ? "Sign In" : "Sign Up"}
           </Button>
 
@@ -173,7 +173,7 @@ export function AuthForm({ mode: initialMode, onClose, redirectTo }: AuthFormPro
                 Don&apos;t have an account?{' '}
                 <button
                   type="button"
-                  className="text-violet-600 hover:underline focus:outline-none"
+                  className="text-green-600 hover:underline focus:outline-none"
                   onClick={() => setMode("signup")}
                 >
                   Sign up
@@ -186,7 +186,7 @@ export function AuthForm({ mode: initialMode, onClose, redirectTo }: AuthFormPro
               Already have an account?{' '}
               <button
                 type="button"
-                className="text-violet-600 hover:underline focus:outline-none"
+                className="text-green-600 hover:underline focus:outline-none"
                 onClick={() => setMode("signin")}
               >
                 Sign in

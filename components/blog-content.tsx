@@ -97,7 +97,7 @@ export function BlogContent({ post }: BlogContentProps) {
         />
         
         <div className="flex flex-wrap gap-2 mb-4">
-          <Badge variant="secondary" className="bg-violet-100 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300">
+          <Badge variant="secondary" className="bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-300">
             {post.category}
           </Badge>
           {post.tags.map((tag: string) => (
@@ -150,8 +150,8 @@ export function BlogContent({ post }: BlogContentProps) {
       <Card className="mt-12 bg-gray-50 dark:bg-zinc-900/50 border-gray-200 dark:border-zinc-800">
         <CardContent className="p-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-violet-100 dark:bg-violet-900/20 rounded-full flex items-center justify-center">
-              <User className="h-6 w-6 text-violet-600 dark:text-violet-400" />
+            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+              <User className="h-6 w-6 text-green-600 dark:text-green-400" />
             </div>
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-1">

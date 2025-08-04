@@ -40,7 +40,7 @@ export default function PostJobPage() {
         />
         <div className="min-h-screen bg-white dark:bg-zinc-950 flex items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
             <p className="text-gray-600 dark:text-gray-400">Redirecting to sign in...</p>
           </div>
         </div>

@@ -61,7 +61,7 @@ export default function OccupationJobPageClient({ occupation }: OccupationJobPag
       <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
         {occupationName} Jobs
       </h1>
-      <Badge variant="outline" className="bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300">
+      <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300">
         {filteredJobs.length} job{filteredJobs.length !== 1 ? 's' : ''} found
       </Badge>
     </div>

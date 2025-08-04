@@ -25,7 +25,7 @@ export function ApplyJobModal({ job, onClose }: ApplyJobModalProps) {
         
         <CardContent className="p-6 space-y-4">
           <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
-            <Mail className="h-5 w-5 text-violet-600" />
+            <Mail className="h-5 w-5 text-green-600" />
             <div>
               <p className="text-sm font-medium text-gray-900 dark:text-white">Email</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">{job.contact_email}</p>
@@ -33,7 +33,7 @@ export function ApplyJobModal({ job, onClose }: ApplyJobModalProps) {
           </div>
           
           <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
-            <Phone className="h-5 w-5 text-violet-600" />
+            <Phone className="h-5 w-5 text-green-600" />
             <div>
               <p className="text-sm font-medium text-gray-900 dark:text-white">Phone</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">{job.contact_phone}</p>

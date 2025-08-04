@@ -22,7 +22,12 @@ async function getJob(jobidslug: string) {
 export async function generateMetadata({ params }: { params: Promise<{ jobidslug: string }> }): Promise<Metadata> {
   const { jobidslug } = await params
   const job = await getJob(jobidslug)
-  if (!job) return {}
+  if (!job) {
+    return {
+      title: 'Page Not Found - AlliedHealthJobs.au',
+      robots: { index: false, follow: true },
+    }
+  }
   
   const title = `${job.job_title} at ${job.company_name} | ${job.location_display}`
   const description = job.job_details?.slice(0, 160) || `Job opening for ${job.job_title} at ${job.company_name} in ${job.location_display}. Apply now for this allied health position.`
@@ -231,7 +236,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ jobi
                     <div className="space-y-4">
                       {job.salary_range && (
                         <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
-                          <DollarSign className="h-5 w-5 text-violet-600" />
+                          <DollarSign className="h-5 w-5 text-green-600" />
                           <div>
                             <p className="text-sm font-medium text-gray-900 dark:text-white">Salary</p>
                             <p className="text-sm text-gray-600 dark:text-gray-400">{job.salary_range}</p>
@@ -240,7 +245,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ jobi
                       )}
                       
                       <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
-                        <Briefcase className="h-5 w-5 text-violet-600" />
+                        <Briefcase className="h-5 w-5 text-green-600" />
                         <div>
                           <p className="text-sm font-medium text-gray-900 dark:text-white">Job Type</p>
                           <p className="text-sm text-gray-600 dark:text-gray-400">{job.job_type}</p>
@@ -248,7 +253,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ jobi
                       </div>
 
                       <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
-                        <GraduationCap className="h-5 w-5 text-violet-600" />
+                        <GraduationCap className="h-5 w-5 text-green-600" />
                         <div>
                           <p className="text-sm font-medium text-gray-900 dark:text-white">Experience Level</p>
                           <p className="text-sm text-gray-600 dark:text-gray-400">{job.experience_level}</p>
@@ -270,7 +275,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ jobi
                     <div className="space-y-4">
                       {job.work_setting && (
                         <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
-                          <Building className="h-5 w-5 text-violet-600" />
+                          <Building className="h-5 w-5 text-green-600" />
                           <div>
                             <p className="text-sm font-medium text-gray-900 dark:text-white">Work Setting</p>
                             <p className="text-sm text-gray-600 dark:text-gray-400">{job.work_setting}</p>
@@ -279,7 +284,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ jobi
                       )}
 
                       <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
-                        <Award className="h-5 w-5 text-violet-600" />
+                        <Award className="h-5 w-5 text-green-600" />
                         <div>
                           <p className="text-sm font-medium text-gray-900 dark:text-white">Category</p>
                           <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -289,7 +294,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ jobi
                       </div>
 
                       <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
-                        <Calendar className="h-5 w-5 text-violet-600" />
+                        <Calendar className="h-5 w-5 text-green-600" />
                         <div>
                           <p className="text-sm font-medium text-gray-900 dark:text-white">Posted</p>
                           <p className="text-sm text-gray-600 dark:text-gray-400">

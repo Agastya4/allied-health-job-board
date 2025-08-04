@@ -218,7 +218,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         )}
         
         {/* CTA Section */}
-        <Card className="mt-16 bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 border-violet-200 dark:border-violet-800">
+        <Card className="mt-16 bg-gradient-to-r from-green-50 to-green-50 dark:from-green-900/20 dark:to-green-900/20 border-green-200 dark:border-green-800">
           <CardContent className="p-8 text-center">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               Ready to Advance Your Career?
@@ -228,12 +228,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/jobs">
-                <Button className="bg-violet-600 hover:bg-violet-700 text-white">
+                <Button className="bg-green-600 hover:bg-green-700 text-white">
                   Browse Jobs
                 </Button>
               </Link>
               <Link href="/blog">
-                <Button variant="outline" className="border-violet-600 text-violet-600 hover:bg-violet-600 hover:text-white">
+                <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-600 hover:text-white">
                   More Articles
                 </Button>
               </Link>

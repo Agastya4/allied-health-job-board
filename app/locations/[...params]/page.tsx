@@ -5,6 +5,7 @@ import { STATES, CITIES, JOB_CATEGORIES } from "../seo-links"
 import { getJobs } from "@/lib/database"
 import { JobCardWrapper } from "@/components/job-card-wrapper"
 import { Metadata } from "next"
+import { notFound } from "next/navigation"
 
 interface LocationPageProps {
   params: Promise<{
@@ -18,6 +19,35 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
   const state = segments[0] || ""
   const city = segments[1] || ""
   const category = segments[2] || ""
+  
+  // Validate parameters
+  const stateInfo = STATES.find(s => s.abbr.toLowerCase() === state)
+  if (!stateInfo) {
+    return {
+      title: 'Page Not Found - AlliedHealthJobs.au',
+      robots: { index: false, follow: true },
+    }
+  }
+  
+  const cityInfo = city ? CITIES[stateInfo?.abbr as keyof typeof CITIES]?.find(c => 
+    c.toLowerCase().replace(/\s+/g, '-') === city
+  ) : null
+  
+  if (city && !cityInfo) {
+    return {
+      title: 'Page Not Found - AlliedHealthJobs.au',
+      robots: { index: false, follow: true },
+    }
+  }
+  
+  const categoryInfo = category ? JOB_CATEGORIES.find(c => c.value === category) : null
+  
+  if (category && !categoryInfo) {
+    return {
+      title: 'Page Not Found - AlliedHealthJobs.au',
+      robots: { index: false, follow: true },
+    }
+  }
   
   // Get all jobs from database
   const jobs = await getJobs({})
@@ -37,12 +67,6 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
   }
   
   // Generate page title and description
-  const stateInfo = STATES.find(s => s.abbr.toLowerCase() === state)
-  const cityInfo = city ? CITIES[stateInfo?.abbr as keyof typeof CITIES]?.find(c => 
-    c.toLowerCase().replace(/\s+/g, '-') === city
-  ) : null
-  const categoryInfo = category ? JOB_CATEGORIES.find(c => c.value === category) : null
-  
   let title = ""
   let description = ""
   
@@ -111,6 +135,26 @@ export default async function LocationPage({ params }: LocationPageProps) {
   const city = segments[1] || ""
   const category = segments[2] || ""
   
+  // Validate parameters and return 404 for invalid combinations
+  const stateInfo = STATES.find(s => s.abbr.toLowerCase() === state)
+  if (!stateInfo) {
+    notFound()
+  }
+  
+  const cityInfo = city ? CITIES[stateInfo?.abbr as keyof typeof CITIES]?.find(c => 
+    c.toLowerCase().replace(/\s+/g, '-') === city
+  ) : null
+  
+  if (city && !cityInfo) {
+    notFound()
+  }
+  
+  const categoryInfo = category ? JOB_CATEGORIES.find(c => c.value === category) : null
+  
+  if (category && !categoryInfo) {
+    notFound()
+  }
+  
   // Get all jobs from database
   const jobs = await getJobs({})
   
@@ -129,12 +173,6 @@ export default async function LocationPage({ params }: LocationPageProps) {
   }
   
   // Generate page title and description
-  const stateInfo = STATES.find(s => s.abbr.toLowerCase() === state)
-  const cityInfo = city ? CITIES[stateInfo?.abbr as keyof typeof CITIES]?.find(c => 
-    c.toLowerCase().replace(/\s+/g, '-') === city
-  ) : null
-  const categoryInfo = category ? JOB_CATEGORIES.find(c => c.value === category) : null
-  
   let title = ""
   let description = ""
   
@@ -176,12 +214,39 @@ export default async function LocationPage({ params }: LocationPageProps) {
         
         {filteredJobs.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-600 dark:text-gray-400 text-lg mb-4">
-              No jobs found for this location and category.
-            </p>
-            <p className="text-gray-500 dark:text-gray-500">
-              Try browsing other locations or check back later for new opportunities.
-            </p>
+            <div className="bg-white dark:bg-zinc-900 rounded-xl p-8 shadow-lg border border-gray-200 dark:border-zinc-800 max-w-2xl mx-auto">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+                No Jobs Found
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 text-lg mb-6">
+                Currently no jobs available for this location and category.
+              </p>
+              <div className="space-y-4">
+                <p className="text-gray-500 dark:text-gray-500">
+                  Try browsing:
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h3 className="font-medium text-gray-900 dark:text-white mb-2">Other Locations</h3>
+                    <ul className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                      <li><a href="/locations/nsw/sydney" className="hover:text-green-600 dark:hover:text-green-400">Sydney Jobs</a></li>
+                      <li><a href="/locations/vic/melbourne" className="hover:text-green-600 dark:hover:text-green-400">Melbourne Jobs</a></li>
+                      <li><a href="/locations/qld/brisbane" className="hover:text-green-600 dark:hover:text-green-400">Brisbane Jobs</a></li>
+                      <li><a href="/locations/wa/perth" className="hover:text-green-600 dark:hover:text-green-400">Perth Jobs</a></li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-gray-900 dark:text-white mb-2">Job Categories</h3>
+                    <ul className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                      <li><a href="/jobs/occupation/physiotherapy" className="hover:text-green-600 dark:hover:text-green-400">Physiotherapy Jobs</a></li>
+                      <li><a href="/jobs/occupation/occupational-therapy" className="hover:text-green-600 dark:hover:text-green-400">Occupational Therapy Jobs</a></li>
+                      <li><a href="/jobs/occupation/speech-pathology" className="hover:text-green-600 dark:hover:text-green-400">Speech Pathology Jobs</a></li>
+                      <li><a href="/jobs/occupation/psychology" className="hover:text-green-600 dark:hover:text-green-400">Psychology Jobs</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="grid gap-3">

@@ -244,7 +244,7 @@ export default function EmployerDashboardPage() {
               </CardHeader>
               <CardContent>
                 <Button
-                  className="bg-violet-600 hover:bg-violet-700 text-white flex items-center gap-2"
+                  className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
                   onClick={() => setShowJobForm(true)}
                 >
                   <PlusCircle className="h-5 w-5" />
@@ -262,7 +262,7 @@ export default function EmployerDashboardPage() {
                   No Job Listings Yet. Post your first job to start attracting qualified Allied health professionals.
                 </p>
                 <Button
-                  className="bg-violet-600 hover:bg-violet-700 text-white flex items-center gap-2"
+                  className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
                   onClick={() => setShowJobForm(true)}
                 >
                   <PlusCircle className="h-5 w-5" />

@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL('https://alliedhealthjobs.au'),
   alternates: {
-    canonical: '/',
+    canonical: 'https://alliedhealthjobs.au',
   },
   openGraph: {
     type: 'website',
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'G-E14337071K', // Fixed: removed trailing space
+    google: 'G-E14337071K',
     yandex: 'your-yandex-verification-code',
     yahoo: 'your-yahoo-verification-code',
   },
@@ -86,6 +86,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="theme-color" content="#7c3aed" />
         <meta name="msapplication-TileColor" content="#7c3aed" />
         <link rel="manifest" href="/manifest.json" />
+        <link rel="canonical" href="https://alliedhealthjobs.au" />
       </head>
       <body className="h-screen w-screen min-h-0 flex flex-col">
         <ThemeProvider>

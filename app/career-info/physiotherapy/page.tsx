@@ -18,7 +18,7 @@ import {
 
 export default function PhysiotherapyPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-violet-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
       <div className="max-w-6xl mx-auto py-12 px-4">
         {/* Hero Section */}
         <div className="text-center mb-12">
@@ -30,7 +30,7 @@ export default function PhysiotherapyPage() {
             physical rehabilitation, movement science, and improving patient quality of life across Australia.
           </p>
           <Link href="/jobs/occupation/physiotherapy">
-            <Button className="bg-violet-600 hover:bg-violet-700 text-white px-8 py-3 text-lg">
+            <Button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg">
               <Briefcase className="h-5 w-5 mr-2" />
               View Physiotherapy Jobs
               <ArrowRight className="h-5 w-5 ml-2" />
@@ -42,7 +42,7 @@ export default function PhysiotherapyPage() {
         <Card className="mb-12 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border-gray-200 dark:border-zinc-800">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              <Heart className="h-6 w-6 text-violet-600" />
+              <Heart className="h-6 w-6 text-green-600" />
               What is Physiotherapy?
             </CardTitle>
           </CardHeader>
@@ -61,23 +61,23 @@ export default function PhysiotherapyPage() {
                 </h3>
                 <ul className="space-y-2 text-gray-600 dark:text-gray-300">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-violet-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                     <span>Physical assessment and diagnosis</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-violet-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                     <span>Treatment planning and implementation</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-violet-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                     <span>Exercise prescription and rehabilitation</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-violet-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                     <span>Manual therapy and hands-on treatment</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 text-violet-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                     <span>Patient education and prevention</span>
                   </li>
                 </ul>
@@ -87,22 +87,22 @@ export default function PhysiotherapyPage() {
                   Specializations
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline" className="bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300">
+                  <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300">
                     Sports Physiotherapy
                   </Badge>
-                  <Badge variant="outline" className="bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300">
+                  <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300">
                     Neurological Rehabilitation
                   </Badge>
-                  <Badge variant="outline" className="bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300">
+                  <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300">
                     Pediatric Physiotherapy
                   </Badge>
-                  <Badge variant="outline" className="bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300">
+                  <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300">
                     Geriatric Care
                   </Badge>
-                  <Badge variant="outline" className="bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300">
+                  <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300">
                     Cardiorespiratory
                   </Badge>
-                  <Badge variant="outline" className="bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300">
+                  <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300">
                     Women's Health
                   </Badge>
                 </div>
@@ -115,7 +115,7 @@ export default function PhysiotherapyPage() {
         <Card className="mb-12 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border-gray-200 dark:border-zinc-800">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              <GraduationCap className="h-6 w-6 text-violet-600" />
+              <GraduationCap className="h-6 w-6 text-green-600" />
               Career Path & Qualifications
             </CardTitle>
           </CardHeader>
@@ -152,7 +152,7 @@ export default function PhysiotherapyPage() {
         <Card className="mb-12 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border-gray-200 dark:border-zinc-800">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              <Briefcase className="h-6 w-6 text-violet-600" />
+              <Briefcase className="h-6 w-6 text-green-600" />
               Work Settings & Salary Information
             </CardTitle>
           </CardHeader>

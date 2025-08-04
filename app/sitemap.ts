@@ -180,9 +180,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  // Location + Category combinations - ALL cities with ALL job categories
+  // Location + Category combinations - Only include valid combinations
   const locationCategoryPages = [
-    // Generate ALL combinations: 32 cities × 12 categories = 384 pages
+    // Generate valid combinations only
     ...['nsw', 'vic', 'qld', 'wa', 'sa', 'tas', 'act', 'nt'].flatMap(state => 
       ['sydney', 'newcastle', 'wollongong', 'central-coast', 'coffs-harbour', 'wagga-wagga',
        'melbourne', 'geelong', 'ballarat', 'bendigo', 'shepparton',
@@ -192,7 +192,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
        'hobart', 'launceston', 'devonport', 'burnie',
        'canberra',
        'darwin', 'alice-springs'].filter(city => {
-         // Filter cities by state
+         // Filter cities by state to ensure valid combinations
          if (state === 'nsw') return ['sydney', 'newcastle', 'wollongong', 'central-coast', 'coffs-harbour', 'wagga-wagga'].includes(city)
          if (state === 'vic') return ['melbourne', 'geelong', 'ballarat', 'bendigo', 'shepparton'].includes(city)
          if (state === 'qld') return ['brisbane', 'gold-coast', 'cairns', 'townsville', 'sunshine-coast', 'toowoomba'].includes(city)
@@ -217,7 +217,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }))
 
-  return [
+  // Remove any duplicate URLs
+  const allUrls = new Set<string>()
+  const uniquePages = [
     ...staticPages, 
     ...blogPages,
     ...locationPages, 
@@ -225,5 +227,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...occupationPages, 
     ...professionPages,
     ...locationCategoryPages
-  ]
+  ].filter(page => {
+    if (allUrls.has(page.url)) {
+      return false
+    }
+    allUrls.add(page.url)
+    return true
+  })
+
+  return uniquePages
 } 

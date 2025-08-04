@@ -39,7 +39,7 @@ export default function CareerInfoPage() {
         url="/career-info"
         type="website"
       />
-      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-violet-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
         <div className="max-w-7xl mx-auto py-12 px-4">
           {/* Simple Allied Health Description */}
           <Card className="mb-12 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border-gray-200 dark:border-zinc-800">
@@ -58,7 +58,7 @@ export default function CareerInfoPage() {
           <Card className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border-gray-200 dark:border-zinc-800">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <Search className="h-6 w-6 text-violet-600" />
+                <Search className="h-6 w-6 text-green-600" />
                 Allied Health Professions A-Z
               </CardTitle>
               <p className="text-gray-600 dark:text-gray-300">
@@ -81,7 +81,7 @@ export default function CareerInfoPage() {
                         <Button 
                           variant="outline" 
                           size="sm"
-                          className="w-full border-violet-600 text-violet-600 hover:bg-violet-600 hover:text-white"
+                          className="w-full border-green-600 text-green-600 hover:bg-green-600 hover:text-white"
                         >
                           Learn More
                         </Button>

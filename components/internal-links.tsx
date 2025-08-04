@@ -54,7 +54,7 @@ export function InternalLinks({
                 <Link
                   key={location.url}
                   href={location.url}
-                  className="block text-violet-600 hover:text-violet-800 dark:text-violet-400 dark:hover:text-violet-300 hover:underline"
+                  className="block text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 hover:underline"
                 >
                   {location.name} Jobs
                 </Link>
@@ -75,7 +75,7 @@ export function InternalLinks({
                 <Link
                   key={category.url}
                   href={category.url}
-                  className="block text-violet-600 hover:text-violet-800 dark:text-violet-400 dark:hover:text-violet-300 hover:underline"
+                  className="block text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 hover:underline"
                 >
                   {category.name} Jobs
                 </Link>
@@ -96,7 +96,7 @@ export function InternalLinks({
                 <Link
                   key={post.url}
                   href={post.url}
-                  className="block text-violet-600 hover:text-violet-800 dark:text-violet-400 dark:hover:text-violet-300 hover:underline text-sm"
+                  className="block text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 hover:underline text-sm"
                 >
                   {post.title}
                 </Link>

@@ -58,7 +58,7 @@ export default function LandingPage() {
           <div className="w-full flex flex-col items-center justify-center max-w-4xl mx-auto">
             <div className="mb-6 md:mb-8 w-full flex justify-center">
               <Link href="/resources">
-                <Button variant="outline" className="rounded-full px-4 md:px-6 py-2 md:py-3 text-sm md:text-base font-medium shadow-sm border-violet-300 dark:border-violet-600 bg-white dark:bg-zinc-900 text-violet-700 dark:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-900/20 hover:border-violet-400 dark:hover:border-violet-500 transition-all duration-300 ease-in-out transform hover:scale-105">
+                <Button variant="outline" className="rounded-full px-4 md:px-6 py-2 md:py-3 text-sm md:text-base font-medium shadow-sm border-green-300 dark:border-green-600 bg-white dark:bg-zinc-900 text-green-700 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20 hover:border-green-400 dark:hover:border-green-500 transition-all duration-300 ease-in-out transform hover:scale-105">
                   Resources & Guides
                 </Button>
               </Link>
@@ -82,12 +82,12 @@ export default function LandingPage() {
 
             <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full max-w-lg justify-center items-center px-4">
               <Link href="/jobs" className="flex-1 w-full">
-                <Button className="w-full py-3 md:py-4 text-base md:text-lg font-semibold bg-violet-600 hover:bg-violet-700 text-white dark:bg-violet-500 dark:hover:bg-violet-600 rounded-xl shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl">
+                <Button className="w-full py-3 md:py-4 text-base md:text-lg font-semibold bg-green-600 hover:bg-green-700 text-white dark:bg-green-500 dark:hover:bg-green-600 rounded-xl shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl">
                   Find Jobs
                 </Button>
               </Link>
               <Link href="/post-job" className="flex-1 w-full">
-                <Button variant="outline" className="w-full py-3 md:py-4 text-base md:text-lg font-semibold border-2 border-violet-600 dark:border-violet-400 bg-transparent text-violet-600 dark:text-violet-400 hover:bg-violet-600 hover:text-white dark:hover:bg-violet-400 dark:hover:text-white rounded-xl shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl">
+                <Button variant="outline" className="w-full py-3 md:py-4 text-base md:text-lg font-semibold border-2 border-green-600 dark:border-green-400 bg-transparent text-green-600 dark:text-green-400 hover:bg-green-600 hover:text-white dark:hover:bg-green-400 dark:hover:text-white rounded-xl shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl">
                   Post a Job
                 </Button>
               </Link>
@@ -103,7 +103,7 @@ export default function LandingPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search for any job, company, location, or keyword... (e.g., physiotherapy blacktown)"
-              className="w-full rounded-lg border-2 border-violet-200 dark:border-violet-700 bg-white dark:bg-zinc-900 px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-violet-400 transition"
+              className="w-full rounded-lg border-2 border-green-200 dark:border-green-700 bg-white dark:bg-zinc-900 px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
             />
           </div>
           <div>
@@ -147,7 +147,7 @@ export default function LandingPage() {
               
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-violet-600 dark:bg-violet-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">1</div>
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 dark:bg-green-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">1</div>
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Specialised Focus in Allied Health</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Jobs specifically curated for physiotherapists, occupational therapists, speech pathologists, and other allied health professionals.</p>
@@ -155,7 +155,7 @@ export default function LandingPage() {
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-violet-600 dark:bg-violet-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">2</div>
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 dark:bg-green-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">2</div>
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Advanced Search and Filters</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Find jobs by location, specialty, experience level, and work setting with powerful search tools.</p>
@@ -163,7 +163,7 @@ export default function LandingPage() {
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-violet-600 dark:bg-violet-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">3</div>
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 dark:bg-green-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">3</div>
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Career Resources and Guidance</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Access comprehensive career advice, resume tips, and industry insights to advance your career.</p>
@@ -171,7 +171,7 @@ export default function LandingPage() {
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-violet-600 dark:bg-violet-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">4</div>
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 dark:bg-green-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">4</div>
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Simplified Application Process</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Apply directly to employers with a streamlined application system and track applications.</p>
@@ -179,7 +179,7 @@ export default function LandingPage() {
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-violet-600 dark:bg-violet-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">5</div>
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 dark:bg-green-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">5</div>
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Locum, Temp-Casual & Permanent Jobs</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Find flexible work arrangements including locum, temporary, casual, and permanent positions.</p>
@@ -187,7 +187,7 @@ export default function LandingPage() {
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-violet-600 dark:bg-violet-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">6</div>
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 dark:bg-green-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">6</div>
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Nationwide Coverage</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Access job opportunities across all Australian states and territories.</p>
@@ -203,7 +203,7 @@ export default function LandingPage() {
               
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-violet-600 dark:bg-violet-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">1</div>
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 dark:bg-green-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">1</div>
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Highly Targeted Audience</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Attracting qualified allied health professionals only - physiotherapists, occupational therapists, speech pathologists, and related fields.</p>
@@ -211,7 +211,7 @@ export default function LandingPage() {
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-violet-600 dark:bg-violet-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">2</div>
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 dark:bg-green-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">2</div>
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-1">National Reach Across Australia</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Connect with candidates from all states and territories across Australia.</p>
@@ -219,7 +219,7 @@ export default function LandingPage() {
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-violet-600 dark:bg-violet-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">3</div>
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 dark:bg-green-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">3</div>
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Ideal for Urgent & Hard-to-Fill Roles</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Perfect for finding qualified candidates quickly for specialized positions and urgent hiring needs.</p>
@@ -227,7 +227,7 @@ export default function LandingPage() {
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-violet-600 dark:bg-violet-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">4</div>
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 dark:bg-green-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">4</div>
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-1">You Pay Less ($50), But Your Ad is Seen by More of the Right People</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Affordable pricing with maximum exposure to your target audience of allied health professionals.</p>
@@ -235,7 +235,7 @@ export default function LandingPage() {
                 </div>
                 
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-violet-600 dark:bg-violet-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">5</div>
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 dark:bg-green-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">5</div>
                   <div>
                     <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Professional Ad Format with Logo & Contact Details</h4>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Ads appear in a clean, professional format with options to include logo, organisation info, and contact details.</p>

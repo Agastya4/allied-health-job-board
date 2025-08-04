@@ -62,7 +62,7 @@ export default function LocationsPage() {
           <h2 className="text-2xl font-bold mb-6">Browse Jobs by Category and Location</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {seoLinks.map(link => (
-              <a key={link.href} href={link.href} className="block text-violet-700 hover:underline text-base">
+              <a key={link.href} href={link.href} className="block text-green-700 hover:underline text-base">
                 {link.label}
               </a>
             ))}
@@ -72,7 +72,7 @@ export default function LocationsPage() {
           <h2 className="text-2xl font-bold mb-6">Browse Jobs by Category and State</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {stateCategoryLinks.map(link => (
-              <a key={link.href} href={link.href} className="block text-violet-700 hover:underline text-base">
+              <a key={link.href} href={link.href} className="block text-green-700 hover:underline text-base">
                 {link.label}
               </a>
             ))}

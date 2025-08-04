@@ -28,7 +28,7 @@ export function BlogCard({ post }: BlogCardProps) {
         
         <CardContent className="p-6">
           {/* Title */}
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors line-clamp-2">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors line-clamp-2">
             {post.title}
           </h3>
           

@@ -46,8 +46,8 @@ export function Navbar() {
             key={link.href}
             href={link.href}
             className={`font-medium transition ${link.match.test(pathname)
-              ? 'text-violet-700 dark:text-violet-400'
-              : 'text-gray-700 dark:text-white hover:text-violet-700 dark:hover:text-violet-400'}`}
+              ? 'text-green-700 dark:text-green-400'
+              : 'text-gray-700 dark:text-white hover:text-green-700 dark:hover:text-green-400'}`}
           >
             {link.label}
           </Link>
@@ -58,7 +58,7 @@ export function Navbar() {
       <div className="hidden md:flex items-center gap-4">
         {user && (
           <Link href="/post-job">
-            <Button className="bg-violet-600 hover:bg-violet-700 text-white flex items-center gap-2">
+            <Button className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2">
               <PlusCircle className="h-4 w-4" />
               Post Job
             </Button>
@@ -83,7 +83,7 @@ export function Navbar() {
           </>
         ) : (
           <Link href="/sign-in">
-            <Button className="bg-violet-600 hover:bg-violet-700 text-white">Sign In</Button>
+            <Button className="bg-green-600 hover:bg-green-700 text-white">Sign In</Button>
           </Link>
         )}
       </div>
@@ -137,8 +137,8 @@ export function Navbar() {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`block py-2 px-3 rounded-lg font-medium transition ${
                       link.match.test(pathname)
-                        ? 'text-violet-700 dark:text-violet-400 bg-violet-50 dark:bg-violet-900/20'
-                        : 'text-gray-700 dark:text-white hover:text-violet-700 dark:hover:text-violet-400 hover:bg-gray-50 dark:hover:bg-zinc-800'
+                        ? 'text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20'
+                        : 'text-gray-700 dark:text-white hover:text-green-700 dark:hover:text-green-400 hover:bg-gray-50 dark:hover:bg-zinc-800'
                     }`}
                   >
                     {link.label}
@@ -153,7 +153,7 @@ export function Navbar() {
                 <>
                   <div className="text-gray-700 dark:text-white font-medium text-center mb-2">{user.name}</div>
                   <Link href="/post-job" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full bg-violet-600 hover:bg-violet-700 text-white flex items-center gap-2">
+                    <Button className="w-full bg-green-600 hover:bg-green-700 text-white flex items-center gap-2">
                       <PlusCircle className="h-4 w-4" />
                       Post Job
                     </Button>
@@ -172,7 +172,7 @@ export function Navbar() {
                 </>
               ) : (
                 <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-violet-600 hover:bg-violet-700 text-white">
+                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
                     Sign In
                   </Button>
                 </Link>

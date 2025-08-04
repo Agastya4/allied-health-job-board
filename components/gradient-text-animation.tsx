@@ -11,7 +11,7 @@ export function GradientTextAnimation({
 }: GradientTextAnimationProps) {
   return (
     <span 
-      className={`bg-gradient-to-r from-violet-600 via-violet-500 to-violet-700 bg-clip-text text-transparent animate-gradient ${className}`}
+      className={`bg-gradient-to-r from-green-600 via-green-500 to-green-700 bg-clip-text text-transparent animate-gradient ${className}`}
     >
       {children}
     </span>

@@ -158,9 +158,9 @@ export function JobCard({ job, onClick, isSelected, onBookmarkToggle, shiftDown 
       className={cn(
         "p-3 flex items-start gap-3 cursor-pointer transition-all duration-200 min-h-[90px]",
         "bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-800 hover:shadow-md",
-        isSelected ? "border-violet-600 ring-2 ring-violet-600" : "",
+        isSelected ? "border-green-600 ring-2 ring-green-600" : "",
         shiftDown ? "mt-8" : "",
-        job.is_featured ? "border-violet-300 dark:border-violet-700 bg-violet-50/50 dark:bg-violet-900/10" : ""
+        job.is_featured ? "border-green-300 dark:border-green-700 bg-green-50/50 dark:bg-green-900/10" : ""
       )}
       onClick={onClick}
     >
@@ -199,7 +199,7 @@ export function JobCard({ job, onClick, isSelected, onBookmarkToggle, shiftDown 
 
         {/* Tags/Badges - moved lower and more compact */}
         <div className="flex flex-wrap gap-1 mt-auto">
-          <Badge className="bg-violet-600 text-white text-xs px-2 py-0.5">
+          <Badge className="bg-green-600 text-white text-xs px-2 py-0.5">
             {getOccupationName(job.job_categories)}
           </Badge>
           
