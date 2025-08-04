@@ -14,45 +14,6 @@ import { useAuth } from "@/hooks/use-auth"
 import { useToast } from "@/components/ui/use-toast"
 import Head from "next/head"
 import { SEO } from "@/components/seo"
-import { Metadata } from "next"
-
-export const metadata: Metadata = {
-  title: "Employer Dashboard - AlliedHealthJobs.au",
-  description: "Manage Your Allied Health Job Listings, Practice Details, and Recruitment Campaigns. Post Jobs and Find Qualified Healthcare Professionals.",
-  keywords: [
-    'Employer Dashboard',
-    'Job Management',
-    'Recruitment Dashboard',
-    'Hire Healthcare Professionals',
-    'Allied Health Recruitment'
-  ],
-  openGraph: {
-    title: "Employer Dashboard - AlliedHealthJobs.au",
-    description: "Manage Your Allied Health Job Listings, Practice Details, and Recruitment Campaigns. Post Jobs and Find Qualified Healthcare Professionals.",
-    url: "https://alliedhealthjobs.au/employer",
-    siteName: "AlliedHealthJobs.au",
-    images: [
-      {
-        url: "/Logo.png",
-        width: 1200,
-        height: 630,
-        alt: "Employer Dashboard",
-      },
-    ],
-    locale: "en_AU",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Employer Dashboard - AlliedHealthJobs.au",
-    description: "Manage Your Allied Health Job Listings, Practice Details, and Recruitment Campaigns. Post Jobs and Find Qualified Healthcare Professionals.",
-    images: ["/Logo.png"],
-    creator: "@alliedhealthjobs",
-  },
-  alternates: {
-    canonical: "https://alliedhealthjobs.au/employer",
-  },
-}
 
 interface PracticeDetails {
   practiceName: string;
