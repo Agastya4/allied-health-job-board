@@ -13,7 +13,9 @@ import { getOccupationName } from "@/lib/utils"
 async function getJob(jobidslug: string) {
   const id = parseInt(jobidslug.split('-')[0], 10)
   if (isNaN(id)) return null
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/jobs/${id}`, { cache: 'no-store' })
+  
+  // Use relative URL for server-side requests
+  const res = await fetch(`/api/jobs/${id}`, { cache: 'no-store' })
   if (!res.ok) return null
   const data = await res.json()
   return data.job

@@ -237,7 +237,7 @@ const professionData = {
       "Clinical Social Worker", "Team Leader", "Practice Manager"
     ],
     workEnvironments: [
-      "Government departments", "Non-profit organisations",
+      "Government departments", "Non-profit organizations",
       "Hospitals and health services", "Schools and educational settings",
       "Community centres", "Mental health facilities", "Correctional services"
     ],
@@ -391,7 +391,7 @@ const professionData = {
     workEnvironments: [
       "Private optometry practices", "Optical retail chains",
       "Hospitals and medical centers", "Community health services",
-      "Research institutions", "Corporate organisations"
+      "Research institutions", "Corporate organizations"
     ],
     salaryRanges: [
       { level: "Graduate", range: "$65,000 - $80,000" },
