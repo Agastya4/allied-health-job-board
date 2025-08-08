@@ -47,8 +47,8 @@ const professionData = {
     ],
     workEnvironments: [
       "Private physiotherapy practices", "Public and private hospitals",
-      "Sports clubs and facilities", "Community health centers",
-      "Aged care facilities", "Rehabilitation centers", "Corporate health programs"
+      "Sports clubs and facilities", "Community health centres",
+      "Aged care facilities", "Rehabilitation centres", "Corporate health programs"
     ],
     salaryRanges: [
       { level: "Graduate", range: "$60,000 - $75,000" },
@@ -84,7 +84,7 @@ const professionData = {
       "Clinical Specialist", "Practice Manager", "Academic/Researcher"
     ],
     workEnvironments: [
-      "Hospitals and rehabilitation centers", "Private practices",
+      "Hospitals and rehabilitation centres", "Private practices",
       "Community health services", "Schools and educational settings",
       "Mental health facilities", "Aged care facilities", "Workplace health"
     ],
@@ -93,7 +93,7 @@ const professionData = {
       { level: "Mid-level (3-5 years)", range: "$70,000 - $90,000" },
       { level: "Senior (5+ years)", range: "$90,000 - $110,000+" }
     ],
-    jobMarket: "Occupational therapy is experiencing strong growth in Australia, particularly in mental health, aged care, and pediatric services. There is high demand for OTs in regional areas and specialized fields like hand therapy and neurological rehabilitation."
+    jobMarket: "Occupational therapy is experiencing strong growth in Australia, particularly in mental health, aged care, and pediatric services. There is high demand for OTs in regional areas and specialised fields like hand therapy and neurological rehabilitation."
   },
   "speech-pathology": {
     name: "Speech Pathology",
@@ -124,14 +124,14 @@ const professionData = {
     workEnvironments: [
       "Hospitals and medical centers", "Private practices",
       "Schools and educational settings", "Community health services",
-      "Rehabilitation centers", "Aged care facilities", "Early intervention services"
+      "Rehabilitation centres", "Aged care facilities", "Early intervention services"
     ],
     salaryRanges: [
       { level: "Graduate", range: "$55,000 - $70,000" },
       { level: "Mid-level (3-5 years)", range: "$70,000 - $90,000" },
       { level: "Senior (5+ years)", range: "$90,000 - $110,000+" }
     ],
-    jobMarket: "Speech pathology is experiencing strong growth in Australia, particularly in pediatric services, aged care, and neurological rehabilitation. There is high demand for speech pathologists in regional areas and specialized fields like AAC and swallowing disorders."
+    jobMarket: "Speech pathology is experiencing strong growth in Australia, particularly in pediatric services, aged care, and neurological rehabilitation. There is high demand for speech pathologists in regional areas and specialised fields like AAC and swallowing disorders."
   },
   "psychology": {
     name: "Psychology",
@@ -147,7 +147,7 @@ const professionData = {
     ],
     specializations: [
       "Clinical Psychology", "Counselling Psychology", "Educational Psychology",
-      "Forensic Psychology", "Health Psychology", "Organizational Psychology"
+      "Forensic Psychology", "Health Psychology", "Organisational Psychology"
     ],
     education: [
       "Bachelor's degree in Psychology (3 years)",
@@ -162,7 +162,7 @@ const professionData = {
     ],
     workEnvironments: [
       "Private practices", "Hospitals and mental health facilities",
-      "Schools and universities", "Corporate organizations",
+      "Schools and universities", "Corporate organisations",
       "Government agencies", "Research institutions", "Community services"
     ],
     salaryRanges: [
@@ -170,7 +170,7 @@ const professionData = {
       { level: "Registered (3-5 years)", range: "$75,000 - $95,000" },
       { level: "Clinical (5+ years)", range: "$95,000 - $130,000+" }
     ],
-    jobMarket: "Psychology is experiencing strong growth in Australia, particularly in mental health services, corporate wellbeing, and specialized areas like forensic and health psychology. There is high demand for psychologists across all sectors."
+    jobMarket: "Psychology is experiencing strong growth in Australia, particularly in mental health services, corporate wellbeing, and specialised areas like forensic and health psychology. There is high demand for psychologists across all sectors."
   },
   "dietetics-nutrition": {
     name: "Dietetics & Nutrition",
@@ -200,7 +200,7 @@ const professionData = {
     ],
     workEnvironments: [
       "Hospitals and medical centers", "Private practices",
-      "Community health services", "Sports organizations",
+      "Community health services", "Sports organisations",
       "Food service industries", "Research institutions", "Government agencies"
     ],
     salaryRanges: [
@@ -208,7 +208,7 @@ const professionData = {
       { level: "Mid-level (3-5 years)", range: "$70,000 - $90,000" },
       { level: "Senior (5+ years)", range: "$90,000 - $110,000+" }
     ],
-    jobMarket: "Dietetics and nutrition is experiencing strong growth in Australia, particularly in clinical settings, sports nutrition, and community health. There is high demand for dietitians in regional areas and specialized fields."
+    jobMarket: "Dietetics and nutrition is experiencing strong growth in Australia, particularly in clinical settings, sports nutrition, and community health. There is high demand for dietitians in regional areas and specialised fields."
   },
   "social-work": {
     name: "Social Work",
@@ -237,16 +237,16 @@ const professionData = {
       "Clinical Social Worker", "Team Leader", "Practice Manager"
     ],
     workEnvironments: [
-      "Government departments", "Non-profit organizations",
+      "Government departments", "Non-profit organisations",
       "Hospitals and health services", "Schools and educational settings",
-      "Community centers", "Mental health facilities", "Correctional services"
+      "Community centres", "Mental health facilities", "Correctional services"
     ],
     salaryRanges: [
       { level: "Graduate", range: "$55,000 - $70,000" },
       { level: "Mid-level (3-5 years)", range: "$70,000 - $90,000" },
       { level: "Senior (5+ years)", range: "$90,000 - $110,000+" }
     ],
-    jobMarket: "Social work is experiencing strong growth in Australia, particularly in mental health, child protection, and community services. There is high demand for social workers in regional areas and specialized fields."
+    jobMarket: "Social work is experiencing strong growth in Australia, particularly in mental health, child protection, and community services. There is high demand for social workers in regional areas and specialised fields."
   },
   "podiatry": {
     name: "Podiatry",
@@ -277,14 +277,14 @@ const professionData = {
     workEnvironments: [
       "Private podiatry practices", "Hospitals and medical centers",
       "Sports clubs and facilities", "Community health services",
-      "Aged care facilities", "Rehabilitation centers"
+      "Aged care facilities", "Rehabilitation centres"
     ],
     salaryRanges: [
       { level: "Graduate", range: "$55,000 - $70,000" },
       { level: "Mid-level (3-5 years)", range: "$70,000 - $90,000" },
       { level: "Senior (5+ years)", range: "$90,000 - $110,000+" }
     ],
-    jobMarket: "Podiatry is experiencing strong growth in Australia, particularly in sports medicine, diabetic foot care, and aged care. There is high demand for podiatrists in regional areas and specialized fields."
+    jobMarket: "Podiatry is experiencing strong growth in Australia, particularly in sports medicine, diabetic foot care, and aged care. There is high demand for podiatrists in regional areas and specialised fields."
   },
   "audiology": {
     name: "Audiology",
@@ -322,7 +322,7 @@ const professionData = {
       { level: "Mid-level (3-5 years)", range: "$75,000 - $95,000" },
       { level: "Senior (5+ years)", range: "$95,000 - $120,000+" }
     ],
-    jobMarket: "Audiology is experiencing strong growth in Australia, particularly in pediatric services, cochlear implants, and hearing aid technology. There is high demand for audiologists in regional areas and specialized fields."
+    jobMarket: "Audiology is experiencing strong growth in Australia, particularly in pediatric services, cochlear implants, and hearing aid technology. There is high demand for audiologists in regional areas and specialised fields."
   },
   "exercise-physiology": {
     name: "Exercise Physiology",
@@ -351,7 +351,7 @@ const professionData = {
       "Clinical Specialist", "Practice Manager", "Academic/Researcher"
     ],
     workEnvironments: [
-      "Private practices", "Hospitals and rehabilitation centers",
+      "Private practices", "Hospitals and rehabilitation centres",
       "Sports clubs and facilities", "Community health services",
       "Corporate wellness programs", "Aged care facilities"
     ],
@@ -391,20 +391,20 @@ const professionData = {
     workEnvironments: [
       "Private optometry practices", "Optical retail chains",
       "Hospitals and medical centers", "Community health services",
-      "Research institutions", "Corporate organizations"
+      "Research institutions", "Corporate organisations"
     ],
     salaryRanges: [
       { level: "Graduate", range: "$65,000 - $80,000" },
       { level: "Mid-level (3-5 years)", range: "$80,000 - $100,000" },
       { level: "Senior (5+ years)", range: "$100,000 - $130,000+" }
     ],
-    jobMarket: "Optometry is experiencing strong growth in Australia, particularly in specialized areas like pediatric optometry, contact lens practice, and ocular disease management. There is high demand for optometrists in regional areas."
+    jobMarket: "Optometry is experiencing strong growth in Australia, particularly in specialised areas like pediatric optometry, contact lens practice, and ocular disease management. There is high demand for optometrists in regional areas."
   },
   "pharmacy": {
     name: "Pharmacy",
     title: "Pharmacy Careers in Australia",
     description: "Discover rewarding careers in pharmacy - providing medication expertise and healthcare services in diverse settings across Australia.",
-    longDescription: "Pharmacy is a healthcare profession that focuses on the safe and effective use of medications. Pharmacists provide medication expertise, patient care, and health services in various settings including community pharmacies, hospitals, and specialized practice areas.",
+    longDescription: "Pharmacy is a healthcare profession that focuses on the safe and effective use of medications. Pharmacists provide medication expertise, patient care, and health services in various settings including community pharmacies, hospitals, and specialised practice areas.",
     responsibilities: [
       "Medication dispensing and counseling",
       "Clinical medication review",
@@ -436,7 +436,7 @@ const professionData = {
       { level: "Mid-level (3-5 years)", range: "$75,000 - $95,000" },
       { level: "Senior (5+ years)", range: "$95,000 - $120,000+" }
     ],
-    jobMarket: "Pharmacy is experiencing strong growth in Australia, particularly in clinical pharmacy, specialized practice areas, and medication management services. There is high demand for pharmacists in regional areas and specialized fields."
+    jobMarket: "Pharmacy is experiencing strong growth in Australia, particularly in clinical pharmacy, specialised practice areas, and medication management services. There is high demand for pharmacists in regional areas and specialised fields."
   },
   "radiography": {
     name: "Radiography",
@@ -466,7 +466,7 @@ const professionData = {
     ],
     workEnvironments: [
       "Hospitals and medical centers", "Private imaging clinics",
-      "Specialized imaging centers", "Research institutions",
+      "Specialised imaging centres", "Research institutions",
       "Mobile imaging services", "Educational institutions"
     ],
     salaryRanges: [
@@ -474,7 +474,7 @@ const professionData = {
       { level: "Mid-level (3-5 years)", range: "$75,000 - $95,000" },
       { level: "Senior (5+ years)", range: "$95,000 - $120,000+" }
     ],
-    jobMarket: "Radiography is experiencing strong growth in Australia, particularly in specialized imaging modalities like MRI, CT, and interventional procedures. There is high demand for radiographers in regional areas and specialized fields."
+    jobMarket: "Radiography is experiencing strong growth in Australia, particularly in specialised imaging modalities like MRI, CT, and interventional procedures. There is high demand for radiographers in regional areas and specialised fields."
   }
 }
 

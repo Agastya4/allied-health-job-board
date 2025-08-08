@@ -45,10 +45,10 @@ export default function CareerInfoPage() {
           <Card className="mb-12 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border-gray-200 dark:border-zinc-800">
             <CardContent className="p-8">
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                Allied health professionals work alongside doctors and nurses to provide specialized healthcare services. 
+                Allied health professionals work alongside doctors and nurses to provide specialised healthcare services. 
                 They focus on prevention, diagnosis, treatment, and rehabilitation across various medical specialties. 
                 These professionals play a crucial role in patient care, recovery, and maintaining quality of life. 
-                From hospitals and clinics to community health centers and private practices, allied health careers 
+                From hospitals and clinics to community health centres and private practices, allied health careers 
                 offer diverse work environments with endless career growth possibilities.
               </p>
             </CardContent>

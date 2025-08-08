@@ -1,5 +1,5 @@
 "use client"
-import { AuthForm } from "@/components/auth-form"
+import { ModernAuthForm } from "@/components/modern-auth-form"
 import { SEO } from "@/components/seo"
 
 export default function SignInPage() {
@@ -18,9 +18,7 @@ export default function SignInPage() {
         url="/sign-in"
         type="website"
       />
-      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-zinc-950 text-gray-900 dark:text-white">
-        <AuthForm mode="signin" redirectTo="/" />
-      </div>
+      <ModernAuthForm mode="signin" redirectTo="/" />
     </>
   )
 }

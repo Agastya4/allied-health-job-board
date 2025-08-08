@@ -166,12 +166,12 @@ export function JobCard({ job, onClick, isSelected, onBookmarkToggle, shiftDown 
     >
       {/* Company Logo */}
       <div className="flex-shrink-0">
-        <div className="w-20 h-20 bg-gray-100 dark:bg-zinc-800 rounded-lg flex items-center justify-center overflow-hidden border border-gray-200 dark:border-zinc-700">
+        <div className="w-24 h-24 bg-gray-100 dark:bg-zinc-800 rounded-lg flex items-center justify-center overflow-hidden border border-gray-200 dark:border-zinc-700">
           <Image
             src={logoSrc}
             alt={`${job.company_name} logo`}
-            width={80}
-            height={80}
+            width={96}
+            height={96}
             className="w-full h-full object-cover"
           />
         </div>
@@ -179,16 +179,16 @@ export function JobCard({ job, onClick, isSelected, onBookmarkToggle, shiftDown 
 
       {/* Job Content */}
       <div className="flex-1 min-w-0 flex flex-col h-full">
-        {/* Header with title, company, and date */}
+        {/* Header with company name, title, and date */}
         <div className="flex items-start justify-between gap-2 mb-3">
           <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1 line-clamp-1">
+            <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400 mb-2">
+              <Building className="h-4 w-4 flex-shrink-0" />
+              <span className="font-medium text-lg truncate">{job.company_name}</span>
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white line-clamp-2">
               {job.job_title}
             </h3>
-            <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
-              <Building className="h-3 w-3 flex-shrink-0" />
-              <span className="font-medium text-xs truncate">{job.company_name}</span>
-            </div>
           </div>
           
           {/* Posted date */}
@@ -197,8 +197,8 @@ export function JobCard({ job, onClick, isSelected, onBookmarkToggle, shiftDown 
           </div>
         </div>
 
-        {/* Tags/Badges - moved lower and more compact */}
-        <div className="flex flex-wrap gap-1 mt-auto">
+        {/* Tags/Badges - moved to middle-right */}
+        <div className="flex flex-wrap gap-1 mt-auto justify-end">
           <Badge className="bg-green-600 text-white text-xs px-2 py-0.5">
             {getOccupationName(job.job_categories)}
           </Badge>

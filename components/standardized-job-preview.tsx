@@ -5,7 +5,7 @@ import { JobSidebar } from "@/components/job-sidebar"
 import { JobList } from "@/components/job-list"
 import { JobDetail } from "@/components/job-detail"
 import { ApplyJobModal } from "@/components/apply-job-modal"
-import { AuthForm } from "@/components/auth-form"
+import { ModernAuthForm } from "@/components/modern-auth-form"
 import { useAuth } from "@/hooks/use-auth"
 import { useJobs, type JobFilters, type Job } from "@/hooks/use-jobs"
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable"
@@ -318,7 +318,7 @@ export function StandardizedJobPreview({
       {showApplyModal && selectedJob && <ApplyJobModal job={selectedJob} onClose={() => setShowApplyModal(false)} />}
       {showAuthModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <AuthForm mode="signin" onClose={() => setShowAuthModal(false)} />
+          <ModernAuthForm mode="signin" onClose={() => setShowAuthModal(false)} />
         </div>
       )}
     </div>

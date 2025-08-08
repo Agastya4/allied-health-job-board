@@ -4,6 +4,7 @@ const nextConfig = {
     domains: [
       'vercel-blob.com',
       'prucvxqlaz88anms.public.blob.vercel-storage.com',
+      'images.unsplash.com',
     ],
     formats: ['image/webp', 'image/avif'],
     // Recommended blog image sizes

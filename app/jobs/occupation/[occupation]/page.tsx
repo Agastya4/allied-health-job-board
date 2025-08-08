@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: { params: Promise<{ occupatio
   if (!data) {
     return {
       title: `${occupation.charAt(0).toUpperCase() + occupation.slice(1)} Jobs - AlliedHealthJobs.au`,
-      description: `Find ${occupation.charAt(0).toUpperCase() + occupation.slice(1)} Jobs Across Australia. Browse Allied Health Positions in This Specialized Field.`,
+      description: `Find ${occupation.charAt(0).toUpperCase() + occupation.slice(1)} Jobs Across Australia. Browse Allied Health Positions in This Specialised Field.`,
     }
   }
 
