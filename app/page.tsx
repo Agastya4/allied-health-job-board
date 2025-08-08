@@ -118,20 +118,20 @@ export default function LandingPage() {
               </div>
             ) : (
               <div className="grid gap-2 md:gap-3">
-                {latestJobs.map(job => (
-                  <div key={job.id} onClick={() => router.push(`/jobs/${job.id}-${(job.job_title + '-' + (job.location_display || '')).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`)} className="cursor-pointer">
-                    <JobCardWrapper
-                      job={{
-                        ...job,
-                        is_new: false,
-                        company_logo_url: job.company_logo_url || "",
-                        salary_range: job.salary_range ?? null,
-                        posted_ago: job.posted_ago ?? null,
-                        is_bookmarked: job.is_bookmarked ?? false,
-                      }}
-                    />
-                  </div>
-                ))}
+                                 {latestJobs.map(job => (
+                   <div key={job.id} onClick={() => router.push(`/jobs/${job.id}-${(job.job_title + '-' + (job.location_display || '')).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`)} className="cursor-pointer">
+                     <JobCardWrapper
+                       job={{
+                         ...job,
+                         is_new: false,
+                         company_logo_url: job.company_logo_url || "",
+                         salary_range: job.salary_range ?? null,
+                         posted_ago: job.posted_ago ?? null,
+                         is_bookmarked: job.is_bookmarked ?? false,
+                       }}
+                     />
+                   </div>
+                 ))}
               </div>
             )}
           </div>
