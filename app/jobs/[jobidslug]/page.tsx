@@ -18,7 +18,14 @@ async function getJob(jobidslug: string) {
   // Directly call the database function instead of making HTTP request
   try {
     const job = await getJobById(id)
-    return job
+    if (!job) return null
+    
+    // Convert Date fields to strings to match the expected interface
+    return {
+      ...job,
+      created_at: job.created_at.toISOString(),
+      updated_at: job.updated_at.toISOString()
+    }
   } catch (error) {
     console.error('Error fetching job:', error)
     return null
