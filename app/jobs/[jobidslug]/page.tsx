@@ -9,16 +9,20 @@ import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { getOccupationName } from "@/lib/utils"
+import { getJobById } from "@/lib/database"
 
 async function getJob(jobidslug: string) {
   const id = parseInt(jobidslug.split('-')[0], 10)
   if (isNaN(id)) return null
   
-  // Use relative URL for server-side requests
-  const res = await fetch(`/api/jobs/${id}`, { cache: 'no-store' })
-  if (!res.ok) return null
-  const data = await res.json()
-  return data.job
+  // Directly call the database function instead of making HTTP request
+  try {
+    const job = await getJobById(id)
+    return job
+  } catch (error) {
+    console.error('Error fetching job:', error)
+    return null
+  }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ jobidslug: string }> }): Promise<Metadata> {
