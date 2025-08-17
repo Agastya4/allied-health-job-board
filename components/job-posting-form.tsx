@@ -12,7 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { LocationAutocomplete } from "@/components/location-autocomplete"
-import { MultiSelect } from "@/components/multi-select"
 import { useJobs } from "@/hooks/use-jobs"
 import { Upload } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
@@ -111,7 +110,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
     city: "",
     state: "",
     jobType: "",
-    jobCategories: [] as string[],
+    jobCategories: "" as string, // Changed to string for single select
     experienceLevel: "",
     workSetting: "",
     salaryRange: "",
@@ -136,7 +135,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
   const jobTitleRef = useRef<HTMLInputElement>(null)
   const practiceLocationRef = useRef<HTMLInputElement>(null)
   const jobTypeRef = useRef<HTMLButtonElement>(null)
-  const jobCategoriesRef = useRef<HTMLDivElement>(null)
+  const jobCategoriesRef = useRef<HTMLButtonElement>(null)
   const experienceLevelRef = useRef<HTMLButtonElement>(null)
   const jobDetailsRef = useRef<HTMLTextAreaElement>(null)
   const companyNameRef = useRef<HTMLInputElement>(null)
@@ -292,8 +291,10 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
     }
   }
 
-  const normalizeString = (str: string) => str.trim().toLowerCase().replace(/\s+/g, '-');
-  const normalizeCategories = (categories: string[]) => categories.map(normalizeString);
+  // Helper function to normalize strings for database storage
+  const normalizeString = (str: string) => {
+    return str.trim().toLowerCase().replace(/\s+/g, '-')
+  }
 
   const scrollToFirstError = () => {
     const errorFields = [
@@ -355,7 +356,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
       console.log("❌ Missing: jobType")
     }
     
-    if (formData.jobCategories.length === 0) {
+    if (!formData.jobCategories) { // Changed to check if jobCategories is empty string
       newErrors.jobCategories = "At least one job category is required"
       console.log("❌ Missing: jobCategories")
     }
@@ -423,17 +424,17 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
       return
     }
     
-    console.log("Form validation passed, creating job...")
+    console.log("Form validation passed, redirecting to Stripe checkout...")
     setIsSubmitting(true)
     
     try {
       const normalizedCity = normalizeString(formData.city || '')
       const normalizedState = normalizeString(formData.state || '')
-      const normalizedCategories = normalizeCategories(formData.jobCategories)
+      const normalizedCategories = normalizeString(formData.jobCategories) // Changed to normalizeString
       
       console.log("Normalized data:", { normalizedCity, normalizedState, normalizedCategories })
       
-      // Create job with pending payment status
+      // Prepare job data but don't create it yet
       const jobData = {
         practice_email: formData.practiceEmail,
         job_title: formData.jobTitle,
@@ -444,7 +445,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
         city: normalizedCity,
         state: normalizedState,
         job_type: formData.jobType,
-        job_categories: normalizedCategories,
+        job_categories: normalizedCategories, // Changed to normalizedCategories
         experience_level: formData.experienceLevel,
         work_setting: formData.workSetting,
         salary_range: formData.salaryRange,
@@ -457,19 +458,15 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
         payment_status: 'pending' as const,
       }
       
-      console.log("Job data to be created:", jobData)
+      console.log("Job data prepared, creating Stripe checkout session...")
       
-      const job = await createJob(jobData)
-      console.log("Job created successfully:", job)
-      // setCreatedJobId(job.id) // This state variable is no longer needed
-      
-      // Go directly to Stripe Checkout instead of showing payment form
-      await redirectToStripeCheckout(job.id, formData.jobTitle)
+      // Store job data temporarily and redirect to Stripe checkout
+      await redirectToStripeCheckout(jobData, formData.jobTitle)
       
     } catch (error) {
-      console.error("Failed to create job:", error)
+      console.error("Failed to setup payment:", error)
       toast({
-        title: "Failed to post job.",
+        title: "Payment setup failed.",
         description: "Please try again.",
         variant: "destructive",
         duration: 4000,
@@ -479,9 +476,9 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
     }
   }
 
-  const redirectToStripeCheckout = async (jobId: number, jobTitle: string) => {
+  const redirectToStripeCheckout = async (jobData: any, jobTitle: string) => {
     try {
-      console.log("Creating checkout session for job:", { jobId, jobTitle })
+      console.log("Creating checkout session for job:", { jobTitle })
       
       const response = await fetch("/api/payments/create-checkout-session", {
         method: "POST",
@@ -490,7 +487,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
         },
         credentials: "include",
         body: JSON.stringify({ 
-          jobId: jobId.toString(),
+          jobData, // Send the entire job data
           jobTitle,
           amount: 100, // This amount is hardcoded for now, will be dynamic later
           currency: 'aud'
@@ -502,7 +499,9 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
 
       if (!response.ok) {
         if (data.requiresPayment === false) {
-          // No payment required, job is already created
+          // No payment required, create job directly
+          const job = await createJob(jobData)
+          console.log("Job created successfully (no payment required):", job)
           toast({
             title: "Job posted successfully!",
             description: "Your job listing is now live.",
@@ -515,7 +514,9 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
       }
 
       if (data.requiresPayment === false) {
-        // No payment required, job is already created
+        // No payment required, create job directly
+        const job = await createJob(jobData)
+        console.log("Job created successfully (no payment required):", job)
         toast({
           title: "Job posted successfully!",
           description: "Your job listing is now live.",
@@ -528,6 +529,8 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
       // Redirect to Stripe Checkout
       if (data.checkoutUrl) {
         console.log("Redirecting to Stripe Checkout:", data.checkoutUrl)
+        // Store job data in sessionStorage for retrieval after payment
+        sessionStorage.setItem('pendingJobData', JSON.stringify(jobData))
         window.location.href = data.checkoutUrl
       } else {
         throw new Error("No checkout URL received")
@@ -575,7 +578,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
         <Card className="mobile-modal bg-white dark:bg-zinc-900 mobile-border">
           <CardContent className="mobile-card">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-600 mx-auto mb-4"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
               <p className="text-gray-600 dark:text-gray-400">Loading...</p>
             </div>
           </CardContent>
@@ -743,15 +746,27 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
               </div>
 
               <div>
-                <Label className="mobile-form-label text-gray-900 dark:text-white">Job Categories *</Label>
-                <div ref={jobCategoriesRef} className={errors.jobCategories ? 'mobile-error mobile-rounded p-1' : ''}>
-                  <MultiSelect
-                    options={jobCategories}
-                    value={formData.jobCategories}
-                    onChange={(value) => handleInputChange("jobCategories", value)}
-                    placeholder="Select job categories"
-                  />
-                </div>
+                <Label htmlFor="jobCategories" className="mobile-form-label text-gray-900 dark:text-white">
+                  Job Categories *
+                </Label>
+                <Select
+                  value={formData.jobCategories}
+                  onValueChange={(value) => handleInputChange("jobCategories", value)}
+                >
+                  <SelectTrigger 
+                    ref={jobCategoriesRef}
+                    className={`mobile-form-input bg-white dark:bg-zinc-800 mobile-border ${errors.jobCategories ? 'mobile-error' : ''}`}
+                  >
+                    <SelectValue placeholder="Select job categories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {jobCategories.map((category) => (
+                      <SelectItem key={category.value} value={category.value}>
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 {errors.jobCategories && <p className="text-red-500 text-sm mt-1" aria-live="polite">{errors.jobCategories}</p>}
               </div>
 
@@ -877,15 +892,35 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
                       <div className="w-16 h-16 bg-gray-200 dark:bg-zinc-700 mobile-rounded"></div>
                     ))}
                   </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="mobile-button bg-white dark:bg-zinc-800 mobile-border text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-700 flex items-center gap-2"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <Upload className="h-4 w-4" />
-                    Upload Logo
-                  </Button>
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="mobile-button bg-white dark:bg-zinc-800 mobile-border text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-zinc-700 flex items-center gap-2"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <Upload className="h-4 w-4" />
+                      Upload Logo
+                    </Button>
+                    {(logoPreview || logoUrl) && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="mobile-button bg-red-50 dark:bg-red-900/20 mobile-border text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 flex items-center gap-2"
+                        onClick={() => {
+                          setLogoPreview("")
+                          setLogoUrl("")
+                          setLogoFile(null)
+                          if (fileInputRef.current) {
+                            fileInputRef.current.value = ""
+                          }
+                        }}
+                      >
+                        <X className="h-4 w-4" />
+                        Remove Logo
+                      </Button>
+                    )}
+                  </div>
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -926,7 +961,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
               </Button>
               <Button
                 type="submit"
-                className="flex-1 bg-violet-600 hover:bg-violet-700 text-white mobile-button"
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white mobile-button"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Processing..." : "Post Job & Pay"}

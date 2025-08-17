@@ -29,39 +29,57 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
       }
 
-      const sessionJobId = session.metadata?.jobId;
-      if (!sessionJobId) {
-        return NextResponse.json({ error: "Job ID not found in session" }, { status: 400 });
-      }
-
       // Check payment status
       if (session.payment_status === 'paid') {
-        // Update job payment status
+        // Get job data from session metadata
+        const jobDataString = session.metadata?.jobData;
+        if (!jobDataString) {
+          return NextResponse.json({ error: "Job data not found in session" }, { status: 400 });
+        }
+
+        let jobData;
+        try {
+          jobData = JSON.parse(jobDataString);
+        } catch (error) {
+          console.error("Failed to parse job data:", error);
+          return NextResponse.json({ error: "Invalid job data in session" }, { status: 400 });
+        }
+
+        // Create the job now that payment is confirmed
         const { sql } = await import('@/lib/database');
         
-        await sql`
-          UPDATE jobs 
-          SET payment_status = 'paid', stripe_payment_intent_id = ${session.payment_intent as string}
-          WHERE id = ${parseInt(sessionJobId)} AND user_id = ${user.id}
+        const job = await sql`
+          INSERT INTO jobs (
+            user_id, practice_email, job_title, practice_location, location_display,
+            location_lat, location_lng, city, state, job_type, job_categories,
+            experience_level, work_setting, salary_range, job_details, company_name,
+            contact_phone, contact_email, company_website, company_logo_url,
+            payment_status, stripe_payment_intent_id, status, created_at, updated_at
+          ) VALUES (
+            ${user.id}, ${jobData.practice_email}, ${jobData.job_title}, ${jobData.practice_location},
+            ${jobData.location_display}, ${jobData.location_lat}, ${jobData.location_lng},
+            ${jobData.city}, ${jobData.state}, ${jobData.job_type}, ${jobData.job_categories},
+            ${jobData.experience_level}, ${jobData.work_setting}, ${jobData.salary_range},
+            ${jobData.job_details}, ${jobData.company_name}, ${jobData.contact_phone},
+            ${jobData.contact_email}, ${jobData.company_website}, ${jobData.company_logo_url},
+            'paid', ${session.payment_intent as string}, 'active', NOW(), NOW()
+          ) RETURNING *
         `;
 
-        // Get job title for response
-        const jobResult = await sql`
-          SELECT job_title FROM jobs WHERE id = ${parseInt(sessionJobId)}
-        `;
-        const jobTitle = jobResult[0]?.job_title || "Your job posting";
+        const createdJob = job[0];
 
         // Record payment in payments table
         await sql`
           INSERT INTO payments (job_id, user_id, stripe_payment_intent_id, amount, currency, status, payment_method)
-          VALUES (${parseInt(sessionJobId)}, ${user.id}, ${session.payment_intent as string}, ${session.amount_total || 0}, ${session.currency || 'aud'}, 'succeeded', 'card')
+          VALUES (${createdJob.id}, ${user.id}, ${session.payment_intent as string}, ${session.amount_total || 0}, ${session.currency || 'aud'}, 'succeeded', 'card')
           ON CONFLICT (stripe_payment_intent_id) DO NOTHING
         `;
 
         return NextResponse.json({ 
           success: true, 
           message: "Payment confirmed and job posted successfully",
-          jobTitle
+          jobTitle: jobData.job_title,
+          jobId: createdJob.id
         });
       } else if (session.payment_status === 'unpaid') {
         return NextResponse.json({ 
@@ -73,7 +91,7 @@ export async function POST(request: NextRequest) {
         }, { status: 400 });
       }
     } else if (paymentIntentId) {
-      // Handle direct payment intent ID
+      // Handle direct payment intent ID (legacy support)
       paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
       
       if (!paymentIntent) {
@@ -92,7 +110,7 @@ export async function POST(request: NextRequest) {
 
       // Check payment status
       if (paymentIntent.status === 'succeeded') {
-        // Update job payment status
+        // Update job payment status (for existing jobs)
         const { sql } = await import('@/lib/database');
         
         await sql`

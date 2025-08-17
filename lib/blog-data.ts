@@ -3113,4 +3113,10 @@ export function getRelatedPosts(currentPost: BlogPost, limit: number = 3): BlogP
       (post.category === currentPost.category || 
        post.tags.some(tag => currentPost.tags.includes(tag))))
     .slice(0, limit);
+}
+
+export function getOldestBlogPosts(limit: number = 3): BlogPost[] {
+  return blogPosts
+    .sort((a, b) => new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime())
+    .slice(0, limit);
 } 

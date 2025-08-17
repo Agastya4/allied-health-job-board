@@ -192,14 +192,14 @@ export function JobDetail({ job, onClose, onApply }: JobDetailProps) {
             <div className="flex gap-3 mt-6">
               <Button
                 onClick={handleQuickApply}
-                className="flex-1 bg-violet-600 hover:bg-violet-700 text-white h-12 text-base font-semibold rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white h-12 text-base font-semibold rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
               >
                 Quick apply
               </Button>
               <Button
                 onClick={handleViewDetails}
                 variant="outline"
-                className="flex-1 h-12 text-base font-semibold border-2 border-violet-600 text-violet-600 hover:bg-violet-50 dark:hover:bg-violet-900/10 rounded-lg transition-all duration-200"
+                className="flex-1 h-12 text-base font-semibold border-2 border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/10 rounded-lg transition-all duration-200"
               >
                 View details
               </Button>

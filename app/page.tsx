@@ -11,6 +11,7 @@ import { InternalLinks } from "@/components/internal-links"
 import { GradientTextAnimation } from "@/components/gradient-text-animation"
 import Link from "next/link"
 import { useJobs } from "@/hooks/use-jobs"
+import { getOldestBlogPosts } from "@/lib/blog-data"
 
 export default function LandingPage() {
   const router = useRouter()
@@ -21,6 +22,9 @@ export default function LandingPage() {
   const { jobs, loading } = useJobs({ 
     search: debouncedSearch || undefined 
   })
+
+  // Get oldest blog posts
+  const oldestBlogPosts = getOldestBlogPosts(3)
 
   // Debounce search input
   useEffect(() => {
@@ -53,25 +57,39 @@ export default function LandingPage() {
         type="website"
       />
       <div className="min-h-screen w-full relative">
+        {/* Grid Background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-100 via-transparent to-transparent dark:from-zinc-800 dark:via-transparent dark:to-transparent">
+          <div className="absolute inset-0 opacity-50">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `
+                linear-gradient(rgba(156, 163, 175, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(156, 163, 175, 0.2) 1px, transparent 1px)
+              `,
+              backgroundSize: '50px 50px',
+              maskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)'
+            }}></div>
+          </div>
+        </div>
+        
         {/* Main Content Section */}
-        <div className="flex items-center justify-center px-4 py-12 md:py-20">
+        <div className="flex items-center justify-center px-4 py-12 md:py-20 relative z-20">
           <div className="w-full flex flex-col items-center justify-center max-w-4xl mx-auto">
             <div className="mb-6 md:mb-8 w-full flex justify-center">
-              <Link href="/resources">
+              <Link href="/blog">
                 <Button variant="outline" className="rounded-full px-4 md:px-6 py-2 md:py-3 text-sm md:text-base font-medium shadow-sm border-green-300 dark:border-green-600 bg-white dark:bg-zinc-900 text-green-700 dark:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20 hover:border-green-400 dark:hover:border-green-500 transition-all duration-300 ease-in-out transform hover:scale-105">
-                  Resources & Guides
+                  Blog
                 </Button>
               </Link>
             </div>
             
-            <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold text-center mb-4 md:mb-6 tracking-tight w-full">
+            <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold text-center mb-4 md:mb-6 tracking-tight w-full relative z-10">
               Find Your Perfect<br />
               <GradientTextAnimation>
                 Healthcare Match
               </GradientTextAnimation>
             </h1>
             
-            <p className="text-base md:text-lg lg:text-xl text-center text-gray-600 dark:text-gray-300 mb-8 md:mb-12 max-w-3xl leading-relaxed w-full px-4 min-h-[1.5em]">
+            <p className="text-base md:text-lg lg:text-xl text-center text-gray-600 dark:text-gray-300 mb-8 md:mb-12 max-w-3xl leading-relaxed w-full px-4 min-h-[1.5em] relative z-10">
               <Typewriter 
                 text="From entry-level positions to senior roles, we help professionals at every stage find their next opportunity."
                 speed={30}
@@ -80,7 +98,7 @@ export default function LandingPage() {
               />
             </p>
 
-            <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full max-w-lg justify-center items-center px-4">
+            <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full max-w-lg justify-center items-center px-4 relative z-10">
               <Link href="/jobs" className="flex-1 w-full">
                 <Button className="w-full py-3 md:py-4 text-base md:text-lg font-semibold bg-green-600 hover:bg-green-700 text-white dark:bg-green-500 dark:hover:bg-green-600 rounded-xl shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl">
                   Find Jobs
@@ -103,7 +121,7 @@ export default function LandingPage() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search for any job, company, location, or keyword... (e.g., physiotherapy blacktown)"
-              className="w-full rounded-lg border-2 border-green-200 dark:border-green-700 bg-white dark:bg-zinc-900 px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+              className="w-full rounded-lg border border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition"
             />
           </div>
           <div>
@@ -137,162 +155,230 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Why Choose Us Section */}
+        {/* Job Seeker Categories Section */}
         <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-20 relative z-10 bg-transparent">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-            {/* For Job Seekers */}
-            <div className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300">
-                             <div className="text-center mb-6">
-                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white">For Job Seekers</h3>
-                 <p className="text-gray-600 dark:text-gray-400">Find your dream role in allied health</p>
-               </div>
-              
-                             <div className="space-y-6">
-                 <div className="flex items-start gap-4">
-                   <div className="flex-shrink-0 w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full mt-2"></div>
-                   <div>
-                     <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Specialised Allied Health Focus</h4>
-                     <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Jobs specifically curated for physiotherapists, occupational therapists, speech pathologists, and other allied health professionals.</p>
-                   </div>
-                 </div>
-                 
-                 <div className="flex items-start gap-4">
-                   <div className="flex-shrink-0 w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full mt-2"></div>
-                   <div>
-                     <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Advanced Search & Filters</h4>
-                     <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Find jobs by location, specialty, experience level, and work setting with powerful search tools.</p>
-                   </div>
-                 </div>
-                 
-                 <div className="flex items-start gap-4">
-                   <div className="flex-shrink-0 w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full mt-2"></div>
-                   <div>
-                     <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Career Resources & Guidance</h4>
-                     <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Access comprehensive career advice, resume tips, and industry insights to advance your career.</p>
-                   </div>
-                 </div>
-                 
-                 <div className="flex items-start gap-4">
-                   <div className="flex-shrink-0 w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full mt-2"></div>
-                   <div>
-                     <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Simplified Application Process</h4>
-                     <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Apply directly to employers with a streamlined application system and track applications.</p>
-                   </div>
-                 </div>
-               </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Side Content */}
+            <div>
+              <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
+                We help you <span className="underline decoration-blue-400 decoration-2 underline-offset-4">find the right job</span>
+              </h3>
+              <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+                We believe that you deserve a job search experience that is human and personal. We go beyond simple keyword searches.
+              </p>
+              <Link href="/jobs" className="inline-flex items-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-semibold text-lg group">
+                Ready to build your Joblist?
+                <svg className="ml-2 w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
             </div>
             
-            {/* For Employers */}
-            <div className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300">
-                             <div className="text-center mb-6">
-                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white">For Employers</h3>
-                 <p className="text-gray-600 dark:text-gray-400">Connect with top allied health talent</p>
-               </div>
+            {/* Right Side - Job Seeker Categories Grid */}
+            <div className="grid grid-cols-2 gap-4">
+              {/* Card 1 - Unemployed */}
+              <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-700 p-6 text-center hover:shadow-lg transition-shadow">
+                <div className="w-12 h-12 mx-auto mb-3 bg-gray-200 dark:bg-zinc-700 rounded-full flex items-center justify-center">
+                  <div className="text-2xl">🔍</div>
+                </div>
+                <p className="font-semibold text-gray-900 dark:text-white">Unemployed</p>
+              </div>
               
-                             <div className="space-y-6">
-                 <div className="flex items-start gap-4">
-                   <div className="flex-shrink-0 w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full mt-2"></div>
-                   <div>
-                     <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Highly Targeted Audience</h4>
-                     <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Attracting qualified allied health professionals only - physiotherapists, occupational therapists, speech pathologists, and related fields.</p>
-                   </div>
-                 </div>
-                 
-                 <div className="flex items-start gap-4">
-                   <div className="flex-shrink-0 w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full mt-2"></div>
-                   <div>
-                     <h4 className="font-semibold text-gray-900 dark:text-white mb-2">National Reach Across Australia</h4>
-                     <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Connect with candidates from all states and territories across Australia.</p>
-                   </div>
-                 </div>
-                 
-                 <div className="flex items-start gap-4">
-                   <div className="flex-shrink-0 w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full mt-2"></div>
-                   <div>
-                     <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Ideal for Urgent & Hard-to-Fill Roles</h4>
-                     <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Perfect for finding qualified candidates quickly for specialised positions and urgent hiring needs.</p>
-                   </div>
-                 </div>
-                 
-                 <div className="flex items-start gap-4">
-                   <div className="flex-shrink-0 w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full mt-2"></div>
-                   <div>
-                     <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Affordable Pricing with Maximum Exposure</h4>
-                     <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">You pay less ($50), but your ad is seen by more of the right people in the allied health industry.</p>
-                   </div>
-                 </div>
-                 
-                 <div className="flex items-start gap-4">
-                   <div className="flex-shrink-0 w-2 h-2 bg-green-600 dark:bg-green-400 rounded-full mt-2"></div>
-                   <div>
-                     <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Professional Ad Format</h4>
-                     <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Ads appear in a clean, professional format with options to include logo, organisation info, and contact details.</p>
-                   </div>
-                 </div>
-               </div>
+              {/* Card 2 - Recent Grad */}
+              <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-700 p-6 text-center hover:shadow-lg transition-shadow">
+                <div className="w-12 h-12 mx-auto mb-3 bg-gray-200 dark:bg-zinc-700 rounded-full flex items-center justify-center">
+                  <div className="text-2xl">🎓</div>
+                </div>
+                <p className="font-semibold text-gray-900 dark:text-white">Recent Grad</p>
+              </div>
+              
+              {/* Card 3 - Open to Remote */}
+              <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-700 p-6 text-center hover:shadow-lg transition-shadow">
+                <div className="w-12 h-12 mx-auto mb-3 bg-gray-200 dark:bg-zinc-700 rounded-full flex items-center justify-center">
+                  <div className="text-2xl">🌐</div>
+                </div>
+                <p className="font-semibold text-gray-900 dark:text-white">Open to Remote</p>
+              </div>
+              
+              {/* Card 4 - Something Else */}
+              <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-700 p-6 text-center hover:shadow-lg transition-shadow">
+                <div className="w-12 h-12 mx-auto mb-3 bg-gray-200 dark:bg-zinc-700 rounded-full flex items-center justify-center">
+                  <div className="text-2xl">🧩</div>
+                </div>
+                <p className="font-semibold text-gray-900 dark:text-white">Something Else</p>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Comparison Table Section */}
-        <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-20 pb-20 md:pb-20 relative z-10 bg-transparent">
-          <h3 className="text-xl md:text-2xl font-bold text-center mb-8 text-gray-900 dark:text-white">
-            What Makes AlliedHealthJobs.au Different?
-          </h3>
+        {/* Joblist Building Process Section */}
+        <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-20 relative z-10 bg-transparent">
+          <div className="text-center mb-12">
+            <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Start building your <span className="underline decoration-yellow-400 decoration-2 underline-offset-4">Joblist</span> today
+            </h3>
+          </div>
           
-          <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-gray-200 dark:border-zinc-800 overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gray-200 dark:border-zinc-700">
-                  <th className="text-left py-3 px-4 font-semibold text-gray-900 dark:text-white">Feature</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-900 dark:text-white">AlliedHealthJobs.au</th>
-                  <th className="text-center py-3 px-4 font-semibold text-gray-500 dark:text-gray-400">Typical Job Boards</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-gray-100 dark:border-zinc-800">
-                  <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">Industry Focus</td>
-                  <td className="py-3 px-4 text-center text-green-600 dark:text-green-400">✓ Dedicated Allied Health</td>
-                  <td className="py-3 px-4 text-center text-gray-500 dark:text-gray-400">General or mixed industries</td>
-                </tr>
-                <tr className="border-b border-gray-100 dark:border-zinc-800">
-                  <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">Job Posting Cost</td>
-                  <td className="py-3 px-4 text-center text-green-600 dark:text-green-400">$50</td>
-                  <td className="py-3 px-4 text-center text-gray-500 dark:text-gray-400">$75-200+</td>
-                </tr>
-                <tr className="border-b border-gray-100 dark:border-zinc-800">
-                  <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">Target Audience</td>
-                  <td className="py-3 px-4 text-center text-green-600 dark:text-green-400">Allied Health Professionals</td>
-                  <td className="py-3 px-4 text-center text-gray-500 dark:text-gray-400">General job seekers</td>
-                </tr>
-                <tr className="border-b border-gray-100 dark:border-zinc-800">
-                  <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">Candidate Quality</td>
-                  <td className="py-3 px-4 text-center text-green-600 dark:text-green-400">Industry-specific candidates</td>
-                  <td className="py-3 px-4 text-center text-gray-500 dark:text-gray-400">Mixed candidate pool</td>
-                </tr>
-                <tr className="border-b border-gray-100 dark:border-zinc-800">
-                  <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">Ad Presentation</td>
-                  <td className="py-3 px-4 text-center text-green-600 dark:text-green-400">Professional format with branding</td>
-                  <td className="py-3 px-4 text-center text-gray-500 dark:text-gray-400">Standard format</td>
-                </tr>
-                <tr className="border-b border-gray-100 dark:border-zinc-800">
-                  <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">Career Resources</td>
-                  <td className="py-3 px-4 text-center text-green-600 dark:text-green-400">Allied health career guidance</td>
-                  <td className="py-3 px-4 text-center text-gray-500 dark:text-gray-400">General career advice</td>
-                </tr>
-                <tr>
-                  <td className="py-3 px-4 font-medium text-gray-900 dark:text-white">Job Categories</td>
-                  <td className="py-3 px-4 text-center text-green-600 dark:text-green-400">Allied health specialties</td>
-                  <td className="py-3 px-4 text-center text-gray-500 dark:text-gray-400">Broad categories</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Side - Smartphone Mockup */}
+            <div className="flex justify-center">
+              <div className="w-80 h-[28rem] bg-white dark:bg-zinc-900 rounded-3xl border-4 border-gray-200 dark:border-zinc-700 p-4 shadow-xl">
+                <div className="w-full h-full bg-gray-100 dark:bg-zinc-800 rounded-2xl flex flex-col items-center justify-center">
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Joblist</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 text-center">Smartphone Mockup Placeholder</div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Right Side - Three Step Process */}
+            <div className="space-y-6">
+              {/* Step 1 */}
+              <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-700 p-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-16 h-16 bg-gray-200 dark:bg-zinc-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="text-center">
+                      <div className="text-sm text-gray-500 dark:text-gray-400">Form</div>
+                      <div className="text-xs text-gray-400 dark:text-gray-500">Mockup</div>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-orange-500 font-semibold text-sm mb-1">STEP 1</div>
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Answer Questions</h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">Answer a few questions about your situation and job preferences.</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Step 2 */}
+              <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-700 p-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-16 h-16 bg-gray-200 dark:bg-zinc-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="text-center">
+                      <div className="text-sm text-gray-500 dark:text-gray-400">List</div>
+                      <div className="text-xs text-gray-400 dark:text-gray-500">Mockup</div>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-orange-500 font-semibold text-sm mb-1">STEP 2</div>
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Get Matches</h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">Browse personalized results based on our analysis of millions of jobs.</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Step 3 */}
+              <div className="bg-white dark:bg-zinc-900 rounded-2xl border border-gray-200 dark:border-zinc-700 p-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-16 h-16 bg-gray-200 dark:bg-zinc-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="text-center">
+                      <div className="text-sm text-gray-500 dark:text-gray-400">Save</div>
+                      <div className="text-xs text-gray-400 dark:text-gray-500">Mockup</div>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-orange-500 font-semibold text-sm mb-1">STEP 3</div>
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Save Favorites</h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">Save jobs to your personalized list and apply when you're ready.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Hero Image Section - Replace "For Job Seekers and Employers" */}
+        <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-20 relative z-10 bg-transparent">
+          <div className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-zinc-800">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              {/* Left Side Content */}
+              <div>
+                <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
+                  Shareable
+                </h3>
+                <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+                  Access your joblist from anywhere and share it (if you want to). We can give you a public URL that you can share directly with friends and family.
+                </p>
+                <Link href="/jobs" className="inline-flex items-center text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 font-semibold text-lg group">
+                  Ready to build your Joblist?
+                  <svg className="ml-2 w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </Link>
+              </div>
+              
+              {/* Right Side Visual (Share Modal Preview) */}
+              <div className="flex justify-center">
+                <div className="w-80 h-64 bg-gray-200 dark:bg-zinc-700 rounded-2xl flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-4xl mb-2">🖼️</div>
+                    <p className="text-gray-500 dark:text-gray-400">Share Modal Placeholder</p>
+                    <p className="text-sm text-gray-400 dark:text-gray-500">Replace with your inspiration image</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Blog Section - Replace "What Makes AlliedHealthJobs.au Different" */}
+        <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-20 relative z-10 bg-transparent">
+          <div className="text-center mb-12">
+            <h3 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Learn more on the <span className="underline decoration-2 underline-offset-4">Joblist Blog</span>
+            </h3>
+          </div>
+          
+          {/* Three Blog Post Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {oldestBlogPosts.map((post, index) => (
+              <div key={index} className="bg-white dark:bg-zinc-900 rounded-2xl shadow-lg border border-gray-200 dark:border-zinc-700 overflow-hidden hover:shadow-xl transition-shadow">
+                <Link href={`/blog/${post.slug}`}>
+                  <div className="h-48 bg-gray-200 dark:bg-zinc-700 flex items-center justify-center">
+                    <img
+                      src={post.coverImage}
+                      alt={post.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 line-clamp-2">
+                      {post.title}
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
+                      {post.excerpt}
+                    </p>
+                    <Link href={`/blog/${post.slug}`} className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 font-medium text-sm inline-flex items-center group">
+                      Read more 
+                      <svg className="ml-1 w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </Link>
+                  </div>
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          {/* View All Articles Button */}
+          <div className="text-center">
+            <Link href="/blog">
+              <Button className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-2xl font-semibold text-lg transition-colors">
+                View All Articles 
+                <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Button>
+            </Link>
           </div>
         </div>
 
         {/* Internal Links Section - Moved to bottom */}
         <div className="w-full max-w-6xl mx-auto px-4 py-12 md:py-20 pb-20 md:pb-20 relative z-10 bg-transparent">
-          <InternalLinks />
+          <InternalLinks 
+            showLocationLinks={false}
+            showCategoryLinks={false}
+            showBlogLinks={false}
+          />
         </div>
       </div>
     </>

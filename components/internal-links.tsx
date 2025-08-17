@@ -88,7 +88,7 @@ export function InternalLinks({
       {showBlogLinks && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Latest Resources</CardTitle>
+                            <CardTitle className="text-lg">Latest Blog Posts</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">

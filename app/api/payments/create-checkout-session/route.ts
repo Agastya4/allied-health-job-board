@@ -14,11 +14,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Only employers can post jobs" }, { status: 403 });
     }
 
-    const { jobId, jobTitle, amount, currency } = await request.json();
-    console.log("Creating checkout session:", { jobId, jobTitle, amount, currency, userId: user.id })
+    const { jobData, jobTitle, amount, currency } = await request.json();
+    console.log("Creating checkout session:", { jobTitle, amount, currency, userId: user.id })
 
-    if (!jobId || !jobTitle) {
-      return NextResponse.json({ error: "Job ID and job title are required" }, { status: 400 });
+    if (!jobData || !jobTitle) {
+      return NextResponse.json({ error: "Job data and job title are required" }, { status: 400 });
     }
 
     // Get payment settings
@@ -63,9 +63,10 @@ export async function POST(request: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_STRIPE_SUCCESS_URL}?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: process.env.NEXT_PUBLIC_STRIPE_CANCEL_URL,
       metadata: {
-        jobId: jobId.toString(),
         userId: user.id.toString(),
         jobTitle: jobTitle,
+        // Store job data as JSON string in metadata
+        jobData: JSON.stringify(jobData),
       },
     });
 

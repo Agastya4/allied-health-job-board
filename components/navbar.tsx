@@ -15,7 +15,7 @@ const navLinks = [
   { href: "/career-info", label: "Career Info", match: /^\/career-info/ },
   { href: "/blog", label: "Blog", match: /^\/blog/ },
   { href: "/employer", label: "For Employers", match: /^\/employer/ },
-  { href: "/resources", label: "Resources", match: /^\/resources/ },
+
 ]
 
 export function Navbar() {
