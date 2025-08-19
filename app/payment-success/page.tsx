@@ -33,13 +33,38 @@ function PaymentSuccessContent() {
 
   const confirmPayment = async (sessionId: string) => {
     try {
+      // Get job data from sessionStorage
+      const jobDataId = sessionStorage.getItem('currentJobDataId');
+      let jobData = null;
+      
+      if (jobDataId) {
+        const storedJobData = sessionStorage.getItem(jobDataId);
+        if (storedJobData) {
+          try {
+            jobData = JSON.parse(storedJobData);
+            // Clean up sessionStorage after retrieving
+            sessionStorage.removeItem(jobDataId);
+            sessionStorage.removeItem('currentJobDataId');
+          } catch (error) {
+            console.error("Failed to parse stored job data:", error);
+          }
+        }
+      }
+
+      if (!jobData) {
+        throw new Error("Job data not found. Please contact support.");
+      }
+
       const response = await fetch("/api/payments/confirm", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ sessionId }),
+        body: JSON.stringify({ 
+          sessionId,
+          jobData // Send the job data to the confirmation API
+        }),
       })
 
       const data = await response.json()

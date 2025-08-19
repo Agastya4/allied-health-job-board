@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { sessionId, paymentIntentId, jobId } = body;
+    const { sessionId, paymentIntentId, jobId, jobData } = body;
 
     // Handle both sessionId and paymentIntentId
     let session;
@@ -31,18 +31,9 @@ export async function POST(request: NextRequest) {
 
       // Check payment status
       if (session.payment_status === 'paid') {
-        // Get job data from session metadata
-        const jobDataString = session.metadata?.jobData;
-        if (!jobDataString) {
-          return NextResponse.json({ error: "Job data not found in session" }, { status: 400 });
-        }
-
-        let jobData;
-        try {
-          jobData = JSON.parse(jobDataString);
-        } catch (error) {
-          console.error("Failed to parse job data:", error);
-          return NextResponse.json({ error: "Invalid job data in session" }, { status: 400 });
+        // Get job data from request body (sent from frontend) instead of metadata
+        if (!jobData) {
+          return NextResponse.json({ error: "Job data not provided" }, { status: 400 });
         }
 
         // Create the job now that payment is confirmed

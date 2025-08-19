@@ -543,8 +543,14 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
       // Always redirect to Stripe Checkout (even for free postings)
       if (data.checkoutUrl) {
         console.log("Redirecting to Stripe Checkout:", data.checkoutUrl)
-        // Store job data in sessionStorage for retrieval after payment
-        sessionStorage.setItem('pendingJobData', JSON.stringify(jobData))
+        
+        // Store job data in sessionStorage using the unique ID from the API
+        const jobDataId = data.jobDataId || `job_${Date.now()}_${Date.now()}`
+        sessionStorage.setItem(jobDataId, JSON.stringify(jobData))
+        
+        // Also store the jobDataId for retrieval after payment
+        sessionStorage.setItem('currentJobDataId', jobDataId)
+        
         window.location.href = data.checkoutUrl
       } else {
         throw new Error("No checkout URL received")

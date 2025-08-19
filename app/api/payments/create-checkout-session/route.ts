@@ -36,7 +36,8 @@ export async function POST(request: NextRequest) {
       }, { status: 500 });
     }
 
-    // Create Stripe checkout session
+    // Create Stripe checkout session with minimal metadata
+    // Store only essential identifiers to avoid metadata size limits
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -49,10 +50,11 @@ export async function POST(request: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_STRIPE_SUCCESS_URL}?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_STRIPE_CANCEL_URL}`,
       metadata: {
-        userId: user.id,
+        userId: user.id.toString(),
         jobTitle: jobTitle,
-        jobData: JSON.stringify(jobData),
-        type: 'job_posting'
+        type: 'job_posting',
+        // Store a unique identifier for the job data instead of the full data
+        jobDataId: `job_${Date.now()}_${user.id}`
       },
       customer_email: user.email,
       allow_promotion_codes: true,
@@ -63,7 +65,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       checkoutUrl: session.url,
       sessionId: session.id,
-      requiresPayment: true // Always true since we're always redirecting to Stripe
+      requiresPayment: true, // Always true since we're always redirecting to Stripe
+      jobDataId: `job_${Date.now()}_${user.id}` // Return the same ID for frontend storage
     });
 
   } catch (error) {
