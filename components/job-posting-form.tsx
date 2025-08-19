@@ -145,7 +145,9 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
 
   // Check authentication and load practice details
   useEffect(() => {
+    console.log("useEffect triggered with user:", user)
     if (!user) {
+      console.log("No user, redirecting to sign in")
       toast({
         title: "Authentication Required",
         description: "You must be signed in to post a job.",
@@ -156,12 +158,20 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
       return
     }
 
+    console.log("User authenticated, loading practice details")
     loadPracticeDetails()
   }, [user, onClose, router, toast])
+
+  // Monitor formData changes
+  useEffect(() => {
+    console.log("formData changed:", formData)
+  }, [formData])
 
   const loadPracticeDetails = async () => {
     try {
       console.log("Loading practice details for user:", user?.email)
+      console.log("Current formData before API call:", formData)
+      
       const response = await fetch("/api/employer/practice-details", {
         credentials: "include"
       })
@@ -197,22 +207,27 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
       } else {
         console.log("No practice details found, using default values")
         // Set at least the email if no practice details
-        setFormData(prev => ({
-          ...prev,
+        const defaultFormData = {
+          ...formData,
           practiceEmail: user?.email || "",
           contactEmail: user?.email || "",
-        }))
+        }
+        console.log("Setting default form data:", defaultFormData)
+        setFormData(defaultFormData)
       }
     } catch (error) {
       console.error("Failed to load practice details:", error)
       // Set at least the email on error
-      setFormData(prev => ({
-        ...prev,
+      const fallbackFormData = {
+        ...formData,
         practiceEmail: user?.email || "",
         contactEmail: user?.email || "",
-      }))
+      }
+      console.log("Setting fallback form data:", fallbackFormData)
+      setFormData(fallbackFormData)
     } finally {
       setLoading(false)
+      console.log("Final formData after loading:", formData)
     }
   }
 
@@ -466,7 +481,7 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
         city: normalizedCity,
         state: normalizedState,
         job_type: formData.jobType,
-        job_categories: normalizedCategories, // Changed to normalizedCategories
+        job_categories: [normalizedCategories], // Send as array, not string
         experience_level: formData.experienceLevel,
         work_setting: formData.workSetting,
         salary_range: formData.salaryRange,
