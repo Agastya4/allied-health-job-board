@@ -510,7 +510,10 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
           onClose()
           return
         }
-        throw new Error(data.error || "Failed to create checkout session")
+        
+        // Show detailed error message
+        const errorMessage = data.details || data.error || "Failed to create checkout session"
+        throw new Error(errorMessage)
       }
 
       if (data.requiresPayment === false) {
