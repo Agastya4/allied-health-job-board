@@ -161,23 +161,28 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
 
   const loadPracticeDetails = async () => {
     try {
+      console.log("Loading practice details for user:", user?.email)
       const response = await fetch("/api/employer/practice-details", {
         credentials: "include"
       })
       const data = await response.json()
+      console.log("Practice details response:", data)
       
       if (data.success && data.practiceDetails) {
         const details: PracticeDetails = data.practiceDetails
+        console.log("Practice details found:", details)
         
         // Auto-fill form with practice details
-        setFormData(prev => ({
-          ...prev,
+        const updatedFormData = {
+          ...formData,
           practiceEmail: user?.email || "",
           companyName: details.practice_name || "",
           contactPhone: details.phone_number || "",
           contactEmail: user?.email || "",
           companyWebsite: details.website || "",
-        }))
+        }
+        console.log("Setting form data to:", updatedFormData)
+        setFormData(updatedFormData)
         
         // Set logo if available
         if (details.logo_url) {
@@ -189,9 +194,23 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
           const locationDisplay = `${details.suburb}, ${details.state.toUpperCase()}`
           handleLocationChange(locationDisplay)
         }
+      } else {
+        console.log("No practice details found, using default values")
+        // Set at least the email if no practice details
+        setFormData(prev => ({
+          ...prev,
+          practiceEmail: user?.email || "",
+          contactEmail: user?.email || "",
+        }))
       }
     } catch (error) {
       console.error("Failed to load practice details:", error)
+      // Set at least the email on error
+      setFormData(prev => ({
+        ...prev,
+        practiceEmail: user?.email || "",
+        contactEmail: user?.email || "",
+      }))
     } finally {
       setLoading(false)
     }
@@ -418,6 +437,8 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
     e.preventDefault()
     console.log("Form submission started")
     console.log("Form data:", formData)
+    console.log("Form data keys:", Object.keys(formData))
+    console.log("Form data values:", Object.values(formData))
     
     if (!validateForm()) {
       console.log("Form validation failed")
@@ -458,7 +479,8 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
         payment_status: 'pending' as const,
       }
       
-      console.log("Job data prepared, creating Stripe checkout session...")
+      console.log("Job data prepared:", jobData)
+      console.log("Creating Stripe checkout session...")
       
       // Store job data temporarily and redirect to Stripe checkout
       await redirectToStripeCheckout(jobData, formData.jobTitle)
