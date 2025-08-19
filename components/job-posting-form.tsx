@@ -535,38 +535,12 @@ export function JobPostingForm({ onClose }: JobPostingFormProps) {
       console.log("Checkout session response:", { status: response.status, data })
 
       if (!response.ok) {
-        if (data.requiresPayment === false) {
-          // No payment required, create job directly
-          const job = await createJob(jobData)
-          console.log("Job created successfully (no payment required):", job)
-          toast({
-            title: "Job posted successfully!",
-            description: "Your job listing is now live.",
-            duration: 4000,
-          })
-          onClose()
-          return
-        }
-        
         // Show detailed error message
         const errorMessage = data.details || data.error || "Failed to create checkout session"
         throw new Error(errorMessage)
       }
 
-      if (data.requiresPayment === false) {
-        // No payment required, create job directly
-        const job = await createJob(jobData)
-        console.log("Job created successfully (no payment required):", job)
-        toast({
-          title: "Job posted successfully!",
-          description: "Your job listing is now live.",
-          duration: 4000,
-        })
-        onClose()
-        return
-      }
-
-      // Redirect to Stripe Checkout
+      // Always redirect to Stripe Checkout (even for free postings)
       if (data.checkoutUrl) {
         console.log("Redirecting to Stripe Checkout:", data.checkoutUrl)
         // Store job data in sessionStorage for retrieval after payment

@@ -18,89 +18,67 @@ export async function POST(request: NextRequest) {
     console.log("Creating checkout session:", { jobTitle, amount, currency, userId: user.id })
 
     if (!jobData || !jobTitle) {
-      return NextResponse.json({ error: "Job data and job title are required" }, { status: 400 });
+      return NextResponse.json({ error: "Job data and title are required" }, { status: 400 });
     }
 
     // Get payment settings
-    const paymentSettings = getPaymentSettings();
+    const paymentSettings = await getPaymentSettings();
     console.log("Payment settings:", paymentSettings)
+
+    // Always create a Stripe checkout session (even for free postings)
+    // This allows us to collect customer information and handle the flow consistently
     
-    // Check if payment is enabled
-    if (!paymentSettings.paymentEnabled) {
-      console.log("Payment disabled, returning free")
-      return NextResponse.json({ 
-        requiresPayment: false,
-        message: "Payment is currently disabled" 
-      });
-    }
-
-    // Check if user has free job postings
-    const hasFreePostings = await checkFreeJobPostings(user.id);
-    console.log("Has free postings:", hasFreePostings)
-    if (hasFreePostings) {
-      return NextResponse.json({ 
-        requiresPayment: false,
-        message: "You have free job postings available" 
-      });
-    }
-
-    // Validate price ID exists
     if (!paymentSettings.priceId) {
-      console.error("No price ID configured")
-      return NextResponse.json({ error: "Payment configuration error - no price ID" }, { status: 500 });
-    }
-
-    // Check if this is a $0 price (free job posting)
-    if (paymentSettings.jobPostingPrice === 0) {
-      console.log("Job posting is free ($0), creating job directly")
+      console.error("Missing Stripe price ID")
       return NextResponse.json({ 
-        requiresPayment: false,
-        message: "Job posting is free - no payment required" 
-      });
-    }
-
-    console.log("Creating Stripe checkout session with price ID:", paymentSettings.priceId)
-    
-    try {
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        line_items: [
-          {
-            price: paymentSettings.priceId,
-            quantity: 1,
-          },
-        ],
-        mode: "payment",
-        success_url: `${process.env.NEXT_PUBLIC_STRIPE_SUCCESS_URL}?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: process.env.NEXT_PUBLIC_STRIPE_CANCEL_URL,
-        metadata: {
-          userId: user.id.toString(),
-          jobTitle: jobTitle,
-          // Store job data as JSON string in metadata
-          jobData: JSON.stringify(jobData),
-        },
-      });
-
-      console.log("Stripe session created:", { sessionId: session.id, url: session.url })
-
-      return NextResponse.json({ 
-        checkoutUrl: session.url,
-        requiresPayment: true 
-      });
-    } catch (stripeError) {
-      console.error("Stripe API error:", stripeError);
-      return NextResponse.json({ 
-        error: "Stripe checkout creation failed", 
-        details: stripeError instanceof Error ? stripeError.message : "Unknown Stripe error",
-        stripeError: stripeError
+        error: "Payment configuration error",
+        details: "Stripe price ID not configured"
       }, { status: 500 });
     }
-  } catch (err) {
-    console.error("General API error:", err);
+
+    // Create Stripe checkout session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price: paymentSettings.priceId,
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: `${process.env.NEXT_PUBLIC_STRIPE_SUCCESS_URL}?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_STRIPE_CANCEL_URL}`,
+      metadata: {
+        userId: user.id,
+        jobTitle: jobTitle,
+        jobData: JSON.stringify(jobData),
+        type: 'job_posting'
+      },
+      customer_email: user.email,
+      allow_promotion_codes: true,
+    });
+
+    console.log("Stripe session created:", { sessionId: session.id, url: session.url })
+
+    return NextResponse.json({
+      checkoutUrl: session.url,
+      sessionId: session.id,
+      requiresPayment: true // Always true since we're always redirecting to Stripe
+    });
+
+  } catch (error) {
+    console.error("Error creating checkout session:", error);
+    
+    if (error instanceof Error) {
+      return NextResponse.json({ 
+        error: "Failed to create checkout session",
+        details: error.message
+      }, { status: 500 });
+    }
+    
     return NextResponse.json({ 
       error: "Failed to create checkout session",
-      details: err instanceof Error ? err.message : "Unknown error",
-      fullError: err
+      details: "Unknown error occurred"
     }, { status: 500 });
   }
 } 
